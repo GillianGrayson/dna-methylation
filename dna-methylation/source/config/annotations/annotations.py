@@ -1,10 +1,10 @@
-from source.config.annotation.types import *
+from source.config.annotations.types import *
 
 
 class Annotation:
 
     def __init__(self,
-                 name='annotation',
+                 name='annotations',
                  exclude=Exclude.none.value,
                  cross_reactive=CrossReactive.any.value,
                  snp=SNP.any.value,

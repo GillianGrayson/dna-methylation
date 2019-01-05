@@ -1,8 +1,8 @@
 from source.infrastucture.load.annotation import *
 from source.infrastucture.load.excluded import *
 from source.infrastucture.load.attributes import *
-from source.config.annotation.subset import *
-from source.config.attribute.subset import *
+from source.config.annotations.subset import *
+from source.config.attributes.subset import *
 
 
 class Config:
@@ -10,15 +10,15 @@ class Config:
     def __init__(self,
                  data,
                  setup,
-                 annotation,
-                 attribute,
-                 target=AttributeKey.age.value
+                 annotations,
+                 attributes,
+                 target
                  ):
 
         self.data = data
         self.setup = setup
-        self.annotation = annotation
-        self.attribute = attribute
+        self.annotations = annotations
+        self.attributes = attributes
         self.target = target
 
         self.cpg_list = []
@@ -29,15 +29,15 @@ class Config:
         self.bop_cpg_dict = {}
         self.bop_gene_dict = {}
 
-        self.attribute_indexes = []
+        self.attributes_indexes = []
 
         self.excluded = load_excluded(self)
 
-        self.annotation_dict = load_annotation_dict(self)
+        self.annotations_dict = load_annotations_dict(self)
         subset_annotations(self)
 
-        self.attribute_dict = load_attribute_dict(self)
-        self.attribute_indexes = get_indexes(self)
+        self.attributes_dict = load_attributes_dict(self)
+        self.attributes_indexes = get_indexes(self)
         subset_attributes(self)
         self.cells_dict = load_cells_dict(self)
         subset_cells(self)

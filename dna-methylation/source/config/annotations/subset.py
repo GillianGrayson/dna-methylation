@@ -1,72 +1,25 @@
 from source.infrastucture.path import *
-from source.config.annotation.conditions import *
+from source.config.annotations.conditions import *
 import os.path
 import pickle
 import numpy as np
 
 
 def subset_annotations(config):
-    cpg_list_fn = get_cache_path(config) + '/' + 'cpg_list.pkl'
-    cpg_gene_dict_fn = get_cache_path(config) + '/' + 'cpg_gene_dict.pkl'
-    cpg_bop_dict_fn = get_cache_path(config) + '/' + 'cpg_bop_dict.pkl'
-    gene_cpg_dict_fn = get_cache_path(config) + '/' + 'gene_cpg_dict.pkl'
-    gene_bop_dict_fn = get_cache_path(config) + '/' + 'gene_bop_dict.pkl'
-    bop_cpg_dict_fn = get_cache_path(config) + '/' + 'bop_cpg_dict.pkl'
-    bop_gene_dict_fn = get_cache_path(config) + '/' + 'bop_gene_dict.pkl'
+    aux_data_fn = get_cache_path(config) + '/' + 'aux_data.pkl'
 
-    is_pkl = True
-
-    if os.path.isfile(cpg_list_fn):
-        f = open(cpg_list_fn, 'rb')
-        config.cpg_list = pickle.load(f)
+    if os.path.isfile(aux_data_fn):
+        f = open(aux_data_fn, 'rb')
+        aux_data = pickle.load(f)
         f.close()
+        config.cpg_list = aux_data['cpg_list']
+        config.cpg_gene_dict = aux_data['cpg_gene_dict']
+        config.cpg_bop_dict = aux_data['cpg_bop_dict']
+        config.gene_cpg_dict = aux_data['gene_cpg_dict']
+        config.gene_bop_dict = aux_data['gene_bop_dict']
+        config.bop_cpg_dict = aux_data['bop_cpg_dict']
+        config.bop_gene_dict = aux_data['bop_gene_dict']
     else:
-        is_pkl = False
-
-    if os.path.isfile(cpg_gene_dict_fn):
-        f = open(cpg_gene_dict_fn, 'rb')
-        config.cpg_gene_dict = pickle.load(f)
-        f.close()
-    else:
-        is_pkl = False
-
-    if os.path.isfile(cpg_bop_dict_fn):
-        f = open(cpg_bop_dict_fn, 'rb')
-        config.cpg_bop_dict = pickle.load(f)
-        f.close()
-    else:
-        is_pkl = False
-
-    if os.path.isfile(gene_cpg_dict_fn):
-        f = open(gene_cpg_dict_fn, 'rb')
-        config.gene_cpg_dict = pickle.load(f)
-        f.close()
-    else:
-        is_pkl = False
-
-    if os.path.isfile(gene_bop_dict_fn):
-        f = open(gene_bop_dict_fn, 'rb')
-        config.gene_bop_dict = pickle.load(f)
-        f.close()
-    else:
-        is_pkl = False
-
-    if os.path.isfile(bop_cpg_dict_fn):
-        f = open(bop_cpg_dict_fn, 'rb')
-        config.bop_cpg_dict = pickle.load(f)
-        f.close()
-    else:
-        is_pkl = False
-
-    if os.path.isfile(bop_gene_dict_fn):
-        f = open(bop_gene_dict_fn, 'rb')
-        config.bop_gene_dict = pickle.load(f)
-        f.close()
-    else:
-        is_pkl = False
-
-    if not is_pkl:
-
         config.cpg_list = []
         config.cpg_gene_dict = {}
         config.cpg_bop_dict = {}
@@ -141,30 +94,16 @@ def subset_annotations(config):
             curr_cpgs_sorted = list(np.array(curr_cpgs)[order])
             config.bop_cpg_dict[curr_bop] = curr_cpgs_sorted
 
-        f = open(cpg_list_fn, 'wb')
-        pickle.dump(config.cpg_list, f, pickle.HIGHEST_PROTOCOL)
-        f.close()
+        aux_data = {
+            'cpg_list': config.cpg_list,
+            'cpg_gene_dict': config.cpg_gene_dict,
+            'cpg_bop_dict': config.cpg_bop_dict,
+            'gene_cpg_dict': config.gene_cpg_dict,
+            'gene_bop_dict': config.gene_bop_dict,
+            'bop_cpg_dict': config.bop_cpg_dict,
+            'bop_gene_dict': config.bop_gene_dict,
+        }
 
-        f = open(cpg_gene_dict_fn, 'wb')
-        pickle.dump(config.cpg_gene_dict, f, pickle.HIGHEST_PROTOCOL)
-        f.close()
-
-        f = open(cpg_bop_dict_fn, 'wb')
-        pickle.dump(config.cpg_bop_dict, f, pickle.HIGHEST_PROTOCOL)
-        f.close()
-
-        f = open(gene_cpg_dict_fn, 'wb')
-        pickle.dump(config.gene_cpg_dict, f, pickle.HIGHEST_PROTOCOL)
-        f.close()
-
-        f = open(gene_bop_dict_fn, 'wb')
-        pickle.dump(config.gene_bop_dict, f, pickle.HIGHEST_PROTOCOL)
-        f.close()
-
-        f = open(bop_cpg_dict_fn, 'wb')
-        pickle.dump(config.bop_cpg_dict, f, pickle.HIGHEST_PROTOCOL)
-        f.close()
-
-        f = open(bop_gene_dict_fn, 'wb')
-        pickle.dump(config.bop_gene_dict, f, pickle.HIGHEST_PROTOCOL)
+        f = open(aux_data_fn, 'wb')
+        pickle.dump(aux_data, f, pickle.HIGHEST_PROTOCOL)
         f.close()

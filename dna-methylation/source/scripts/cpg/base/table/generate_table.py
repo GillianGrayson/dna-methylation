@@ -1,11 +1,11 @@
 from source.config.data.data import *
 from source.config.setup.setup import *
-from source.config.annotation.annotation import *
-from source.config.attribute.attribute import *
+from source.config.annotations.annotations import *
+from source.config.attributes.attributes import *
 from source.config.config import *
-from source.data_type.cpg.base.table.linreg.processing import *
-from source.data_type.cpg.base.table.cluster.processing import *
-from source.data_type.cpg.base.table.variance_linreg.processing import *
+from source.scripts.cpg.base.table.linreg.processing import *
+from source.scripts.cpg.base.table.cluster.processing import *
+from source.scripts.cpg.base.table.variance_linreg.processing import *
 
 
 def generate_table(config):
@@ -33,7 +33,7 @@ setup = Setup(
 )
 
 annotation = Annotation(
-    name='annotation',
+    name='annotations',
     exclude=Exclude.cluster.value,
     cross_reactive=CrossReactive.exclude.value,
     snp=SNP.exclude.value,
@@ -45,7 +45,7 @@ annotation = Annotation(
 
 attribute = Attribute(
     obs={AttributeKey.gender.value:Gender.any.value},
-    name='attribute',
+    name='attributes',
     cells=Cells.none.value,
     cells_name='cells',
 )

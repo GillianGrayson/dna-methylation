@@ -1,4 +1,4 @@
-from source.config.annotation.types import *
+from source.config.annotations.types import *
 
 
 def exclude_condition(config, annotation_dict):

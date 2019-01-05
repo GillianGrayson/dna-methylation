@@ -1,8 +1,8 @@
-from source.config.attribute.types import *
+from source.config.attributes.types import *
 import numpy as np
 
 
-def get_attribute_indexes(config, target, variable, common):
+def pass_indexes(config, target, variable, common):
     passed_indexes = []
     attributes = config.attribute_dict[target]
     if variable == common:
@@ -20,7 +20,7 @@ def get_indexes(config):
     for obs, value in config.attribute.obs.items():
         common = 'any'
         if obs in config.attribute_dict:
-            passed_indexes = get_attribute_indexes(config, obs, value, common)
+            passed_indexes = pass_indexes(config, obs, value, common)
             indexes = list(set(indexes).intersection(passed_indexes))
 
     indexes.sort()

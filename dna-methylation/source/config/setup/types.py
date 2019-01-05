@@ -11,6 +11,7 @@ class Task(Enum):
     clock = 'clock'
     inside_gene = 'inside_gene'
     inside_bop = 'inside_bop'
+    plot = 'plot'
 
 
 class Method(Enum):
@@ -21,3 +22,4 @@ class Method(Enum):
     polygon = 'polygon'
     classification = 'classification'
     cluster = 'cluster'
+    hist = 'hist'
