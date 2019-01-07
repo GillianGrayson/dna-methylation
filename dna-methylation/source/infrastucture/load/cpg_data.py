@@ -14,17 +14,21 @@ def get_line_list(line):
 def load_cpg_beta_dict(config):
     fn = get_data_base_path(config) + '/' + config.data.name
     fn_txt = fn + '.txt'
-    fn_pkl = fn + '.pkl'
+    fn_npz = fn + '.npz'
 
-    if os.path.isfile(fn_pkl):
+    fn_cpg_row_dict =  get_data_base_path(config) + '/' + 'cpg_row_dict.pkl'
 
-        f = open(fn_pkl, 'rb')
-        cpg_beta_dict = pickle.load(f)
+    if os.path.isfile(fn_npz) and os.path.isfile(fn_cpg_row_dict):
+
+        
+
+        f = open(fn_cpg_row_dict, 'rb')
+        cpg_row_dict = pickle.load(f)
         f.close()
 
     else:
 
-        cpg_beta_dict = {}
+        cpg_row_dict = {}
 
         f = open(fn_txt)
         header_line = f.readline()

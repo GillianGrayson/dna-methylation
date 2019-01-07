@@ -1,5 +1,6 @@
 from source.infrastucture.common import is_float
 from source.infrastucture.path import *
+from source.config.common import CommonTypes
 import os.path
 import pickle
 
@@ -17,11 +18,12 @@ def load_attributes_dict(config):
 
     else:
 
-        possible_keys = [config.target] + list(config.attributes.observables.types.keys())
         f = open(fn_txt)
         key_line = f.readline()
         keys = key_line.split('\t')
         keys = [x.rstrip() for x in keys]
+
+        possible_keys = [config.target] + list(config.attributes.observables.types.keys())
 
         attributes_dict = {}
         for key in keys:
@@ -64,13 +66,20 @@ def load_cells_dict(config):
 
     else:
 
-        possible_keys = config.attributes.cells.types
+
 
         f = open(fn_txt)
         key_line = f.readline()
         keys = key_line.split('\t')
         # First column is always sample name
         keys = [x.rstrip() for x in keys][1::]
+
+        if isinstance(config.attributes.cells.types, list):
+            possible_keys = config.attributes.cells.types
+        elif config.attributes.cells.types == CommonTypes.any:
+            possible_keys = keys
+        else:
+            possible_keys = []
 
         cells_dict = {}
         for key in keys:
