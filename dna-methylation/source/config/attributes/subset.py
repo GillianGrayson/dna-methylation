@@ -1,11 +1,11 @@
-from source.config.attributes.types import *
+from source.config.common import CommonTypes
 import numpy as np
 
 
-def pass_indexes(config, target, variable, common):
+def pass_indexes(config, target, variable, any):
     passed_indexes = []
-    attributes = config.attribute_dict[target]
-    if variable == common:
+    attributes = config.attributes_dict[target]
+    if variable == any:
         passed_indexes = list(range(0, len(attributes)))
     else:
         for index in range(0, len(attributes)):
@@ -15,12 +15,12 @@ def pass_indexes(config, target, variable, common):
 
 
 def get_indexes(config):
-    indexes = list(range(0, len(list(config.attribute_dict.values())[0])))
+    indexes = list(range(0, len(list(config.attributes_dict.values())[0])))
 
-    for obs, value in config.attribute.obs.items():
-        common = 'any'
-        if obs in config.attribute_dict:
-            passed_indexes = pass_indexes(config, obs, value, common)
+    for obs, value in config.attributes.observables.types.items():
+        any = CommonTypes.any.value
+        if obs in config.attributes_dict:
+            passed_indexes = pass_indexes(config, obs, value, any)
             indexes = list(set(indexes).intersection(passed_indexes))
 
     indexes.sort()
@@ -29,12 +29,12 @@ def get_indexes(config):
 
 
 def subset_attributes(config):
-    for key in config.attribute_dict:
-        values = config.attribute_dict[key]
-        config.attribute_dict[key] = list(np.array(values)[config.attribute_indexes])
+    for key in config.attributes_dict:
+        values = config.attributes_dict[key]
+        config.attributes_dict[key] = list(np.array(values)[config.attributes_indexes])
 
 
 def subset_cells(config):
     for key in config.cells_dict:
         values = config.cells_dict[key]
-        config.cells_dict[key] = list(np.array(values)[config.attribute_indexes])
+        config.cells_dict[key] = list(np.array(values)[config.attributes_indexes])

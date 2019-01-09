@@ -8,8 +8,8 @@ import pickle
 def load_excluded(config):
     exclude = []
 
-    if config.annotation.exclude != CommonTypes.none:
-        fn = get_data_base_path(config) + '/' + config.annotation.exclude
+    if config.annotations.exclude != CommonTypes.none.value:
+        fn = get_data_base_path(config) + '/' + config.annotations.exclude
         fn_txt = fn + '.txt'
         fn_pkl = fn + '.pkl'
 

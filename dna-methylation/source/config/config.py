@@ -1,4 +1,4 @@
-from source.infrastucture.load.annotation import *
+from source.infrastucture.load.annotations import *
 from source.infrastucture.load.excluded import *
 from source.infrastucture.load.attributes import *
 from source.config.annotations.subset import *
@@ -28,6 +28,8 @@ class Config:
         self.gene_bop_dict = {}
         self.bop_cpg_dict = {}
         self.bop_gene_dict = {}
+
+        self.cpg_row_dict = {}
 
         self.attributes_indexes = []
 

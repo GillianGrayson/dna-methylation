@@ -110,12 +110,12 @@ def build_clock(clock):
 
 
 def generate_clock_linreg(config_from, config_to):
-    attribute_dict = config_to.attribute_dict
+    attributes_dict = config_to.attributes_dict
     cpg_beta_dict = load_cpg_beta_dict(config_to)
     cpg_list = config_to.cpg_list
     cpg_gene_dict = config_to.cpg_gene_dict
 
-    target = attribute_dict[config_to.target]
+    target = attributes_dict[config_to.target]
 
     test_size = math.floor(len(target) * 0.25)
     train_size = len(target) - test_size

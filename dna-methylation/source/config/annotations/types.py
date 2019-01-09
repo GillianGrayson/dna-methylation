@@ -15,35 +15,29 @@ class AnnotationKey(Enum):
 
 
 class Exclude(Enum):
-    none = 'none'
     cluster = 'cluster'
 
 
 class CrossReactive(Enum):
-    any = 'any'
     exclude = 'ex'
 
 
 class SNP(Enum):
-    any = 'any'
     exclude = 'ex'
 
 
 class Chromosome(Enum):
-    any = 'any'
     non_gender = 'NG'
     X = 'X'
     Y = 'Y'
 
 
 class GeneRegion(Enum):
-    any = 'any'
     yes = 'yes'
     no = 'no'
 
 
 class Geo(Enum):
-    any = 'any'
     shores = 'shores'
     shores_s = 'shores_s'
     shores_n = 'shores_n'
@@ -52,7 +46,6 @@ class Geo(Enum):
 
 
 class ProbeClass(Enum):
-    any = 'any'
     A = 'A'
     B = 'B'
     C = 'C'

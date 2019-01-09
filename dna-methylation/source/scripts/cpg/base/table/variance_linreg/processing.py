@@ -4,11 +4,11 @@ import statsmodels.api as sm
 
 
 def generate_table_variance_linreg(config):
-    attribute_dict = config.attribute_dict
+    attributes_dict = config.attributes_dict
     cpg_beta_dict = load_cpg_beta_dict(config)
     cpg_list = config.cpg_list
 
-    target = attribute_dict[config.target]
+    target = attributes_dict[config.target]
 
     print('len(cpg_list): ' + str(len(cpg_list)))
 

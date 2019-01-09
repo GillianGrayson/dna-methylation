@@ -4,11 +4,11 @@ from sklearn.cluster import DBSCAN
 
 
 def generate_table_cluster(config):
-    attribute_dict = config.attribute_dict
+    attributes_dict = config.attributes_dict
     cpg_beta_dict = load_cpg_beta_dict(config)
     cpg_list = config.cpg_list
 
-    target = attribute_dict[config.target]
+    target = attributes_dict[config.target]
     target_normed = [(float(x) - min(target)) / (float(max(target)) - float(min(target))) for x in target]
 
     print('len(cpg_list): ' + str(len(cpg_list)))

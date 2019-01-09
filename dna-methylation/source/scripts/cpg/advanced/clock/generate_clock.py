@@ -43,7 +43,7 @@ setup_to = Setup(
     suffix='',
 )
 
-annotation = Annotation(
+annotation = Annotations(
     name='annotations',
     exclude=Exclude.none.value,
     cross_reactive=CrossReactive.exclude.value,

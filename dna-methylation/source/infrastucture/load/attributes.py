@@ -66,8 +66,6 @@ def load_cells_dict(config):
 
     else:
 
-
-
         f = open(fn_txt)
         key_line = f.readline()
         keys = key_line.split('\t')
@@ -76,7 +74,7 @@ def load_cells_dict(config):
 
         if isinstance(config.attributes.cells.types, list):
             possible_keys = config.attributes.cells.types
-        elif config.attributes.cells.types == CommonTypes.any:
+        elif config.attributes.cells.types == CommonTypes.any.value:
             possible_keys = keys
         else:
             possible_keys = []
@@ -103,4 +101,3 @@ def load_cells_dict(config):
         f.close()
 
     return cells_dict
-

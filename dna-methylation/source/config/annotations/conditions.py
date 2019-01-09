@@ -1,17 +1,18 @@
 from source.config.annotations.types import *
+from source.config.common import CommonTypes
 
 
-def exclude_condition(config, annotation_dict):
-    cpg = annotation_dict[AnnotationKey.cpg.value]
+def exclude_condition(config, annotations_dict):
+    cpg = annotations_dict[AnnotationKey.cpg.value]
     if cpg in config.excluded:
         return False
     else:
         return True
 
 
-def cross_reactive_condition(config, annotation_dict):
-    target = config.annotation.cross_reactive
-    value = annotation_dict[AnnotationKey.cross_reactive.value]
+def cross_reactive_condition(config, annotations_dict):
+    target = config.annotations.cross_reactive
+    value = annotations_dict[AnnotationKey.cross_reactive.value]
 
     match = True
     if target == CrossReactive.exclude.value:
@@ -21,10 +22,10 @@ def cross_reactive_condition(config, annotation_dict):
     return match
 
 
-def snp_condition(config, annotation_dict):
-    target = config.annotation.snp
-    snp = annotation_dict[AnnotationKey.Probe_SNPs.value]
-    snp_10 = annotation_dict[AnnotationKey.Probe_SNPs_10.value]
+def snp_condition(config, annotations_dict):
+    target = config.annotations.snp
+    snp = annotations_dict[AnnotationKey.Probe_SNPs.value]
+    snp_10 = annotations_dict[AnnotationKey.Probe_SNPs_10.value]
 
     match = True
     if target == SNP.exclude.value:
@@ -34,12 +35,12 @@ def snp_condition(config, annotation_dict):
     return match
 
 
-def chromosome_condition(config, annotation_dict):
-    target = config.annotation.chr
-    chr = annotation_dict[AnnotationKey.chr.value]
+def chromosome_condition(config, annotations_dict):
+    target = config.annotations.chr
+    chr = annotations_dict[AnnotationKey.chr.value]
 
     match = False
-    if target == Chromosome.any.value:
+    if target == CommonTypes.any.value:
         match = True
     elif target == Chromosome.non_gender.value:
         if chr != Chromosome.X.value and chr != Chromosome.Y.value:
@@ -57,12 +58,12 @@ def chromosome_condition(config, annotation_dict):
     return match
 
 
-def gene_region_condition(config, annotation_dict):
-    target = config.annotation.gene_region
-    gene = annotation_dict[AnnotationKey.gene.value]
+def gene_region_condition(config, annotations_dict):
+    target = config.annotations.gene_region
+    gene = annotations_dict[AnnotationKey.gene.value]
 
     match = False
-    if target == GeneRegion.any.value:
+    if target == CommonTypes.any.value:
         match = True
     elif target == GeneRegion.yes.value:
         if len(gene) > 0:
@@ -74,12 +75,12 @@ def gene_region_condition(config, annotation_dict):
     return match
 
 
-def geo_condition(config, annotation_dict):
-    target = config.annotation.geo
-    geo = annotation_dict[AnnotationKey.geo.value]
+def geo_condition(config, annotations_dict):
+    target = config.annotations.geo
+    geo = annotations_dict[AnnotationKey.geo.value]
 
     match = False
-    if target == Geo.any.value:
+    if target == CommonTypes.any.value:
         match = True
     else:
         keys_preset = [x.value for x in Geo]
@@ -107,12 +108,12 @@ def geo_condition(config, annotation_dict):
     return match
 
 
-def probe_class_condition(config, annotation_dict):
-    target = config.annotation.probe_class
-    probe_class = annotation_dict[AnnotationKey.probe_class.value]
+def probe_class_condition(config, annotations_dict):
+    target = config.annotations.probe_class
+    probe_class = annotations_dict[AnnotationKey.probe_class.value]
 
     match = False
-    if target == ProbeClass.any.value:
+    if target == CommonTypes.any.value:
         match = True
     else:
         keys_preset = [x.value for x in ProbeClass]
@@ -131,23 +132,23 @@ def probe_class_condition(config, annotation_dict):
     return match
 
 
-def cpg_name_condition(annotation_dict):
-    cpg = annotation_dict[AnnotationKey.cpg.value]
+def cpg_name_condition(annotations_dict):
+    cpg = annotations_dict[AnnotationKey.cpg.value]
     if len(cpg) > 0:
         return True
     else:
         return False
 
 
-def check_conditions(config, annotation_dict):
+def check_conditions(config, annotations_dict):
     match = False
-    if exclude_condition(config, annotation_dict):
-        if cross_reactive_condition(config, annotation_dict):
-            if snp_condition(config, annotation_dict):
-                if chromosome_condition(config, annotation_dict):
-                    if gene_region_condition(config, annotation_dict):
-                        if geo_condition(config, annotation_dict):
-                            if probe_class_condition(config, annotation_dict):
-                                if cpg_name_condition(annotation_dict):
+    if exclude_condition(config, annotations_dict):
+        if cross_reactive_condition(config, annotations_dict):
+            if snp_condition(config, annotations_dict):
+                if chromosome_condition(config, annotations_dict):
+                    if gene_region_condition(config, annotations_dict):
+                        if geo_condition(config, annotations_dict):
+                            if probe_class_condition(config, annotations_dict):
+                                if cpg_name_condition(annotations_dict):
                                     match = True
     return match

@@ -16,12 +16,13 @@ def generate_table(config):
     elif config.setup.method == Method.variance_linreg:
         generate_table_variance_linreg(config)
 
+target = 'age'
 
 data = Data(
     name='cpg_beta',
     type=DataType.cpg,
     path='',
-    base=DataBase.GSE87571.value
+    base='GSE87571'
 )
 
 setup = Setup(
@@ -32,38 +33,50 @@ setup = Setup(
     suffix='',
 )
 
-annotation = Annotation(
+annotations = Annotations(
     name='annotations',
-    exclude=Exclude.cluster.value,
+    exclude=CommonTypes.none.value,
     cross_reactive=CrossReactive.exclude.value,
     snp=SNP.exclude.value,
     chr=Chromosome.non_gender.value,
     gene_region=GeneRegion.yes.value,
-    geo=Geo.any.value,
-    probe_class=ProbeClass.any.value
+    geo=CommonTypes.any.value,
+    probe_class=CommonTypes.any.value
 )
 
-attribute = Attribute(
-    obs={AttributeKey.gender.value:Gender.any.value},
-    name='attributes',
-    cells=Cells.none.value,
-    cells_name='cells',
+observables = Observables(
+    file_name='observables',
+    types={
+        'gender': CommonTypes.any.value
+    }
 )
+
+cells = Cells(
+    file_name='cells',
+    types=CommonTypes.any.value
+)
+
+attributes = Attributes(
+    observables=observables,
+    cells=cells
+
+)
+
 obs_list = [
-    {AttributeKey.gender.value: Gender.F.value},
-    {AttributeKey.gender.value: Gender.M.value},
-    {AttributeKey.gender.value: Gender.any.value}
+    {'gender': 'F'},
+    {'gender': 'M'},
+    {'gender': CommonTypes.any.value}
 ]
 
 for obs in obs_list:
-    attribute.obs = obs
+    attributes.observables.types = obs
 
     config = Config(
         data=data,
         setup=setup,
-        annotation=annotation,
-        attribute=attribute,
-        target=AttributeKey.age.value
+        annotations=annotations,
+        attributes=attributes,
+        target=target
     )
 
     generate_table(config)

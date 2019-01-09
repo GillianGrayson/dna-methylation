@@ -28,18 +28,18 @@ def subset_annotations(config):
         config.bop_cpg_dict = {}
         config.bop_gene_dict = {}
 
-        cpgs = config.annotation_dict[AnnotationKey.cpg.value]
-        genes = config.annotation_dict[AnnotationKey.gene.value]
-        bops = config.annotation_dict[AnnotationKey.bop.value]
-        map_infos = config.annotation_dict[AnnotationKey.map_info.value]
+        cpgs = config.annotations_dict[AnnotationKey.cpg.value]
+        genes = config.annotations_dict[AnnotationKey.gene.value]
+        bops = config.annotations_dict[AnnotationKey.bop.value]
+        map_infos = config.annotations_dict[AnnotationKey.map_info.value]
         for id in range(0, len(cpgs)):
 
             if id % 10000 == 0:
                 print('id: ' + str(id))
 
             curr_ann_dict = {}
-            for key in config.annotation_dict:
-                curr_ann_dict[key] = config.annotation_dict[key][id]
+            for key in config.annotations_dict:
+                curr_ann_dict[key] = config.annotations_dict[key][id]
 
             if check_conditions(config, curr_ann_dict):
 

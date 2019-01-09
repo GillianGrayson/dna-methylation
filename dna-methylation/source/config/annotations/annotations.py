@@ -1,17 +1,17 @@
-from source.config.annotations.types import *
+from source.config.common import CommonTypes
 
 
-class Annotation:
+class Annotations:
 
     def __init__(self,
                  name='annotations',
-                 exclude=Exclude.none.value,
-                 cross_reactive=CrossReactive.any.value,
-                 snp=SNP.any.value,
-                 chr=Chromosome.any.value,
-                 gene_region=GeneRegion.any.value,
-                 geo=Geo.any.value,
-                 probe_class=ProbeClass.any.value
+                 exclude=CommonTypes.any.value,
+                 cross_reactive=CommonTypes.any.value,
+                 snp=CommonTypes.any.value,
+                 chr=CommonTypes.any.value,
+                 gene_region=CommonTypes.any.value,
+                 geo=CommonTypes.any.value,
+                 probe_class=CommonTypes.any.value
                  ):
         self.name = name
         self.exclude = exclude

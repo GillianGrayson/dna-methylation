@@ -4,11 +4,12 @@ import statsmodels.api as sm
 
 
 def generate_table_linreg(config):
-    attribute_dict = config.attribute_dict
-    cpg_beta_dict = load_cpg_beta_dict(config)
+    attributes_dict = config.attributes_dict
+    betas = load_betas(config)
+    cpg_row_dict = config.cpg_row_dict
     cpg_list = config.cpg_list
 
-    target = attribute_dict[config.target]
+    target = attributes_dict[config.target]
 
     print('len(cpg_list): ' + str(len(cpg_list)))
 
@@ -31,15 +32,16 @@ def generate_table_linreg(config):
 
     for cpg in cpg_list:
 
-        if cpg in cpg_beta_dict:
+        if cpg in cpg_row_dict:
+            row_id = cpg_row_dict[cpg]
 
             if num_passed % 10000 == 0:
                 print('cpg_id: ' + str(num_passed))
 
-            betas = cpg_beta_dict[cpg]
+            curr_betas = betas[row_id]
 
             x = sm.add_constant(target)
-            results = sm.OLS(betas, x).fit()
+            results = sm.OLS(curr_betas, x).fit()
 
             if np.isclose(config.setup.params['out_limit'], 0.0):
 
@@ -67,14 +69,14 @@ def generate_table_linreg(config):
                 passed_ids = []
                 for p_id in range(0, len(target)):
                     curr_x = target[p_id]
-                    curr_y = betas[p_id]
+                    curr_y = curr_betas[p_id]
                     pred_y = results.params[1] * curr_x + results.params[0]
                     if abs(pred_y - curr_y) < max_diff:
                         passed_ids.append(p_id)
 
-                if len(passed_ids) > np.floor(len(betas) * config.setup.params['out_limit']):
+                if len(passed_ids) > np.floor(len(curr_betas) * config.setup.params['out_limit']):
 
-                    values_good = list(np.array(betas)[passed_ids])
+                    values_good = list(np.array(curr_betas)[passed_ids])
                     attributes_good = list(np.array(target)[passed_ids])
 
                     x = sm.add_constant(attributes_good)
