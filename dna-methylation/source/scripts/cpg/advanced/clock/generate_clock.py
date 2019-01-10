@@ -2,7 +2,6 @@ from source.config.data.data import *
 from source.config.setup.setup import *
 from source.config.annotations.annotations import *
 from source.config.attributes.attributes import *
-from source.config.auxillary.clock import *
 from source.config.config import *
 from source.scripts.cpg.advanced.clock.linreg.processing import *
 
@@ -12,12 +11,13 @@ def generate_clock(config_from, config_to):
     if config_to.setup.method == Method.linreg:
         generate_clock_linreg(config_from, config_to)
 
+target = 'age'
 
 data = Data(
     name='cpg_beta',
     type=DataType.cpg,
     path='',
-    base=DataBase.GSE87571.value
+    base='GSE87571'
 )
 
 setup_from = Setup(
@@ -27,8 +27,7 @@ setup_from = Setup(
     params={
         'out_limit': 0.0,
         'out_sigma': 0.0
-    },
-    suffix='',
+    }
 )
 
 setup_to = Setup(
@@ -36,53 +35,65 @@ setup_to = Setup(
     task=Task.clock,
     method=Method.linreg,
     params={
-        'exog_type': ClockExogType.all.value,
-        'exog_num': 100,
-        'exog_num_comb': 100
-    },
-    suffix='',
+        'type': ClockExogType.all.value,
+        'exogs': 100,
+        'combs': 100,
+        'runs': 100
+    }
 )
 
-annotation = Annotations(
+annotations = Annotations(
     name='annotations',
-    exclude=Exclude.none.value,
+    exclude=CommonTypes.none.value,
     cross_reactive=CrossReactive.exclude.value,
     snp=SNP.exclude.value,
     chr=Chromosome.non_gender.value,
     gene_region=GeneRegion.yes.value,
-    geo=Geo.any.value,
-    probe_class=ProbeClass.any.value
+    geo=CommonTypes.any.value,
+    probe_class=CommonTypes.any.value
 )
 
-attribute = Attribute(
-    obs={AttributeKey.gender.value:Gender.any.value},
-    name='attributes',
-    cells=Cells.none.value,
-    cells_name='cells',
+observables = Observables(
+    file_name='observables',
+    types={
+        'gender': CommonTypes.any.value
+    }
 )
+
+cells = Cells(
+    file_name='cells',
+    types=CommonTypes.any.value
+)
+
+attributes = Attributes(
+    observables=observables,
+    cells=cells
+
+)
+
 obs_list = [
-    {AttributeKey.gender.value: Gender.F.value},
-    {AttributeKey.gender.value: Gender.M.value},
-    {AttributeKey.gender.value: Gender.any.value}
+    {'gender': 'F'},
+    {'gender': 'M'},
+    {'gender': CommonTypes.any.value}
 ]
 
 for obs in obs_list:
-    attribute.obs = obs
+    attributes.observables.types = obs
 
     config_from = Config(
         data=data,
         setup=setup_from,
-        annotation=annotation,
-        attribute=attribute,
-        target=AttributeKey.age.value
+        annotations=annotations,
+        attributes=attributes,
+        target=target
     )
 
     config_to = Config(
         data=data,
         setup=setup_to,
-        annotation=annotation,
-        attribute=attribute,
-        target=AttributeKey.age.value
+        annotations=annotations,
+        attributes=attributes,
+        target=target
     )
 
     generate_clock(config_from, config_to)

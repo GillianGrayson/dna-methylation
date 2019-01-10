@@ -5,7 +5,8 @@ import statsmodels.api as sm
 
 def generate_table_variance_linreg(config):
     attributes_dict = config.attributes_dict
-    cpg_beta_dict = load_cpg_beta_dict(config)
+    betas = load_betas(config)
+    cpg_row_dict = config.cpg_row_dict
     cpg_list = config.cpg_list
 
     target = attributes_dict[config.target]
@@ -34,15 +35,16 @@ def generate_table_variance_linreg(config):
 
     for cpg in cpg_list:
 
-        if cpg in cpg_beta_dict:
+        if cpg in cpg_row_dict:
+            row_id = cpg_row_dict[cpg]
 
             if num_passed % 10000 == 0:
                 print('cpg_id: ' + str(num_passed))
 
-            betas = cpg_beta_dict[cpg]
+            curr_betas = betas[row_id]
 
             x = sm.add_constant(target)
-            results = sm.OLS(betas, x).fit()
+            results = sm.OLS(curr_betas, x).fit()
 
             cpg_names_passed.append(cpg)
             R2s.append(results.rsquared)
@@ -56,7 +58,7 @@ def generate_table_variance_linreg(config):
             diffs = []
             for p_id in range(0, len(target)):
                 curr_x = target[p_id]
-                curr_y = betas[p_id]
+                curr_y = curr_betas[p_id]
                 pred_y = results.params[1] * curr_x + results.params[0]
                 diffs.append(abs(pred_y - curr_y))
 

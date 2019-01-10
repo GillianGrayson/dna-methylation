@@ -5,7 +5,8 @@ from sklearn.cluster import DBSCAN
 
 def generate_table_cluster(config):
     attributes_dict = config.attributes_dict
-    cpg_beta_dict = load_cpg_beta_dict(config)
+    betas = load_betas(config)
+    cpg_row_dict = config.cpg_row_dict
     cpg_list = config.cpg_list
 
     target = attributes_dict[config.target]
@@ -27,14 +28,15 @@ def generate_table_cluster(config):
 
     for cpg in cpg_list:
 
-        if cpg in cpg_beta_dict:
+        if cpg in cpg_row_dict:
+            row_id = cpg_row_dict[cpg]
 
             if num_passed % 10000 == 0:
                 print('cpg_id: ' + str(num_passed))
 
-            betas = cpg_beta_dict[cpg]
+            curr_betas = betas[row_id]
 
-            X = np.array([target_normed, betas]).T
+            X = np.array([target_normed, curr_betas]).T
             db = DBSCAN(eps=config.setup.params['eps'], min_samples=config.setup.params['min_samples']).fit(X)
             core_samples_mask = np.zeros_like(db.labels_, dtype=bool)
             core_samples_mask[db.core_sample_indices_] = True

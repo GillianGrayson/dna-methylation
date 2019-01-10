@@ -38,3 +38,6 @@ class Data:
     def get_data_base_path(self):
         path = self.path + '/' + self.base
         return path
+
+    def get_root_path(self):
+        return self.path

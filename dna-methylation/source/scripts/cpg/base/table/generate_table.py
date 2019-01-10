@@ -29,8 +29,10 @@ setup = Setup(
     experiment=Experiment.base,
     task=Task.table,
     method=Method.linreg,
-    params={},
-    suffix='',
+    params={
+        'out_limit': 0.0,
+        'out_sigma': 0.0
+    }
 )
 
 annotations = Annotations(
