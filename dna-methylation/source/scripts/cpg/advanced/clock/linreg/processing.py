@@ -34,7 +34,7 @@ def generate_clock_linreg(config_from, config_to):
     if not bool(config_to.setup.params):
         config_to.setup.params = {
             'type': ClockExogType.all.value,
-            'num_all': min(train_size, len(cpg_names)),
+            'exogs': min(train_size, len(cpg_names)),
             'combs': min(train_size, len(cpg_names)),
             'runs': 100
         }
