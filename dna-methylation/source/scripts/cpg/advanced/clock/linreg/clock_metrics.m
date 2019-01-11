@@ -1,8 +1,8 @@
 clear all;
 
-metric = "mae_test";
+metric = "r_test";
 
-config.data_base = 'GSE87571';
+config.data_base = 'GSE40279';
 config.data_type = 'cpg';
 
 config.exclude = 'none';

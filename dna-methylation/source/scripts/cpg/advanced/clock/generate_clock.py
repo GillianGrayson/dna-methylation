@@ -4,7 +4,7 @@ from source.config.annotations.annotations import *
 from source.config.attributes.attributes import *
 from source.config.config import *
 from source.scripts.cpg.advanced.clock.linreg.processing import *
-
+from source.setup.advanced.clock.clock import ClockExogType
 
 
 def generate_clock(config_from, config_to):
@@ -17,7 +17,7 @@ data = Data(
     name='cpg_beta',
     type=DataType.cpg,
     path='',
-    base='GSE87571'
+    base='GSE40279'
 )
 
 setup_from = Setup(
