@@ -22,4 +22,4 @@ class Method(Enum):
     polygon = 'polygon'
     classification = 'classification'
     cluster = 'cluster'
-    hist = 'hist'
+    histogram = 'histogram'
