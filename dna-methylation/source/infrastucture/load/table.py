@@ -3,7 +3,7 @@ import pandas as pd
 
 
 def load_table_dict(config):
-    fn = get_table_path(config) + '/' + config.setup.get_file_name() + '.xlsx'
+    fn = get_save_path(config) + '/' + config.setup.get_file_name() + '.xlsx'
     df = pd.read_excel(fn)
     tmp_dict = df.to_dict()
     table_dict = {}

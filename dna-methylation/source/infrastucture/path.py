@@ -17,7 +17,7 @@ def get_cache_path(config):
     return path
 
 
-def get_table_path(config):
+def get_save_path(config):
     path = str(config.data) + '/' + \
            str(config.setup) + '/' + \
            str(config.annotations) + '/' + \

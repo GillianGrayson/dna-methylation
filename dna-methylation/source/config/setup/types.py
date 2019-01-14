@@ -23,3 +23,4 @@ class Method(Enum):
     classification = 'classification'
     cluster = 'cluster'
     histogram = 'histogram'
+    scatter = 'scatter'

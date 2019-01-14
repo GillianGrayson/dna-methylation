@@ -2,7 +2,6 @@ from source.infrastucture.load.table import *
 from source.infrastucture.save.table import *
 from source.infrastucture.load.cpg_data import *
 import math
-
 from source.setup.advanced.clock.clock import ClockExogType, Clock
 from source.setup.advanced.clock.linreg.processing import build_clock_linreg
 

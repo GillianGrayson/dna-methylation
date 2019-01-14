@@ -4,13 +4,13 @@ import csv
 
 
 def save_table_dict(config, table_dict):
-    fn = get_table_path(config) + '/' + config.setup.get_file_name() + '.xlsx'
+    fn = get_save_path(config) + '/' + config.setup.get_file_name() + '.xlsx'
     df = pd.DataFrame(table_dict)
     writer = pd.ExcelWriter(fn, engine='xlsxwriter')
     df.to_excel(writer, index=False)
     writer.save()
 
-    fn = get_table_path(config) + '/' + config.setup.get_file_name() + '.csv'
+    fn = get_save_path(config) + '/' + config.setup.get_file_name() + '.csv'
     with open(fn, 'w') as csvfile:
         writer = csv.DictWriter(csvfile, fieldnames=table_dict.keys(), lineterminator='\n')
         writer.writeheader()
