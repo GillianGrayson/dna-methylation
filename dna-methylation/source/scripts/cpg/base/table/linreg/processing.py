@@ -13,12 +13,6 @@ def generate_table_linreg(config):
 
     print('len(cpg_list): ' + str(len(cpg_list)))
 
-    if not bool(config.setup.params):
-        config.setup.params = {
-            'out_limit': 0.0,
-            'out_sigma': 0.0
-        }
-
     cpg_names_passed = []
     R2s = []
     intercepts = []
@@ -39,59 +33,21 @@ def generate_table_linreg(config):
                 print('cpg_id: ' + str(num_passed))
 
             curr_betas = betas[row_id]
-
             x = sm.add_constant(target)
+
             results = sm.OLS(curr_betas, x).fit()
 
-            if np.isclose(config.setup.params['out_limit'], 0.0):
+            cpg_names_passed.append(cpg)
+            R2s.append(results.rsquared)
+            intercepts.append(results.params[0])
+            slopes.append(results.params[1])
+            intercepts_std_errors.append(results.bse[0])
+            slopes_std_errors.append(results.bse[1])
+            intercepts_p_values.append(results.pvalues[0])
+            slopes_p_values.append(results.pvalues[1])
 
-                cpg_names_passed.append(cpg)
-                R2s.append(results.rsquared)
-                intercepts.append(results.params[0])
-                slopes.append(results.params[1])
-                intercepts_std_errors.append(results.bse[0])
-                slopes_std_errors.append(results.bse[1])
-                intercepts_p_values.append(results.pvalues[0])
-                slopes_p_values.append(results.pvalues[1])
+            num_passed += 1
 
-                num_passed += 1
-
-            else:
-
-                slope_plus = results.params[1] + config.setup.params['out_sigma'] * results.bse[1]
-                intercept_plus = results.params[0] + config.setup.params['out_sigma'] * results.bse[0]
-
-                slope = results.params[1]
-                intercept = results.params[0]
-
-                max_diff = ((slope_plus * max(target) + intercept_plus) - (slope * max(target) + intercept))
-
-                passed_ids = []
-                for p_id in range(0, len(target)):
-                    curr_x = target[p_id]
-                    curr_y = curr_betas[p_id]
-                    pred_y = results.params[1] * curr_x + results.params[0]
-                    if abs(pred_y - curr_y) < max_diff:
-                        passed_ids.append(p_id)
-
-                if len(passed_ids) > np.floor(len(curr_betas) * config.setup.params['out_limit']):
-
-                    values_good = list(np.array(curr_betas)[passed_ids])
-                    attributes_good = list(np.array(target)[passed_ids])
-
-                    x = sm.add_constant(attributes_good)
-                    results = sm.OLS(values_good, x).fit()
-
-                    cpg_names_passed.append(cpg)
-                    R2s.append(results.rsquared)
-                    intercepts.append(results.params[0])
-                    slopes.append(results.params[1])
-                    intercepts_std_errors.append(results.bse[0])
-                    slopes_std_errors.append(results.bse[1])
-                    intercepts_p_values.append(results.pvalues[0])
-                    slopes_p_values.append(results.pvalues[1])
-
-                    num_passed += 1
 
     order = np.argsort(list(map(abs, R2s)))[::-1]
     cpgs_sorted = list(np.array(cpg_names_passed)[order])

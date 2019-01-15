@@ -14,7 +14,6 @@ def generate_table_variance_linreg(config):
     print('len(cpg_list): ' + str(len(cpg_list)))
 
     cpg_names_passed = []
-
     R2s = []
     intercepts = []
     slopes = []

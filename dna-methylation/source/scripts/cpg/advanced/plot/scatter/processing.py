@@ -50,15 +50,11 @@ def add_cpg_scatter(config_from, config_to, cpg, color_id, plot_data):
             x_max = np.max(x)
             y_min = slope * x_min + intercept
             y_max = slope * x_max + intercept
-
             slope_tmp = slope + 3.0 * slope_std
             y_tmp =  slope_tmp * x_max + intercept
-
             y_diff = 3.0 * np.abs(intercept_std) + np.abs(y_tmp - y_max)
-
             y_min_up = y_min + y_diff
             y_min_down = y_min - y_diff
-
             y_max_up = y_max + y_diff
             y_max_down = y_max - y_diff
 

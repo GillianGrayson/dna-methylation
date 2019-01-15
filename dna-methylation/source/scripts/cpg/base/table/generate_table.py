@@ -28,11 +28,8 @@ data = Data(
 setup = Setup(
     experiment=Experiment.base,
     task=Task.table,
-    method=Method.linreg,
-    params={
-        'out_limit': 0.0,
-        'out_sigma': 0.0
-    }
+    method=Method.variance_linreg,
+    params={}
 )
 
 annotations = Annotations(
