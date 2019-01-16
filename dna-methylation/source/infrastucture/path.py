@@ -9,7 +9,7 @@ def get_data_base_path(config):
 def get_cache_path(config):
     path = get_data_base_path(config) + '/' + \
            DataType.cache.value + '/' + \
-           str(config.annotation)
+           str(config.annotations)
 
     if not os.path.exists(path):
         os.makedirs(path)
@@ -17,11 +17,11 @@ def get_cache_path(config):
     return path
 
 
-def get_table_path(config):
+def get_save_path(config):
     path = str(config.data) + '/' + \
            str(config.setup) + '/' + \
-           str(config.annotation) + '/' + \
-           str(config.attribute)
+           str(config.annotations) + '/' + \
+           str(config.attributes)
 
     if not os.path.exists(path):
         os.makedirs(path)

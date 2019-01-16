@@ -25,7 +25,7 @@ class Data:
             if host_name == 'MSI':
                 self.path = DataPath.local_1.value
             elif host_name == 'DESKTOP-K9VO2TI':
-                self.data_path = DataPath.local_2.value
+                self.path = DataPath.local_2.value
             elif host_name == 'DESKTOP-4BEQ7MS':
                 self.path = DataPath.local_3.value
             elif host_name == 'master' or host_name[0:4] == 'node':
@@ -38,3 +38,6 @@ class Data:
     def get_data_base_path(self):
         path = self.path + '/' + self.base
         return path
+
+    def get_root_path(self):
+        return self.path

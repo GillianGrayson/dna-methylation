@@ -3,10 +3,10 @@ import getpass
 
 
 class DataPath(Enum):
-    local_1 = 'D:/YandexDisk/Work/pymethspec'
-    local_2 = 'E:/YandexDisk/Work/pymethspec'
-    local_3 = 'C:/Users/User/YandexDisk/pymethspec'
-    cluster = '/common/home/' + getpass.getuser() + '/Work/data/pymethspec'
+    local_1 = 'D:/YandexDisk/Work/dna-methylation'
+    local_2 = 'E:/YandexDisk/Work/dna-methylation'
+    local_3 = 'C:/Users/User/YandexDisk/dna-methylation'
+    cluster = '/common/home/' + getpass.getuser() + '/Work/data/dna-methylation'
 
 
 class DataBase(Enum):
@@ -16,8 +16,8 @@ class DataBase(Enum):
     GSE61256 = 'GSE61256'
     GSE63347 = 'GSE63347'
     GSE87571 = 'GSE87571'
+    EPIC = 'EPIC'
     liver = 'liver'
-    data_base_versus = 'versus'
 
 
 class DataType(Enum):
@@ -26,4 +26,4 @@ class DataType(Enum):
     bop = 'bop'
     suppl = 'suppl'
     cache = 'cache'
-    versus = 'versus'
+    attributes = 'attributes'
