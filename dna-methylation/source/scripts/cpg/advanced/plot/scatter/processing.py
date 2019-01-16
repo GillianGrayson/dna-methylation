@@ -31,60 +31,96 @@ def add_cpg_scatter(config_from, config_to, cpg, color_id, plot_data):
     )
     plot_data.append(scatter)
 
-    if not bool(config_to.setup.params):
-        config_to.setup.params = {
-            'method': Method.linreg.value,
-            'details': 0
-        }
+    if config_to.setup.params['method'] == Method.linreg.value:
+        table = load_table_dict(config_from)
+        cpgs = table['id']
+        cpg_id = cpgs.index(cpg)
+        intercept = table['intercept'][cpg_id]
+        intercept_std = table['intercept_std'][cpg_id]
+        slope = table['slope'][cpg_id]
+        slope_std = table['slope_std'][cpg_id]
+        x_min = np.min(x)
+        x_max = np.max(x)
+        y_min = slope * x_min + intercept
+        y_max = slope * x_max + intercept
+        slope_tmp = slope + 3.0 * slope_std
+        y_tmp =  slope_tmp * x_max + intercept
+        y_diff = 3.0 * np.abs(intercept_std) + np.abs(y_tmp - y_max)
+        y_min_up = y_min + y_diff
+        y_min_down = y_min - y_diff
+        y_max_up = y_max + y_diff
+        y_max_down = y_max - y_diff
 
-    if config_to.setup.params['details'] > 0 and bool(config_from.setup.params):
-        if config_to.setup.params['method'] == Method.linreg.value:
-            table = load_table_dict(config_from)
-            cpgs = table['id']
-            cpg_id = cpgs.index(cpg)
-            intercept = table['intercept'][cpg_id]
-            intercept_std = table['intercept_std'][cpg_id]
-            slope = table['slope'][cpg_id]
-            slope_std = table['slope_std'][cpg_id]
-            x_min = np.min(x)
-            x_max = np.max(x)
-            y_min = slope * x_min + intercept
-            y_max = slope * x_max + intercept
-            slope_tmp = slope + 3.0 * slope_std
-            y_tmp =  slope_tmp * x_max + intercept
-            y_diff = 3.0 * np.abs(intercept_std) + np.abs(y_tmp - y_max)
-            y_min_up = y_min + y_diff
-            y_min_down = y_min - y_diff
-            y_max_up = y_max + y_diff
-            y_max_down = y_max - y_diff
+        if config_to.setup.params['details'] >= 1:
+            scatter = go.Scatter(
+                x=[x_min, x_max],
+                y=[y_min, y_max],
+                mode='lines',
+                marker=dict(
+                    color=cl.scales['8']['qual']['Set1'][color_id],
+                    line=dict(width=8)
+                ),
+                showlegend=False
+            )
+            plot_data.append(scatter)
 
-            if config_to.setup.params['details'] >= 1:
-                scatter = go.Scatter(
-                    x=[x_min, x_max],
-                    y=[y_min, y_max],
-                    mode='lines',
-                    marker=dict(
-                        color=cl.scales['8']['qual']['Set1'][color_id],
-                        line=dict(width=8)
-                    ),
-                    showlegend=False
-                )
-                plot_data.append(scatter)
+        if config_to.setup.params['details'] >= 2:
+            scatter = go.Scatter(
+                x=[x_min, x_max, x_max, x_min, x_min],
+                y=[y_min_down, y_max_down, y_max_up, y_min_up, y_min_down],
+                fill='tozerox',
+                mode='lines',
+                marker=dict(
+                    opacity=0.75,
+                    color=cl.scales['8']['qual']['Set1'][color_id],
+                    line=dict(width=4)
+                ),
+                showlegend=False
+            )
+            plot_data.append(scatter)
 
-            if config_to.setup.params['details'] >= 2:
-                scatter = go.Scatter(
-                    x=[x_min, x_max, x_max, x_min, x_min],
-                    y=[y_min_down, y_max_down, y_max_up, y_min_up, y_min_down],
-                    fill='tozerox',
-                    mode='lines',
-                    marker=dict(
-                        opacity=0.75,
-                        color=cl.scales['8']['qual']['Set1'][color_id],
-                        line=dict(width=4)
-                    ),
-                    showlegend=False
-                )
-                plot_data.append(scatter)
+    if config_to.setup.params['method'] == Method.variance_linreg.value:
+        table = load_table_dict(config_from)
+        cpgs = table['id']
+        cpg_id = cpgs.index(cpg)
+        intercept = table['intercept'][cpg_id]
+        slope = table['slope'][cpg_id]
+        intercept_var = table['intercept_var'][cpg_id]
+        slope_var = table['slope_var'][cpg_id]
+        x_min = np.min(x)
+        x_max = np.max(x)
+        y_min = slope * x_min + intercept
+        y_max = slope * x_max + intercept
+        y_min_var = slope_var * x_min + intercept_var
+        y_max_var = slope_var * x_max + intercept_var
+
+        if config_to.setup.params['details'] >= 1:
+            scatter = go.Scatter(
+                x=[x_min, x_max],
+                y=[y_min, y_max],
+                mode='lines',
+                marker=dict(
+                    color=cl.scales['8']['qual']['Set1'][color_id],
+                    line=dict(width=8)
+                ),
+                showlegend=False
+            )
+            plot_data.append(scatter)
+
+            scatter = go.Scatter(
+                x=[x_min, x_max, x_max, x_min, x_min],
+                y=[y_min - y_min_var, y_max - y_max_var, y_max + y_max_var, y_min + y_min_var, y_min - y_min_var],
+                fill='tozerox',
+                mode='lines',
+                marker=dict(
+                    opacity=0.75,
+                    color=cl.scales['8']['qual']['Set1'][color_id],
+                    line=dict(width=4)
+                ),
+                showlegend=False
+            )
+            plot_data.append(scatter)
+
 
 def plot_cpg_scatter(plot_data, cpg, config):
     genes = config.cpg_gene_dict[cpg]
@@ -164,11 +200,8 @@ data = Data(
 setup_from = Setup(
     experiment=Experiment.base,
     task=Task.table,
-    method=Method.linreg,
-    params={
-        'out_limit': 0.0,
-        'out_sigma': 0.0
-    }
+    method=Method.variance_linreg,
+    params={}
 )
 
 setup_to = Setup(
