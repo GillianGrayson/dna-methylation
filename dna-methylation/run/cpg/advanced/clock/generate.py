@@ -3,13 +3,8 @@ from lib.config.setup.setup import *
 from lib.config.annotations.annotations import *
 from lib.config.attributes.attributes import *
 from lib.config.config import *
-from lib.scripts.cpg.advanced.clock.linreg.processing import *
-from lib.setup.advanced.clock.clock import ClockExogType
+from lib.model.main import *
 
-
-def generate_clock(config_from, config_to):
-    if config_to.setup.method == Method.linreg:
-        generate_clock_linreg(config_from, config_to)
 
 target = 'age'
 
@@ -17,24 +12,22 @@ data = Data(
     name='cpg_beta',
     type=DataType.cpg,
     path='',
-    base='GSE40279'
+    base='GSE87571'
 )
 
-setup_from = Setup(
+setup_primary = Setup(
     experiment=Experiment.base,
     task=Task.table,
     method=Method.linreg,
-    params={
-        'out_limit': 0.0,
-        'out_sigma': 0.0
-    }
+    params={}
 )
 
-setup_to = Setup(
+setup = Setup(
     experiment=Experiment.advanced,
     task=Task.clock,
     method=Method.linreg,
     params={
+        'part': 0.25,
         'type': ClockExogType.all.value,
         'exogs': 100,
         'combs': 100,
@@ -55,9 +48,7 @@ annotations = Annotations(
 
 observables = Observables(
     file_name='observables',
-    types={
-        'gender': CommonTypes.any.value
-    }
+    types={}
 )
 
 cells = Cells(
@@ -68,7 +59,6 @@ cells = Cells(
 attributes = Attributes(
     observables=observables,
     cells=cells
-
 )
 
 obs_list = [
@@ -80,20 +70,20 @@ obs_list = [
 for obs in obs_list:
     attributes.observables.types = obs
 
-    config_from = Config(
+    config_primary = Config(
         data=data,
-        setup=setup_from,
+        setup=setup_primary,
         annotations=annotations,
         attributes=attributes,
         target=target
     )
 
-    config_to = Config(
+    config = Config(
         data=data,
-        setup=setup_to,
+        setup=setup,
         annotations=annotations,
         attributes=attributes,
         target=target
     )
 
-    generate_clock(config_from, config_to)
+    advanced_experiment(config, [config_primary])

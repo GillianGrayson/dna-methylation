@@ -17,7 +17,7 @@ data = Data(
 setup = Setup(
     experiment=Experiment.base,
     task=Task.table,
-    method=Method.linreg,
+    method=Method.variance_linreg,
     params={}
 )
 
@@ -66,4 +66,4 @@ for obs in obs_list:
         target=target
     )
 
-    run_dna_methylation_analysis(config)
+    base_experiment(config)
