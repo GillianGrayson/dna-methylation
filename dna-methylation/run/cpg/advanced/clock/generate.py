@@ -1,8 +1,3 @@
-from library.config.data.data import *
-from library.config.setup.setup import *
-from library.config.annotations.annotations import *
-from library.config.attributes.attributes import *
-from library.config.config import *
 from library.model.main import *
 
 

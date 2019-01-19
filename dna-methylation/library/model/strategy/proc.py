@@ -6,6 +6,8 @@ import numpy as np
 from sklearn.cluster import DBSCAN
 from library.setup.advanced.clock.clock import ClockExogType, Clock
 from library.setup.advanced.clock.linreg.processing import build_clock_linreg
+import plotly.graph_objs as go
+import colorlover as cl
 
 
 class ProcStrategy(metaclass=abc.ABCMeta):
@@ -14,7 +16,7 @@ class ProcStrategy(metaclass=abc.ABCMeta):
         self.get_strategy = get_strategy
 
     @abc.abstractmethod
-    def single_base(self, config, id):
+    def single_base(self, config, item):
         pass
 
     @abc.abstractmethod
@@ -27,6 +29,10 @@ class ProcStrategy(metaclass=abc.ABCMeta):
 
     @abc.abstractmethod
     def proc_advanced(self, config, configs_primary):
+        pass
+    
+    @abc.abstractmethod
+    def proc_plot(self, config, configs_primary):
         pass
 
 
@@ -120,10 +126,13 @@ class TableProcStrategy(ProcStrategy):
     def proc_advanced(self, config, configs_primary):
         pass
 
+    def proc_plot(self, config, configs_primary):
+        pass
+
 
 class ClockProcStrategy(ProcStrategy):
 
-    def single_base(self, config, id):
+    def single_base(self, config, item):
         pass
 
     def iterate_base(self, config):
@@ -133,10 +142,8 @@ class ClockProcStrategy(ProcStrategy):
         pass
 
     def proc_advanced(self, config, configs_primary):
-        if config.setup.task is Task.table:
-            self.iterate_base(config)
 
-        elif config.setup.task is Task.clock:
+        if config.setup.method is Method.linreg:
 
             items = config.experiment_data['items']
             values = config.experiment_data['values']
@@ -231,3 +238,168 @@ class ClockProcStrategy(ProcStrategy):
                                   num_bootstrap_runs=runs)
 
                     build_clock_linreg(clock)
+
+    def proc_plot(self, config, configs_primary):
+        pass
+
+
+class MethylationProcStrategy(ProcStrategy):
+
+    def single_base(self, config, item):
+
+        plot_data = []
+
+        target = self.get_strategy.get_target(config)
+        methylation = self.get_strategy.get_single_base(config, [item])[0]
+
+        scatter = go.Scatter(
+            x=target,
+            y=methylation,
+            name='_'.join([key + '(' + value + ')' for key, value in config.attributes.observables.types.items()]),
+            mode='markers',
+            marker=dict(
+                opacity=0.75,
+                size=15,
+                color=cl.scales['8']['qual']['Set1'][config.plot_data['color_id']],
+                line=dict(width=2)
+            ),
+        )
+        plot_data.append(scatter)
+
+        if config.setup.method is Method.linreg:
+
+            target = self.get_strategy.get_target(config)
+            x = sm.add_constant(target)
+            y = self.get_strategy.get_single_base(config, [item])[0]
+
+            results = sm.OLS(y, x).fit()
+
+            intercept = results.params[0]
+            slope = results.params[1]
+            intercept_std = results.bse[0]
+            slope_std = results.bse[1]
+
+            x_min = np.min(target)
+            x_max = np.max(target)
+            y_min = slope * x_min + intercept
+            y_max = slope * x_max + intercept
+            slope_tmp = slope + 3.0 * slope_std
+            y_tmp = slope_tmp * x_max + intercept
+            y_diff = 3.0 * np.abs(intercept_std) + np.abs(y_tmp - y_max)
+            y_min_up = y_min + y_diff
+            y_min_down = y_min - y_diff
+            y_max_up = y_max + y_diff
+            y_max_down = y_max - y_diff
+
+            scatter = go.Scatter(
+                x=[x_min, x_max],
+                y=[y_min, y_max],
+                mode='lines',
+                marker=dict(
+                    color=cl.scales['8']['qual']['Set1'][config.plot_data['color_id']],
+                    line=dict(width=8)
+                ),
+                showlegend=False
+            )
+            plot_data.append(scatter)
+
+            scatter = go.Scatter(
+                x=[x_min, x_max, x_max, x_min, x_min],
+                y=[y_min_down, y_max_down, y_max_up, y_min_up, y_min_down],
+                fill='tozerox',
+                mode='lines',
+                marker=dict(
+                    opacity=0.75,
+                    color=cl.scales['8']['qual']['Set1'][config.plot_data['color_id']],
+                    line=dict(width=8)
+                ),
+                showlegend=False
+            )
+            plot_data.append(scatter)
+
+        elif config.setup.method is Method.variance_linreg:
+
+            target = self.get_strategy.get_target(config)
+            x = sm.add_constant(target)
+            y = self.get_strategy.get_single_base(config, [item])[0]
+
+            results = sm.OLS(y, x).fit()
+
+            intercept = results.params[0]
+            slope = results.params[1]
+
+            diffs = []
+            for p_id in range(0, len(target)):
+                curr_x = target[p_id]
+                curr_y = y[p_id]
+                pred_y = slope * curr_x + intercept
+                diffs.append(abs(pred_y - curr_y))
+
+            results_var = sm.OLS(diffs, x).fit()
+
+            intercept_var = results_var.params[0]
+            slope_var = results_var.params[1]
+
+            x_min = np.min(target)
+            x_max = np.max(target)
+            y_min = slope * x_min + intercept
+            y_max = slope * x_max + intercept
+            y_min_var = slope_var * x_min + intercept_var
+            y_max_var = slope_var * x_max + intercept_var
+
+            scatter = go.Scatter(
+                x=[x_min, x_max],
+                y=[y_min, y_max],
+                mode='lines',
+                marker=dict(
+                    color=cl.scales['8']['qual']['Set1'][config.plot_data['color_id']],
+                    line=dict(width=8)
+                ),
+                showlegend=False
+            )
+            plot_data.append(scatter)
+
+            scatter = go.Scatter(
+                x=[x_min, x_max, x_max, x_min, x_min],
+                y=[y_min - y_min_var, y_max - y_max_var, y_max + y_max_var, y_min + y_min_var, y_min - y_min_var],
+                fill='tozerox',
+                mode='lines',
+                marker=dict(
+                    opacity=0.75,
+                    color=cl.scales['8']['qual']['Set1'][config.plot_data['color_id']],
+                    line=dict(width=4)
+                ),
+                showlegend=False
+            )
+            plot_data.append(scatter)
+
+
+        elif config.setup.method is Method.cluster:
+
+            pass
+
+        return plot_data
+
+    def iterate_base(self, config):
+        pass
+
+    def proc_base(self, config):
+        pass
+
+    def proc_advanced(self, config, configs_primary):
+        pass
+
+    def proc_plot(self, config, configs_primary):
+
+        if config.setup.method is Method.scatter:
+
+            item = config.setup.params['item']
+            plot_data = []
+            for config_primary in configs_primary:
+                config_primary.plot_data = {
+                    'color_id': configs_primary.index(config_primary)
+                }
+                curr_plot_data = self.single_base(config_primary, item)
+                plot_data += curr_plot_data
+
+            config.plot_data['data'] = plot_data

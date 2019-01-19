@@ -11,7 +11,11 @@ class LoadStrategy(metaclass=abc.ABCMeta):
         pass
 
     @abc.abstractmethod
-    def load_advanced(self, config):
+    def load_advanced(self, config, configs_primary):
+        pass
+
+    @abc.abstractmethod
+    def load_plot(self, config, configs_primary):
         pass
 
     @abc.abstractmethod
@@ -27,9 +31,24 @@ class CPGLoadStrategy(LoadStrategy):
         config.base_dict = config.cpg_dict
         config.base_data = config.cpg_data
 
-    def load_advanced(self, config):
-        if config.setup.task is Task.table:
-            config.advanced_data = load_table_dict(config)
+    def load_advanced(self, config, configs_primary):
+        self.load_base(config)
+        for config_primary in configs_primary:
+            self.inherit_base(config, config_primary)
+
+            if config.setup.task is Task.table:
+
+                config_primary.advanced_data = load_table_dict(config_primary)
+
+    def load_plot(self, config, configs_primary):
+        self.load_base(config)
+        for config_primary in configs_primary:
+            self.inherit_base(config, config_primary)
+
+        config.plot_data = {
+            'data': [],
+            'fig': []
+        }
 
     def inherit_base(self, config_source, config_target):
         config_target.base_list = config_source.base_list

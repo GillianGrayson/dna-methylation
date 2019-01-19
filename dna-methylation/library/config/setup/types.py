@@ -11,8 +11,8 @@ class Experiment(Enum):
 class Task(Enum):
     table = 'table'
     clock = 'clock'
-    attributes = 'attributes'
-    betas = 'betas'
+    observables = 'observables'
+    methylation = 'methylation'
 
 
 class Method(Enum):
@@ -115,6 +115,13 @@ def get_default_params(setup):
                 'exogs': 100,
                 'combs': 100,
                 'runs': 100,
+            }
+
+    elif setup.task is Task.observables:
+
+        if setup.method is Method.scatter:
+            params = {
+                'item': 'cg01620164',
             }
 
     return params

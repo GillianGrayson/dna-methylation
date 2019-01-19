@@ -1,6 +1,5 @@
 import abc
 from library.config.setup.types import *
-import numpy as np
 import math
 
 
@@ -14,19 +13,13 @@ class SetupStrategy(metaclass=abc.ABCMeta):
         pass
 
     @abc.abstractmethod
-    def setup_advanced(self, config, base_configs):
+    def setup_advanced(self, config, configs_primary):
         pass
 
     @abc.abstractmethod
-    def setup_params(self, config):
+    def setup_plot(self, config, configs_primary):
         pass
 
-    @abc.abstractmethod
-    def setup_metrics(self, config):
-        pass
-
-
-class TableSetUpStrategy(SetupStrategy):
 
     def setup_params(self, config):
         if not bool(config.setup.params):
@@ -36,26 +29,23 @@ class TableSetUpStrategy(SetupStrategy):
         config.metrics = {}
         for key in get_metrics_keys(config.setup):
             config.metrics[key] = []
+
+
+class TableSetUpStrategy(SetupStrategy):
 
     def setup_base(self, config):
         self.setup_params(config)
         self.setup_metrics(config)
         config.experiment_data = config.base_data
 
-    def setup_advanced(self, config, base_configs):
+    def setup_advanced(self, config, configs_primary):
+        pass
+
+    def setup_plot(self, config, configs_primary):
         pass
 
 
 class ClockSetUpStrategy(SetupStrategy):
-
-    def setup_params(self, config):
-        if not bool(config.setup.params):
-            config.setup.params = get_default_params(config.setup)
-
-    def setup_metrics(self, config):
-        config.metrics = {}
-        for key in get_metrics_keys(config.setup):
-            config.metrics[key] = []
 
     def setup_base(self, config):
         pass
@@ -80,3 +70,19 @@ class ClockSetUpStrategy(SetupStrategy):
             'train_size': train_size
         }
 
+    def setup_plot(self, config, configs_primary):
+        pass
+
+
+class MethylationSetUpStrategy(SetupStrategy):
+
+    def setup_base(self, config):
+        pass
+
+    def setup_advanced(self, config, configs_primary):
+        pass
+
+    def setup_plot(self, config, configs_primary):
+        self.setup_params(config)
+        self.setup_metrics(config)
+        config.experiment_data = config.base_data
