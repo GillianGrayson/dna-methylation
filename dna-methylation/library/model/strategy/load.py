@@ -54,3 +54,21 @@ class CPGLoadStrategy(LoadStrategy):
         config_target.base_list = config_source.base_list
         config_target.base_dict = config_source.base_dict
         config_target.base_data = config_source.base_data
+
+
+class AttributesLoadStrategy(LoadStrategy):
+
+    def load_base(self, config):
+        pass
+
+    def load_advanced(self, config, configs_primary):
+        pass
+
+    def load_plot(self, config, configs_primary):
+        config.plot_data = {
+            'data': [],
+            'fig': []
+        }
+
+    def inherit_base(self, config_source, config_target):
+        pass

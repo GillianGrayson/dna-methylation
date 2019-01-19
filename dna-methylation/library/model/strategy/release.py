@@ -125,3 +125,71 @@ class MethylationReleaseStrategy(ReleaseStrategy):
 
             )
             config.plot_data['fig'] = go.Figure(data=config.plot_data['data'], layout=layout)
+
+
+class ObservablesReleaseStrategy(ReleaseStrategy):
+
+    def release_base(self, config):
+        pass
+
+    def release_advanced(self, config, configs_primary):
+        pass
+
+    def release_plot(self, config, configs_primary):
+
+        if config.setup.method is Method.histogram:
+            layout = go.Layout(
+                autosize=True,
+                barmode='overlay',
+                legend=dict(
+                    font=dict(
+                        family='sans-serif',
+                        size=16,
+                    ),
+                    orientation="h",
+                    x=0,
+                    y=1.15,
+                ),
+                xaxis=dict(
+                    title=config.target,
+                    showgrid=True,
+                    showline=True,
+                    mirror='ticks',
+                    titlefont=dict(
+                        family='Arial, sans-serif',
+                        size=24,
+                        color='black'
+                    ),
+                    showticklabels=True,
+                    tickangle=0,
+                    tickfont=dict(
+                        family='Old Standard TT, serif',
+                        size=20,
+                        color='black'
+                    ),
+                    exponentformat='e',
+                    showexponent='all'
+                ),
+                yaxis=dict(
+                    title='count',
+                    showgrid=True,
+                    showline=True,
+                    mirror='ticks',
+                    titlefont=dict(
+                        family='Arial, sans-serif',
+                        size=24,
+                        color='black'
+                    ),
+                    showticklabels=True,
+                    tickangle=0,
+                    tickfont=dict(
+                        family='Old Standard TT, serif',
+                        size=20,
+                        color='black'
+                    ),
+                    exponentformat='e',
+                    showexponent='all'
+                ),
+
+            )
+            config.plot_data['fig'] = go.Figure(data=config.plot_data['data'], layout=layout)

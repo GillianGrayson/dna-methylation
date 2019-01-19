@@ -86,3 +86,17 @@ class MethylationSetUpStrategy(SetupStrategy):
         self.setup_params(config)
         self.setup_metrics(config)
         config.experiment_data = config.base_data
+
+
+class ObservablesSetUpStrategy(SetupStrategy):
+
+    def setup_base(self, config):
+        pass
+
+    def setup_advanced(self, config, configs_primary):
+        pass
+
+    def setup_plot(self, config, configs_primary):
+        self.setup_params(config)
+        self.setup_metrics(config)
+        config.experiment_data = []

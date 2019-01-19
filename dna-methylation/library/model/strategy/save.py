@@ -52,3 +52,15 @@ class MethylationSaveStrategy(SaveStrategy):
 
     def save_plot(self, config, configs_primary):
         save_figure(config, config.plot_data['fig'])
+
+
+class ObservablesSaveStrategy(SaveStrategy):
+
+    def save_base(self, config):
+        pass
+
+    def save_advanced(self, config, configs_primary):
+        pass
+
+    def save_plot(self, config, configs_primary):
+        save_figure(config, config.plot_data['fig'])

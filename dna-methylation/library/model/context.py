@@ -13,9 +13,13 @@ class Context:
 
         if config.data.type == DataType.cpg:
             self.load_strategy = CPGLoadStrategy()
+        elif config.data.type == DataType.attributes:
+            self.load_strategy = AttributesLoadStrategy()
 
         if config.data.type == DataType.cpg:
             self.get_strategy = CPGGetStrategy()
+        elif config.data.type == DataType.attributes:
+            self.get_strategy = AttributesGetStrategy()
 
         if config.setup.task == Task.table:
             self.setup_strategy = TableSetUpStrategy(self.get_strategy)
@@ -23,6 +27,8 @@ class Context:
             self.setup_strategy = ClockSetUpStrategy(self.get_strategy)
         elif config.setup.task == Task.methylation:
             self.setup_strategy = MethylationSetUpStrategy(self.get_strategy)
+        elif config.setup.task == Task.observables:
+            self.setup_strategy = ObservablesSetUpStrategy(self.get_strategy)
 
         if config.setup.task == Task.table:
             self.proc_strategy = TableProcStrategy(self.get_strategy)
@@ -30,6 +36,8 @@ class Context:
             self.proc_strategy = ClockProcStrategy(self.get_strategy)
         elif config.setup.task == Task.methylation:
             self.proc_strategy = MethylationProcStrategy(self.get_strategy)
+        elif config.setup.task == Task.observables:
+            self.proc_strategy = ObservablesProcStrategy(self.get_strategy)
 
         if config.setup.task == Task.table:
             self.release_strategy = TableReleaseStrategy()
@@ -37,6 +45,8 @@ class Context:
             self.release_strategy = ClockReleaseStrategy()
         elif config.setup.task == Task.methylation:
             self.release_strategy = MethylationReleaseStrategy()
+        elif config.setup.task == Task.observables:
+            self.release_strategy = ObservablesReleaseStrategy()
 
         if config.setup.task == Task.table:
             self.save_strategy = TableSaveStrategy()
@@ -44,6 +54,8 @@ class Context:
             self.save_strategy = ClockSaveStrategy()
         elif config.setup.task == Task.methylation:
             self.save_strategy = MethylationSaveStrategy()
+        elif config.setup.task == Task.observables:
+            self.save_strategy = ObservablesSaveStrategy()
 
     def base_pipeline(self, config):
         self.load_strategy.load_base(config)

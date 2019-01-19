@@ -1,5 +1,4 @@
 import abc
-from library.config.setup.types import *
 import numpy as np
 
 
@@ -22,3 +21,9 @@ class CPGGetStrategy(GetStrategy):
     def get_single_base(self, config, items):
         rows = [config.base_dict[item] for item in items]
         return config.base_data[np.ix_(rows, config.attributes_indexes)]
+
+
+class AttributesGetStrategy(GetStrategy):
+
+    def get_single_base(self, config, items):
+        pass

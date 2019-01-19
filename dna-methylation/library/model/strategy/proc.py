@@ -403,3 +403,55 @@ class MethylationProcStrategy(ProcStrategy):
                 plot_data += curr_plot_data
 
             config.plot_data['data'] = plot_data
+
+
+class ObservablesProcStrategy(ProcStrategy):
+
+    def single_base(self, config, item):
+
+        plot_data = []
+
+        target = self.get_strategy.get_target(config)
+
+        if config.setup.method is Method.histogram:
+
+            histogram = go.Histogram(
+                x=target,
+                name='_'.join([key + '(' + value + ')' for key, value in config.attributes.observables.types.items()]),
+                xbins=dict(
+                    start=min(target) - 0.5,
+                    end=max(target) + 0.5,
+                    size=1.0
+                ),
+                marker=dict(
+                    opacity=0.75,
+                    color=cl.scales['8']['qual']['Set1'][config.plot_data['color_id']]
+                )
+            )
+            plot_data.append(histogram)
+
+        return plot_data
+
+    def iterate_base(self, config):
+        pass
+
+    def proc_base(self, config):
+        pass
+
+    def proc_advanced(self, config, configs_primary):
+        pass
+
+    def proc_plot(self, config, configs_primary):
+
+        if config.setup.method is Method.histogram:
+
+            plot_data = []
+            for config_primary in configs_primary:
+                config_primary.plot_data = {
+                    'color_id': configs_primary.index(config_primary)
+                }
+                curr_plot_data = self.single_base(config_primary, [])
+                plot_data += curr_plot_data
+
+            config.plot_data['data'] = plot_data
+
