@@ -1,5 +1,5 @@
 from enum import Enum
-from lib.setup.advanced.clock.clock import ClockExogType
+from library.setup.advanced.clock.clock import ClockExogType
 
 
 class Experiment(Enum):

@@ -1,4 +1,4 @@
-from lib.infrastucture.path import *
+from library.infrastucture.path import *
 import pandas as pd
 import csv
 

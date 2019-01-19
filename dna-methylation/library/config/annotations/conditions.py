@@ -1,5 +1,5 @@
-from lib.config.annotations.types import *
-from lib.config.common import CommonTypes
+from library.config.annotations.types import *
+from library.config.common import CommonTypes
 
 
 def exclude_condition(config, annotations_dict):

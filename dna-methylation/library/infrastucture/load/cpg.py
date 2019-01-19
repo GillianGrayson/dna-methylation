@@ -1,4 +1,4 @@
-from lib.infrastucture.path import *
+from library.infrastucture.path import *
 import numpy as np
 import os.path
 import pickle
@@ -12,7 +12,7 @@ def get_line_list(line):
 
 
 def load_cpg(config):
-    fn_dict = get_data_base_path(config) + '/' + 'cpg_row_dict.pkl'
+    fn_dict = get_data_base_path(config) + '/' + 'cpg_dict.pkl'
     fn_data = get_data_base_path(config) + '/' + config.data.name
     fn_txt = fn_data + '.txt'
     fn_npz = fn_data + '.npz'

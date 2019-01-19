@@ -1,9 +1,9 @@
-from lib.model.strategy.load import *
-from lib.model.strategy.get import *
-from lib.model.strategy.setup import *
-from lib.model.strategy.proc import *
-from lib.model.strategy.release import *
-from lib.model.strategy.save import *
+from library.model.strategy.load import *
+from library.model.strategy.get import *
+from library.model.strategy.setup import *
+from library.model.strategy.proc import *
+from library.model.strategy.release import *
+from library.model.strategy.save import *
 
 
 class Context:
@@ -18,9 +18,9 @@ class Context:
             self.get_strategy = CPGGetStrategy()
 
         if config.setup.task == Task.table:
-            self.setup_strategy = TableSetUpStrategy()
+            self.setup_strategy = TableSetUpStrategy(self.get_strategy)
         elif config.setup.task == Task.clock:
-            self.setup_strategy = ClockSetUpStrategy()
+            self.setup_strategy = ClockSetUpStrategy(self.get_strategy)
 
         if config.setup.task == Task.table:
             self.proc_strategy = TableProcStrategy(self.get_strategy)
@@ -47,18 +47,10 @@ class Context:
     def advanced_pipeline(self, config, configs_primary):
         self.load_strategy.load_base(config)
         for config_primary in configs_primary:
+            self.load_strategy.inherit_base(config, config_primary)
             self.load_strategy.load_advanced(config_primary)
         self.setup_strategy.setup_advanced(config, configs_primary)
-        self.proc_strategy.proc_base(config)
-        self.release_strategy.release(config)
-        self.save_strategy.save(config)
-
-    def plot_pipeline(self, config, configs_primary):
-        self.load_strategy.load_base(config)
-        for config_primary in configs_primary:
-            self.load_strategy.load_advanced(config_primary)
-        self.setup_strategy.setup_advanced(config, configs_primary)
-        self.proc_strategy.proc_base(config)
+        self.proc_strategy.proc_advanced(config, configs_primary)
         self.release_strategy.release(config)
         self.save_strategy.save(config)
 

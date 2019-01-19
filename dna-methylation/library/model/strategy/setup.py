@@ -1,5 +1,5 @@
 import abc
-from lib.config.setup.types import *
+from library.config.setup.types import *
 import numpy as np
 import math
 
@@ -70,17 +70,11 @@ class ClockSetUpStrategy(SetupStrategy):
 
         # In clock task only first base config matters
         table = configs_primary[0].advanced_data
-        ids = table['item'][0:max_size]
-        values = np.zeros((max_size, max_size))
-        for i in range(0, max_size):
-            id = ids[i]
-            row_values = self.get_strategy.get_single_base(config, [id])
-            row_id = config.base_dict[id]
-            row_values = config.base_data[row_id]
-            values[i] = row_values
+        items = table['item'][0:max_size]
+        values = self.get_strategy.get_single_base(config, items)
 
         config.experiment_data = {
-            'ids': ids,
+            'items': items,
             'values': values,
             'test_size': test_size,
             'train_size': train_size

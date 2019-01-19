@@ -1,5 +1,5 @@
 import os.path
-from lib.config.data.types import *
+from library.config.data.types import *
 
 
 def get_data_base_path(config):

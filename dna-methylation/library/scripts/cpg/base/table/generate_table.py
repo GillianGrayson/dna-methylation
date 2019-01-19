@@ -1,11 +1,11 @@
-from lib.config.data.data import *
-from lib.config.setup.setup import *
-from lib.config.annotations.annotations import *
-from lib.config.attributes.attributes import *
-from lib.config.config import *
-from lib.scripts.cpg.base.table.linreg.processing import *
-from lib.scripts.cpg.base.table.cluster.processing import *
-from lib.scripts.cpg.base.table.variance_linreg.processing import *
+from library.config.data.data import *
+from library.config.setup.setup import *
+from library.config.annotations.annotations import *
+from library.config.attributes.attributes import *
+from library.config.config import *
+from library.scripts.cpg.base.table.linreg.processing import *
+from library.scripts.cpg.base.table.cluster.processing import *
+from library.scripts.cpg.base.table.variance_linreg.processing import *
 
 
 def generate_table(config):

@@ -1,7 +1,7 @@
 import abc
-from lib.config.setup.types import *
-from lib.infrastucture.load.cpg import *
-from lib.infrastucture.load.table import *
+from library.config.setup.types import *
+from library.infrastucture.load.cpg import *
+from library.infrastucture.load.table import *
 
 
 class LoadStrategy(metaclass=abc.ABCMeta):
@@ -14,6 +14,9 @@ class LoadStrategy(metaclass=abc.ABCMeta):
     def load_advanced(self, config):
         pass
 
+    @abc.abstractmethod
+    def inherit_base(self, source_config, target_config):
+        pass
 
 
 class CPGLoadStrategy(LoadStrategy):
@@ -28,3 +31,7 @@ class CPGLoadStrategy(LoadStrategy):
         if config.setup.task is Task.table:
             config.advanced_data = load_table_dict(config)
 
+    def inherit_base(self, config_source, config_target):
+        config_target.base_list = config_source.base_list
+        config_target.base_dict = config_source.base_dict
+        config_target.base_data = config_source.base_data

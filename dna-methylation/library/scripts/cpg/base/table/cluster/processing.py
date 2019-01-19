@@ -1,5 +1,5 @@
-from lib.infrastucture.load.cpg import *
-from lib.infrastucture.save.table import *
+from library.infrastucture.load.cpg import *
+from library.infrastucture.save.table import *
 from sklearn.cluster import DBSCAN
 
 

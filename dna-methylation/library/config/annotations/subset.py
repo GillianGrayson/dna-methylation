@@ -1,5 +1,5 @@
-from lib.infrastucture.path import *
-from lib.config.annotations.conditions import *
+from library.infrastucture.path import *
+from library.config.annotations.conditions import *
 import os.path
 import pickle
 import numpy as np

@@ -1,4 +1,4 @@
-from lib.config.setup.types import *
+from library.config.setup.types import *
 
 
 """

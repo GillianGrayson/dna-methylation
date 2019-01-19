@@ -1,4 +1,4 @@
-from lib.config.data.types import *
+from library.config.data.types import *
 import socket
 import os
 

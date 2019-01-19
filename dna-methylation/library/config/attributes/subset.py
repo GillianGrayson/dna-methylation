@@ -1,4 +1,4 @@
-from lib.config.common import CommonTypes
+from library.config.common import CommonTypes
 import numpy as np
 
 

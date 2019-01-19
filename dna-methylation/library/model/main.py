@@ -1,4 +1,4 @@
-from lib.model.context import *
+from library.model.context import *
 
 def base_experiment(config):
     context = Context(config)

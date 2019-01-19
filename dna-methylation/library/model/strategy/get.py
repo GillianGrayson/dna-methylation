@@ -1,12 +1,12 @@
 import abc
-from lib.config.setup.types import *
+from library.config.setup.types import *
 import numpy as np
 
 
 class GetStrategy(metaclass=abc.ABCMeta):
 
     @abc.abstractmethod
-    def get_single_base(self, config, ids):
+    def get_single_base(self, config, items):
         pass
 
     def get_target(self, config, normed=False):
@@ -19,8 +19,6 @@ class GetStrategy(metaclass=abc.ABCMeta):
 
 class CPGGetStrategy(GetStrategy):
 
-    def get_single_base(self, config, ids):
-
-        if config.setup.task is Task.table:
-            rows = [config.base_dict[id] for id in ids]
-            return config.base_data[np.ix_(config.attributes_indexes), rows]
+    def get_single_base(self, config, items):
+        rows = [config.base_dict[item] for item in items]
+        return config.base_data[np.ix_(rows, config.attributes_indexes)]

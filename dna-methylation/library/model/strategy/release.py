@@ -1,6 +1,6 @@
 import abc
 import numpy as np
-from lib.config.setup.types import *
+from library.config.setup.types import *
 
 class ReleaseStrategy(metaclass=abc.ABCMeta):
 

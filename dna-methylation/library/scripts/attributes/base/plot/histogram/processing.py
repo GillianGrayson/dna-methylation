@@ -1,6 +1,6 @@
 import plotly.graph_objs as go
 import colorlover as cl
-from lib.infrastucture.save.figure import *
+from library.infrastucture.save.figure import *
 
 
 def add_attributes_histogram(config, plot_data):

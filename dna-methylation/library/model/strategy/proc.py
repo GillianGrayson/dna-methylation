@@ -1,11 +1,11 @@
 import abc
-from lib.config.setup.types import *
-from lib.config.data.types import *
+from library.config.setup.types import *
+from library.config.data.types import *
 import statsmodels.api as sm
 import numpy as np
 from sklearn.cluster import DBSCAN
-from lib.setup.advanced.clock.clock import ClockExogType, Clock
-from lib.setup.advanced.clock.linreg.processing import build_clock_linreg
+from library.setup.advanced.clock.clock import ClockExogType, Clock
+from library.setup.advanced.clock.linreg.processing import build_clock_linreg
 
 
 class ProcStrategy(metaclass=abc.ABCMeta):
@@ -25,6 +25,11 @@ class ProcStrategy(metaclass=abc.ABCMeta):
     def proc_base(self, config):
         pass
 
+    @abc.abstractmethod
+    def proc_advanced(self, config, configs_primary):
+        pass
+
+
 class TableProcStrategy(ProcStrategy):
 
     def single_base(self, config, item):
@@ -33,7 +38,7 @@ class TableProcStrategy(ProcStrategy):
 
             target = self.get_strategy.get_target(config)
             x = sm.add_constant(target)
-            y = self.get_strategy.get_single_base(config, [item])
+            y = self.get_strategy.get_single_base(config, [item])[0]
 
             results = sm.OLS(y, x).fit()
 
@@ -51,7 +56,7 @@ class TableProcStrategy(ProcStrategy):
 
             target = self.get_strategy.get_target(config)
             x = sm.add_constant(target)
-            y = self.get_strategy.get_single_base(config, [item])
+            y = self.get_strategy.get_single_base(config, [item])[0]
 
             results = sm.OLS(y, x).fit()
 
@@ -85,7 +90,7 @@ class TableProcStrategy(ProcStrategy):
         elif config.setup.method is Method.cluster:
 
             x = self.get_strategy.get_target(config, True)
-            y = self.get_strategy.get_single_base(config, [item])
+            y = self.get_strategy.get_single_base(config, [item])[0]
 
             X = np.array([x, y]).T
             db = DBSCAN(eps=config.setup.params['eps'], min_samples=config.setup.params['min_samples']).fit(X)
@@ -112,6 +117,9 @@ class TableProcStrategy(ProcStrategy):
         if config.setup.task is Task.table:
             self.iterate_base(config)
 
+    def proc_advanced(self, config, configs_primary):
+        pass
+
 
 class ClockProcStrategy(ProcStrategy):
 
@@ -122,13 +130,15 @@ class ClockProcStrategy(ProcStrategy):
         pass
 
     def proc_base(self, config):
+        pass
 
+    def proc_advanced(self, config, configs_primary):
         if config.setup.task is Task.table:
             self.iterate_base(config)
 
         elif config.setup.task is Task.clock:
 
-            ids = config.experiment_data['ids']
+            items = config.experiment_data['items']
             values = config.experiment_data['values']
             test_size = config.experiment_data['test_size']
             train_size = config.experiment_data['train_size']
@@ -144,14 +154,14 @@ class ClockProcStrategy(ProcStrategy):
 
                 for exog_id in range(0, exogs):
 
-                    config.metrics['id'].append(ids[exog_id])
-                    config.metrics['aux'].append(';'.join(config.cpg_gene_dict[ids[exog_id]]))
+                    config.metrics['item'].append(items[exog_id])
+                    config.metrics['aux'].append(';'.join(config.cpg_gene_dict[items[exog_id]]))
                     config.metrics['count'].append(exog_id + 1)
 
                     clock = Clock(endog_data=target,
                                   endog_names=config.target,
                                   exog_data=values[0:exog_id + 1],
-                                  exog_names=ids[0:exog_id + 1],
+                                  exog_names=items[0:exog_id + 1],
                                   metrics_dict=config.metrics,
                                   train_size=train_size,
                                   test_size=test_size,
@@ -172,7 +182,7 @@ class ClockProcStrategy(ProcStrategy):
                     clock = Clock(endog_data=target,
                                   endog_names=config.target,
                                   exog_data=values[0:exogs + 1],
-                                  exog_names=ids[0:exogs + 1],
+                                  exog_names=items[0:exogs + 1],
                                   metrics_dict=config.metrics,
                                   train_size=train_size,
                                   test_size=test_size,
@@ -191,7 +201,7 @@ class ClockProcStrategy(ProcStrategy):
                 clock = Clock(endog_data=target,
                               endog_names=config.target,
                               exog_data=values[0:exogs],
-                              exog_names=ids[0:exogs],
+                              exog_names=items[0:exogs],
                               metrics_dict=config.metrics,
                               train_size=train_size,
                               test_size=test_size,
@@ -211,7 +221,7 @@ class ClockProcStrategy(ProcStrategy):
 
                     clock = Clock(endog_data=target,
                                   endog_names=config.target,
-                                  exog_data=ids[exog_id: exog_id + combs],
+                                  exog_data=items[exog_id: exog_id + combs],
                                   exog_names=values[exog_id: exog_id + combs],
                                   metrics_dict=config.metrics,
                                   train_size=train_size,

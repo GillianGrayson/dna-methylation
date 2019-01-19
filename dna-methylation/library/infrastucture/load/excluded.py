@@ -1,6 +1,6 @@
-from lib.infrastucture.path import *
-from lib.config.annotations.types import *
-from lib.config.common import CommonTypes
+from library.infrastucture.path import *
+from library.config.annotations.types import *
+from library.config.common import CommonTypes
 import os.path
 import pickle
 

@@ -1,9 +1,9 @@
-from lib.infrastucture.load.table import *
-from lib.infrastucture.save.table import *
-from lib.infrastucture.load.cpg import *
+from library.infrastucture.load.table import *
+from library.infrastucture.save.table import *
+from library.infrastucture.load.cpg import *
 import math
-from lib.setup.advanced.clock.clock import ClockExogType, Clock
-from lib.setup.advanced.clock.linreg.processing import build_clock_linreg
+from library.setup.advanced.clock.clock import ClockExogType, Clock
+from library.setup.advanced.clock.linreg.processing import build_clock_linreg
 
 
 def generate_clock_linreg(config_from, config_to):

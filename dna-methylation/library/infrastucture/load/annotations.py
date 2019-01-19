@@ -1,5 +1,5 @@
-from lib.infrastucture.path import *
-from lib.config.annotations.types import *
+from library.infrastucture.path import *
+from library.config.annotations.types import *
 import os.path
 import pickle
 

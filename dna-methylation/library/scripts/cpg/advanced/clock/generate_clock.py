@@ -1,10 +1,10 @@
-from lib.config.data.data import *
-from lib.config.setup.setup import *
-from lib.config.annotations.annotations import *
-from lib.config.attributes.attributes import *
-from lib.config.config import *
-from lib.scripts.cpg.advanced.clock.linreg.processing import *
-from lib.setup.advanced.clock.clock import ClockExogType
+from library.config.data.data import *
+from library.config.setup.setup import *
+from library.config.annotations.annotations import *
+from library.config.attributes.attributes import *
+from library.config.config import *
+from library.scripts.cpg.advanced.clock.linreg.processing import *
+from library.setup.advanced.clock.clock import ClockExogType
 
 
 def generate_clock(config_from, config_to):

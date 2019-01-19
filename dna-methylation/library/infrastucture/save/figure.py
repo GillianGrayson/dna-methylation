@@ -1,6 +1,6 @@
 import plotly
 import plotly.io as pio
-from lib.infrastucture.path import *
+from library.infrastucture.path import *
 
 
 def save_figure(config, fig, prefix=''):

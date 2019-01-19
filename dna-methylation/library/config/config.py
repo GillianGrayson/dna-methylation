@@ -1,8 +1,8 @@
-from lib.infrastucture.load.annotations import *
-from lib.infrastucture.load.excluded import *
-from lib.infrastucture.load.attributes import *
-from lib.config.annotations.subset import *
-from lib.config.attributes.subset import *
+from library.infrastucture.load.annotations import *
+from library.infrastucture.load.excluded import *
+from library.infrastucture.load.attributes import *
+from library.config.annotations.subset import *
+from library.config.attributes.subset import *
 
 
 class Config:
