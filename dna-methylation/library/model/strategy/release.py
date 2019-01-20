@@ -32,7 +32,7 @@ class TableReleaseStrategy(ReleaseStrategy):
             config.metrics[key] = list(np.array(value)[order])
 
     def release_advanced(self, config, configs_primary):
-        pass
+        self.release_base(config)
 
     def release_plot(self, config, configs_primary):
         pass

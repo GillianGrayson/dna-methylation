@@ -39,7 +39,16 @@ class TableSetUpStrategy(SetupStrategy):
         config.experiment_data = config.base_data
 
     def setup_advanced(self, config, configs_primary):
-        pass
+        self.setup_params(config)
+        self.setup_metrics(config)
+        for config_primary in configs_primary:
+            metrics_keys = get_metrics_keys(config.setup)
+            metrics_keys_primary = get_metrics_keys(config_primary.setup)
+            for key in metrics_keys_primary:
+                if key not in metrics_keys:
+                    key_primary =  key + '_' +'_'.join([key + '(' + value + ')' for key, value in config_primary.attributes.observables.types.items()])
+                    config.metrics[key_primary] = []
+        config.experiment_data = []
 
     def setup_plot(self, config, configs_primary):
         pass

@@ -1,6 +1,5 @@
 import abc
 from library.config.setup.types import *
-from library.config.data.types import *
 import statsmodels.api as sm
 import numpy as np
 from sklearn.cluster import DBSCAN
@@ -8,6 +7,7 @@ from library.setup.advanced.clock.clock import ClockExogType, Clock
 from library.setup.advanced.clock.linreg.processing import build_clock_linreg
 import plotly.graph_objs as go
 import colorlover as cl
+from shapely import geometry
 
 
 class ProcStrategy(metaclass=abc.ABCMeta):
@@ -49,7 +49,7 @@ class TableProcStrategy(ProcStrategy):
             results = sm.OLS(y, x).fit()
 
             config.metrics['item'].append(item)
-            config.metrics['aux'].append(';'.join(config.cpg_gene_dict[item]))
+            config.metrics['aux'].append(self.get_strategy.get_aux(config, item))
             config.metrics['R2'].append(results.rsquared)
             config.metrics['intercept'].append(results.params[0])
             config.metrics['slope'].append(results.params[1])
@@ -67,7 +67,7 @@ class TableProcStrategy(ProcStrategy):
             results = sm.OLS(y, x).fit()
 
             config.metrics['item'].append(item)
-            config.metrics['aux'].append(';'.join(config.cpg_gene_dict[item]))
+            config.metrics['aux'].append(self.get_strategy.get_aux(config, item))
             config.metrics['R2'].append(results.rsquared)
             config.metrics['intercept'].append(results.params[0])
             config.metrics['slope'].append(results.params[1])
@@ -107,24 +107,106 @@ class TableProcStrategy(ProcStrategy):
             number_of_noise_points = list(labels).count(-1)
 
             config.metrics['item'].append(item)
+            config.metrics['aux'].append(self.get_strategy.get_aux(config, item))
             config.metrics['number_of_clusters'].append(number_of_clusters)
             config.metrics['number_of_noise_points'].append(number_of_noise_points)
 
     def iterate_base(self, config):
+        for item in config.base_list:
+            if item in config.base_dict:
+                self.single_base(config, item)
 
-        if config.data.type is DataType.cpg:
+    def proc_base(self, config):
+        self.iterate_base(config)
+
+    def proc_advanced(self, config, configs_primary):
+
+        method_primary = config.setup.params['method_primary']
+        metrics_keys = get_metrics_keys(config.setup)
+
+        if config.setup.method is Method.polygon:
 
             for item in config.base_list:
                 if item in config.base_dict:
-                    self.single_base(config, item)
 
-    def proc_base(self, config):
+                    polygons = []
 
-        if config.setup.task is Task.table:
-            self.iterate_base(config)
+                    for config_primary in configs_primary:
 
-    def proc_advanced(self, config, configs_primary):
-        pass
+                        if config_primary.setup.method != method_primary:
+                            raise ValueError('method_primary param must agree with configs_primary methods')
+
+                        target = self.get_strategy.get_target(config_primary)
+                        item_id = config_primary.advanced_dict[item]
+
+                        for key in config_primary.advanced_data:
+                            if key not in metrics_keys:
+                                key_primary = key + '_' + '_'.join([key + '(' + value + ')' for key, value in config_primary.attributes.observables.types.items()])
+                                config.metrics[key_primary].append(config_primary.advanced_data[key][item_id])
+
+                        points = []
+
+                        if config_primary.setup.method is Method.linreg:
+
+                            intercept = config_primary.advanced_data['intercept'][item_id]
+                            slope = config_primary.advanced_data['slope'][item_id]
+                            intercept_std = config_primary.advanced_data['intercept_std'][item_id]
+                            slope_std = config_primary.advanced_data['slope_std'][item_id]
+
+                            x_min = np.min(target)
+                            x_max = np.max(target)
+                            y_min = slope * x_min + intercept
+                            y_max = slope * x_max + intercept
+                            slope_tmp = slope + 3.0 * slope_std
+                            y_tmp = slope_tmp * x_max + intercept
+                            y_diff = 3.0 * np.abs(intercept_std) + np.abs(y_tmp - y_max)
+                            y_min_up = y_min + y_diff
+                            y_min_down = y_min - y_diff
+                            y_max_up = y_max + y_diff
+                            y_max_down = y_max - y_diff
+
+                            points = [
+                                geometry.Point(x_min, y_min_down),
+                                geometry.Point(x_max, y_max_down),
+                                geometry.Point(x_max, y_max_up),
+                                geometry.Point(x_min, y_min_up),
+                            ]
+
+                        elif config_primary.setup.method is Method.linreg.variance_linreg:
+
+                            intercept = config_primary.advanced_data['intercept'][item_id]
+                            slope = config_primary.advanced_data['slope'][item_id]
+                            intercept_var = config_primary.advanced_data['intercept_var'][item_id]
+                            slope_var = config_primary.advanced_data['slope_var'][item_id]
+
+                            x_min = np.min(target)
+                            x_max = np.max(target)
+                            y_min = slope * x_min + intercept
+                            y_max = slope * x_max + intercept
+                            y_min_var = slope_var * x_min + intercept_var
+                            y_max_var = slope_var * x_max + intercept_var
+
+                            points = [
+                                geometry.Point(x_min, y_min - y_min_var),
+                                geometry.Point(x_max, y_max - y_max_var),
+                                geometry.Point(x_max, y_max + y_max_var),
+                                geometry.Point(x_min, y_min + y_min_var),
+                            ]
+
+                        polygon = geometry.Polygon([[point.x, point.y] for point in points])
+                        polygons.append(polygon)
+
+                    intersection = polygons[0]
+                    union = polygons[0]
+                    for polygon in polygons[1::]:
+                        intersection = intersection.intersection(polygon)
+                        union = union.union(polygon)
+
+                    area_intersection_rel = intersection.area / union.area
+
+                    config.metrics['item'].append(item)
+                    config.metrics['aux'].append(self.get_strategy.get_aux(config, item))
+                    config.metrics['area_intersection_rel'].append(area_intersection_rel)
 
     def proc_plot(self, config, configs_primary):
         pass
@@ -162,7 +244,7 @@ class ClockProcStrategy(ProcStrategy):
                 for exog_id in range(0, exogs):
 
                     config.metrics['item'].append(items[exog_id])
-                    config.metrics['aux'].append(';'.join(config.cpg_gene_dict[items[exog_id]]))
+                    config.metrics['aux'].append(self.get_strategy.get_aux(config, items[exog_id]))
                     config.metrics['count'].append(exog_id + 1)
 
                     clock = Clock(endog_data=target,
@@ -375,7 +457,6 @@ class MethylationProcStrategy(ProcStrategy):
 
 
         elif config.setup.method is Method.cluster:
-
             pass
 
         return plot_data
@@ -454,4 +535,3 @@ class ObservablesProcStrategy(ProcStrategy):
                 plot_data += curr_plot_data
 
             config.plot_data['data'] = plot_data
-

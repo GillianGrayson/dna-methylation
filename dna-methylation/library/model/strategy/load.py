@@ -35,10 +35,15 @@ class CPGLoadStrategy(LoadStrategy):
         self.load_base(config)
         for config_primary in configs_primary:
             self.inherit_base(config, config_primary)
-
             if config.setup.task is Task.table:
-
                 config_primary.advanced_data = load_table_dict(config_primary)
+                config_primary.advanced_list = config_primary.base_list
+                config_primary.advanced_dict = {}
+                row_id = 0
+                for item in config_primary.advanced_data['item']:
+                    config_primary.advanced_dict[item] = row_id
+                    row_id += 1
+
 
     def load_plot(self, config, configs_primary):
         self.load_base(config)

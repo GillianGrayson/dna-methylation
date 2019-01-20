@@ -7,12 +7,18 @@ class Experiment(Enum):
     advanced = 'advanced'
     plot = 'plot'
 
+    def __str__(self):
+        return str(self.value)
+
 
 class Task(Enum):
     table = 'table'
     clock = 'clock'
     observables = 'observables'
     methylation = 'methylation'
+
+    def __str__(self):
+        return str(self.value)
 
 
 class Method(Enum):
@@ -21,6 +27,10 @@ class Method(Enum):
     cluster = 'cluster'
     histogram = 'histogram'
     scatter = 'scatter'
+    polygon = 'polygon'
+
+    def __str__(self):
+        return str(self.value)
 
 
 def get_metrics_keys(setup):
@@ -62,8 +72,15 @@ def get_metrics_keys(setup):
         elif setup.method is Method.cluster:
             metrics = [
                 'item',
+                'aux',
                 'number_of_clusters',
                 'number_of_noise_points',
+            ]
+        elif setup.method is Method.polygon:
+            metrics = [
+                'item',
+                'aux',
+                'area_intersection_rel'
             ]
 
     elif setup.task is Task.clock:
@@ -91,6 +108,10 @@ def get_main_metric(setup):
             metric = ('R2', 'descending')
         elif setup.method is Method.variance_linreg:
             metric = ('R2_var', 'descending')
+        elif setup.method is Method.cluster:
+            metric = ('number_of_clusters', 'descending')
+        elif setup.method is Method.polygon:
+            metric = ('area_intersection_rel', 'ascending')
 
     return metric
 
@@ -104,6 +125,10 @@ def get_default_params(setup):
             params = {
                 'eps': 0.2,
                 'min_samples': 5
+            }
+        elif setup.method is Method.polygon:
+            params = {
+                'method_primary': Method.linreg,
             }
 
     elif setup.task is Task.clock:
