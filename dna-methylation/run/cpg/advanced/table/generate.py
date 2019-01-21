@@ -13,7 +13,7 @@ data = Data(
 setup_primary = Setup(
     experiment=Experiment.base,
     task=Task.table,
-    method=Method.linreg,
+    method=Method.variance_linreg,
     params={}
 )
 

@@ -56,20 +56,29 @@ attributes = Attributes(
     cells=cells
 )
 
-obs_list = [
+observables_types_primary = [
     {'gender': 'F'},
     {'gender': 'M'},
     {'gender': CommonTypes.any.value}
 ]
 
-for obs in obs_list:
-    attributes.observables.types = obs
+for observable_type in observables_types_primary:
+
+    observables_primary = Observables(
+        file_name='observables',
+        types=observable_type
+    )
+
+    attributes_primary = Attributes(
+        observables=observables_primary,
+        cells=cells
+    )
 
     config_primary = Config(
         data=data,
         setup=setup_primary,
         annotations=annotations,
-        attributes=attributes,
+        attributes=attributes_primary,
         target=target
     )
 
@@ -77,7 +86,7 @@ for obs in obs_list:
         data=data,
         setup=setup,
         annotations=annotations,
-        attributes=attributes,
+        attributes=attributes_primary,
         target=target
     )
 

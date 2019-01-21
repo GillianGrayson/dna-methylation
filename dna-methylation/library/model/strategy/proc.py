@@ -129,7 +129,9 @@ class TableProcStrategy(ProcStrategy):
             for item in config.base_list:
                 if item in config.base_dict:
 
-                    polygons = []
+                    polygons_region = []
+                    polygons_slope = []
+                    max_abs_slope = 0.0
 
                     for config_primary in configs_primary:
 
@@ -144,7 +146,8 @@ class TableProcStrategy(ProcStrategy):
                                 key_primary = key + '_' + '_'.join([key + '(' + value + ')' for key, value in config_primary.attributes.observables.types.items()])
                                 config.metrics[key_primary].append(config_primary.advanced_data[key][item_id])
 
-                        points = []
+                        points_region = []
+                        points_slope = []
 
                         if config_primary.setup.method is Method.linreg:
 
@@ -165,17 +168,27 @@ class TableProcStrategy(ProcStrategy):
                             y_max_up = y_max + y_diff
                             y_max_down = y_max - y_diff
 
-                            points = [
+                            points_region = [
                                 geometry.Point(x_min, y_min_down),
                                 geometry.Point(x_max, y_max_down),
                                 geometry.Point(x_max, y_max_up),
                                 geometry.Point(x_min, y_min_up),
                             ]
 
+                            points_slope = [
+                                geometry.Point(slope - 3.0 * slope_std, 0.0),
+                                geometry.Point(slope + 3.0 * slope_std, 0.0),
+                                geometry.Point(slope + 3.0 * slope_std, 1.0),
+                                geometry.Point(slope - 3.0 * slope_std, 1.0),
+                            ]
+
+                            max_abs_slope = max(max_abs_slope, abs(slope))
+
                         elif config_primary.setup.method is Method.linreg.variance_linreg:
 
                             intercept = config_primary.advanced_data['intercept'][item_id]
                             slope = config_primary.advanced_data['slope'][item_id]
+                            slope_std = config_primary.advanced_data['slope_std'][item_id]
                             intercept_var = config_primary.advanced_data['intercept_var'][item_id]
                             slope_var = config_primary.advanced_data['slope_var'][item_id]
 
@@ -184,29 +197,53 @@ class TableProcStrategy(ProcStrategy):
                             y_min = slope * x_min + intercept
                             y_max = slope * x_max + intercept
                             y_min_var = slope_var * x_min + intercept_var
+                            if y_min_var < 0:
+                                y_min_var = -y_min_var
                             y_max_var = slope_var * x_max + intercept_var
+                            if y_max_var < 0:
+                                y_max_var = -y_max_var
 
-                            points = [
+                            points_region = [
                                 geometry.Point(x_min, y_min - y_min_var),
                                 geometry.Point(x_max, y_max - y_max_var),
                                 geometry.Point(x_max, y_max + y_max_var),
                                 geometry.Point(x_min, y_min + y_min_var),
                             ]
 
-                        polygon = geometry.Polygon([[point.x, point.y] for point in points])
-                        polygons.append(polygon)
+                            points_slope = [
+                                geometry.Point(slope - 3.0 * slope_std, 0.0),
+                                geometry.Point(slope + 3.0 * slope_std, 0.0),
+                                geometry.Point(slope + 3.0 * slope_std, 1.0),
+                                geometry.Point(slope - 3.0 * slope_std, 1.0),
+                            ]
 
-                    intersection = polygons[0]
-                    union = polygons[0]
-                    for polygon in polygons[1::]:
+                            max_abs_slope = max(max_abs_slope, slope)
+
+                        polygon = geometry.Polygon([[point.x, point.y] for point in points_region])
+                        polygons_region.append(polygon)
+
+                        polygon = geometry.Polygon([[point.x, point.y] for point in points_slope])
+                        polygons_slope.append(polygon)
+
+                    intersection = polygons_region[0]
+                    union = polygons_region[0]
+                    for polygon in polygons_region[1::]:
                         intersection = intersection.intersection(polygon)
                         union = union.union(polygon)
-
                     area_intersection_rel = intersection.area / union.area
+
+                    intersection = polygons_slope[0]
+                    union = polygons_slope[0]
+                    for polygon in polygons_slope[1::]:
+                        intersection = intersection.intersection(polygon)
+                        union = union.union(polygon)
+                    slope_intersection_rel = intersection.area / union.area
 
                     config.metrics['item'].append(item)
                     config.metrics['aux'].append(self.get_strategy.get_aux(config, item))
                     config.metrics['area_intersection_rel'].append(area_intersection_rel)
+                    config.metrics['slope_intersection_rel'].append(slope_intersection_rel)
+                    config.metrics['max_abs_slope'].append(max_abs_slope)
 
     def proc_plot(self, config, configs_primary):
         pass
@@ -427,7 +464,11 @@ class MethylationProcStrategy(ProcStrategy):
             y_min = slope * x_min + intercept
             y_max = slope * x_max + intercept
             y_min_var = slope_var * x_min + intercept_var
+            if y_min_var < 0:
+                y_min_var = -y_min_var
             y_max_var = slope_var * x_max + intercept_var
+            if y_max_var < 0:
+                y_max_var = -y_max_var
 
             scatter = go.Scatter(
                 x=[x_min, x_max],

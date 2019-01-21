@@ -13,7 +13,7 @@ data = Data(
 setup_primary = Setup(
     experiment=Experiment.base,
     task=Task.table,
-    method=Method.variance_linreg,
+    method=Method.linreg,
     params={}
 )
 
@@ -56,11 +56,8 @@ observables_types = [
     {'gender': 'M'},
 ]
 
-cpgs = [
-    'cg01620164',
-    'cg23256579',
-    'cg27615582'
-]
+f = open('cpgs.txt', 'r')
+cpgs = f.read().splitlines()
 
 config = Config(
     data=data,

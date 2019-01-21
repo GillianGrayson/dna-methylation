@@ -80,7 +80,9 @@ def get_metrics_keys(setup):
             metrics = [
                 'item',
                 'aux',
-                'area_intersection_rel'
+                'area_intersection_rel',
+                'slope_intersection_rel',
+                'max_abs_slope'
             ]
 
     elif setup.task is Task.clock:

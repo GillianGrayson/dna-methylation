@@ -48,6 +48,7 @@ class TableSetUpStrategy(SetupStrategy):
                 if key not in metrics_keys:
                     key_primary =  key + '_' +'_'.join([key + '(' + value + ')' for key, value in config_primary.attributes.observables.types.items()])
                     config.metrics[key_primary] = []
+
         config.experiment_data = []
 
     def setup_plot(self, config, configs_primary):
