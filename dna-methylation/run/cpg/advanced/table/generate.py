@@ -7,13 +7,13 @@ data = Data(
     name='cpg_beta',
     type=DataType.cpg,
     path='',
-    base='GSE87571'
+    base='EPIC'
 )
 
 setup_primary = Setup(
     experiment=Experiment.base,
     task=Task.table,
-    method=Method.variance_linreg,
+    method=Method.linreg,
     params={}
 )
 

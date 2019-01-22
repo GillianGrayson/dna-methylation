@@ -7,7 +7,7 @@ data = Data(
     name='cpg_beta',
     type=DataType.attributes,
     path='',
-    base='GSE87571'
+    base='EPIC'
 )
 
 setup = Setup(
