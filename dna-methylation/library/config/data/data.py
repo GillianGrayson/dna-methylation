@@ -20,7 +20,7 @@ class Data:
         self.path = path
         self.base = base
 
-        if self.path == '' or os.path.isdir(self.path):
+        if self.path == '':
             host_name = socket.gethostname()
             if host_name == 'MSI':
                 self.path = DataPath.local_1.value

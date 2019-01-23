@@ -42,6 +42,16 @@ class Config:
 
         self.attributes_indexes = []
 
+        self.excluded = None
+
+        self.annotations_dict = None
+        self.attributes_dict = None
+        self.attributes_indexes = None
+        self.cells_dict = None
+
+
+    def initialize(self):
+
         self.excluded = load_excluded(self)
 
         self.annotations_dict = load_annotations_dict(self)
