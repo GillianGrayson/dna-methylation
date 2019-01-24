@@ -55,24 +55,19 @@ class TestLoadAnnotations(unittest.TestCase):
         )
 
 
-    def test_load_annotations_dict_num_elems(self):
-        annotations_dict = load_annotations_dict(self.config)
-        self.assertEqual(len(annotations_dict['ID_REF']), 300)
+    def test_load_attributes_dict_num_elems(self):
+        attributes_dict = load_attributes_dict(self.config)
+        self.assertEqual(len(attributes_dict['age']), 729)
 
 
-    def test_load_annotations_dict_num_keys(self):
-        annotations_dict = load_annotations_dict(self.config)
-        self.assertEqual(len(list(annotations_dict.keys())), 10)
+    def test_load_attributes_dict_num_keys(self):
+        attributes_dict = load_attributes_dict(self.config)
+        self.assertEqual(len(list(attributes_dict.keys())), 2)
 
 
-    def test_load_annotations_dict_num_chrs(self):
-        annotations_dict = load_annotations_dict(self.config)
-        self.assertEqual(len(set(annotations_dict['CHR'])), 11)
-
-
-    def test_load_annotations_dict_num_bops(self):
-        annotations_dict = load_annotations_dict(self.config)
-        self.assertEqual(len(set(annotations_dict['BOP'])), 82)
+    def test_load_attributes_dict_age_range(self):
+        attributes_dict = load_attributes_dict(self.config)
+        self.assertEqual(max(attributes_dict['age']) - min(attributes_dict['age']), 80)
 
 
 if __name__ == '__main__':
