@@ -1,19 +1,18 @@
 from library.model.main import *
 
-
 target = 'age'
 
 data = Data(
     name='cpg_beta',
     type=DataType.cpg,
     path='',
-    base='EPIC'
+    base='GSE87571'
 )
 
 setup_primary = Setup(
     experiment=Experiment.base,
     task=Task.table,
-    method=Method.linreg,
+    method=Method.variance_linreg,
     params={}
 )
 

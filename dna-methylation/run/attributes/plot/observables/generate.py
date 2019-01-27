@@ -1,13 +1,12 @@
 from library.model.main import *
 
-
 target = 'age'
 
 data = Data(
     name='cpg_beta',
     type=DataType.attributes,
     path='',
-    base='EPIC'
+    base='GSE40279'
 )
 
 setup = Setup(

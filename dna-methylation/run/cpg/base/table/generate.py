@@ -6,13 +6,13 @@ data = Data(
     name='cpg_beta',
     type=DataType.cpg,
     path='',
-    base='EPIC'
+    base='GSE40279'
 )
 
 setup = Setup(
     experiment=Experiment.base,
     task=Task.table,
-    method=Method.variance_linreg,
+    method=Method.linreg,
     params={}
 )
 

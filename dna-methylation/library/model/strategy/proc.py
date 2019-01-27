@@ -217,7 +217,7 @@ class TableProcStrategy(ProcStrategy):
                                 geometry.Point(slope - 3.0 * slope_std, 1.0),
                             ]
 
-                            max_abs_slope = max(max_abs_slope, slope)
+                            max_abs_slope = max(max_abs_slope,  abs(slope))
 
                         polygon = geometry.Polygon([[point.x, point.y] for point in points_region])
                         polygons_region.append(polygon)
