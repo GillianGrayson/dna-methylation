@@ -1,52 +1,52 @@
-from library.model.main import *
+import pydnameth as dm
 
 
 target = 'age'
 
-data = Data(
+data = dm.Data(
     name='cpg_beta',
-    type=DataType.cpg,
+    type=dm.DataType.cpg,
     path='',
     base='EPIC'
 )
 
-setup_primary = Setup(
-    experiment=Experiment.base,
-    task=Task.table,
-    method=Method.linreg,
+setup_primary = dm.Setup(
+    experiment=dm.Experiment.base,
+    task=dm.Task.table,
+    method=dm.Method.variance_linreg,
     params={}
 )
 
-setup = Setup(
-    experiment=Experiment.plot,
-    task=Task.methylation,
-    method=Method.scatter,
+setup = dm.Setup(
+    experiment=dm.Experiment.plot,
+    task=dm.Task.methylation,
+    method=dm.Method.scatter,
     params={'item': '',
             'method': setup_primary.method.value}
 )
 
-annotations = Annotations(
+annotations = dm.Annotations(
     name='annotations',
-    exclude=CommonTypes.none.value,
-    cross_reactive=CrossReactive.exclude.value,
-    snp=SNP.exclude.value,
-    chr=Chromosome.non_gender.value,
-    gene_region=GeneRegion.yes.value,
-    geo=CommonTypes.any.value,
-    probe_class=CommonTypes.any.value
+    exclude=dm.CommonTypes.none.value,
+    cross_reactive=dm.CrossReactive.exclude.value,
+    snp=dm.SNP.exclude.value,
+    chr=dm.Chromosome.non_gender.value,
+    gene_region=dm.GeneRegion.yes.value,
+    geo=dm.CommonTypes.any.value,
+    probe_class=dm.CommonTypes.any.value
 )
 
-observables = Observables(
+observables = dm.Observables(
     file_name='observables',
     types={'gender': 'vs'}
 )
 
-cells = Cells(
+cells = dm.Cells(
     file_name='cells',
-    types=CommonTypes.any.value
+    types=dm.CommonTypes.any.value
 )
 
-attributes = Attributes(
+attributes = dm.Attributes(
     observables=observables,
     cells=cells
 )
@@ -59,14 +59,13 @@ observables_types = [
 f = open('cpgs.txt', 'r')
 cpgs = f.read().splitlines()
 
-config = Config(
+config = dm.Config(
     data=data,
     setup=setup,
     annotations=annotations,
     attributes=attributes,
     target=target
 )
-
 
 for cpg in cpgs:
 
@@ -75,17 +74,17 @@ for cpg in cpgs:
     configs_primary = []
     for observable_type in observables_types:
 
-        observables_primary = Observables(
+        observables_primary = dm.Observables(
             file_name='observables',
             types=observable_type
         )
 
-        attributes_primary = Attributes(
+        attributes_primary = dm.Attributes(
             observables=observables_primary,
             cells=cells
         )
 
-        config_primary = Config(
+        config_primary = dm.Config(
             data=data,
             setup=setup_primary,
             annotations=annotations,
@@ -95,5 +94,5 @@ for cpg in cpgs:
 
         configs_primary.append(config_primary)
 
-    plot_experiment(config, configs_primary)
+    dm.plot(config, configs_primary)
 

@@ -1,43 +1,43 @@
-from library.model.main import *
+import pydnameth as pdm
 
 target = 'age'
 
-data = Data(
+data = pdm.Data(
     name='cpg_beta',
-    type=DataType.attributes,
+    type=pdm.DataType.attributes,
     path='',
     base='GSE40279'
 )
 
-setup = Setup(
-    experiment=Experiment.plot,
-    task=Task.observables,
-    method=Method.histogram,
+setup = pdm.Setup(
+    experiment=pdm.Experiment.plot,
+    task=pdm.Task.observables,
+    method=pdm.Method.histogram,
     params={}
 )
 
-annotations = Annotations(
+annotations = pdm.Annotations(
     name='annotations',
-    exclude=CommonTypes.none.value,
-    cross_reactive=CrossReactive.exclude.value,
-    snp=SNP.exclude.value,
-    chr=Chromosome.non_gender.value,
-    gene_region=GeneRegion.yes.value,
-    geo=CommonTypes.any.value,
-    probe_class=CommonTypes.any.value
+    exclude=pdm.CommonTypes.none.value,
+    cross_reactive=pdm.CrossReactive.exclude.value,
+    snp=pdm.SNP.exclude.value,
+    chr=pdm.Chromosome.non_gender.value,
+    gene_region=pdm.GeneRegion.yes.value,
+    geo=pdm.CommonTypes.any.value,
+    probe_class=pdm.CommonTypes.any.value
 )
 
-observables = Observables(
+observables = pdm.Observables(
     file_name='observables',
     types={'gender': 'vs'}
 )
 
-cells = Cells(
+cells = pdm.Cells(
     file_name='cells',
-    types=CommonTypes.any.value
+    types=pdm.CommonTypes.any.value
 )
 
-attributes = Attributes(
+attributes = pdm.Attributes(
     observables=observables,
     cells=cells
 )
@@ -48,7 +48,7 @@ observables_types = [
     {'gender': 'M'},
 ]
 
-config = Config(
+config = pdm.Config(
     data=data,
     setup=setup,
     annotations=annotations,
@@ -59,17 +59,17 @@ config = Config(
 configs_primary = []
 for observable_type in observables_types:
 
-    observables_primary = Observables(
+    observables_primary = pdm.Observables(
         file_name='observables',
         types=observable_type
     )
 
-    attributes_primary = Attributes(
+    attributes_primary = pdm.Attributes(
         observables=observables_primary,
         cells=cells
     )
 
-    config_primary = Config(
+    config_primary = pdm.Config(
         data=data,
         setup=setup,
         annotations=annotations,
@@ -79,5 +79,5 @@ for observable_type in observables_types:
 
     configs_primary.append(config_primary)
 
-plot_experiment(config, configs_primary)
+pdm.plot(config, configs_primary)
 
