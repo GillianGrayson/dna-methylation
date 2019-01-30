@@ -1,8 +1,5 @@
 import pydnameth as pdm
 
-
-target = 'age'
-
 data = pdm.Data(
     name='cpg_beta',
     type=pdm.DataType.cpg,
@@ -41,6 +38,7 @@ cells = pdm.Cells(
 )
 
 attributes = pdm.Attributes(
+    target='age',
     observables=observables,
     cells=cells
 )
@@ -58,8 +56,7 @@ for obs in obs_list:
         data=data,
         setup=setup,
         annotations=annotations,
-        attributes=attributes,
-        target=target
+        attributes=attributes
     )
 
     pdm.base(config)

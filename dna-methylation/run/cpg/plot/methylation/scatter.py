@@ -1,8 +1,5 @@
 import pydnameth as dm
 
-
-target = 'age'
-
 data = dm.Data(
     name='cpg_beta',
     type=dm.DataType.cpg,
@@ -47,6 +44,7 @@ cells = dm.Cells(
 )
 
 attributes = dm.Attributes(
+    target='age',
     observables=observables,
     cells=cells
 )
@@ -64,7 +62,6 @@ config = dm.Config(
     setup=setup,
     annotations=annotations,
     attributes=attributes,
-    target=target
 )
 
 for cpg in cpgs:
@@ -80,6 +77,7 @@ for cpg in cpgs:
         )
 
         attributes_primary = dm.Attributes(
+            target='age',
             observables=observables_primary,
             cells=cells
         )
@@ -88,8 +86,7 @@ for cpg in cpgs:
             data=data,
             setup=setup_primary,
             annotations=annotations,
-            attributes=attributes_primary,
-            target=target
+            attributes=attributes_primary
         )
 
         configs_primary.append(config_primary)

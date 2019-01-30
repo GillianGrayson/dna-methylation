@@ -1,8 +1,5 @@
 import pydnameth as pdm
 
-
-target = 'age'
-
 data = pdm.Data(
     name='cpg_beta',
     type=pdm.DataType.cpg,
@@ -52,6 +49,7 @@ cells = pdm.Cells(
 )
 
 attributes = pdm.Attributes(
+    target='age',
     observables=observables,
     cells=cells
 )
@@ -70,6 +68,7 @@ for observable_type in observables_types_primary:
     )
 
     attributes_primary = pdm.Attributes(
+        target='age',
         observables=observables_primary,
         cells=cells
     )
@@ -79,7 +78,6 @@ for observable_type in observables_types_primary:
         setup=setup_primary,
         annotations=annotations,
         attributes=attributes_primary,
-        target=target
     )
 
     config = pdm.Config(
@@ -87,7 +85,6 @@ for observable_type in observables_types_primary:
         setup=setup,
         annotations=annotations,
         attributes=attributes_primary,
-        target=target
     )
 
     pdm.advanced(config, [config_primary])
