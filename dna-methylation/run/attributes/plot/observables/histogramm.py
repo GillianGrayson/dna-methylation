@@ -4,7 +4,7 @@ data = pdm.Data(
     name='cpg_beta',
     type=pdm.DataType.attributes,
     path='',
-    base='GSE40279'
+    base='EPIC'
 )
 
 setup = pdm.Setup(
@@ -16,23 +16,23 @@ setup = pdm.Setup(
 
 annotations = pdm.Annotations(
     name='annotations',
-    exclude=pdm.CommonTypes.none.value,
-    cross_reactive=pdm.CrossReactive.exclude.value,
-    snp=pdm.SNP.exclude.value,
-    chr=pdm.Chromosome.non_gender.value,
-    gene_region=pdm.GeneRegion.yes.value,
-    geo=pdm.CommonTypes.any.value,
-    probe_class=pdm.CommonTypes.any.value
+    exclude='none',
+    cross_reactive='ex',
+    snp='ex',
+    chr='NS',
+    gene_region='yes',
+    geo='any',
+    probe_class='any'
 )
 
 observables = pdm.Observables(
-    file_name='observables',
+    name='observables',
     types={'gender': 'vs'}
 )
 
 cells = pdm.Cells(
-    file_name='cells',
-    types=pdm.CommonTypes.any.value
+    name='cells',
+    types='any'
 )
 
 attributes = pdm.Attributes(
@@ -58,7 +58,7 @@ configs_primary = []
 for observable_type in observables_types:
 
     observables_primary = pdm.Observables(
-        file_name='observables',
+        name='observables',
         types=observable_type
     )
 
@@ -77,5 +77,5 @@ for observable_type in observables_types:
 
     configs_primary.append(config_primary)
 
-pdm.plot(config, configs_primary)
+pdm.run(config, configs_primary)
 

@@ -29,23 +29,23 @@ setup = pdm.Setup(
 
 annotations = pdm.Annotations(
     name='annotations',
-    exclude=pdm.CommonTypes.none.value,
-    cross_reactive=pdm.CrossReactive.exclude.value,
-    snp=pdm.SNP.exclude.value,
-    chr=pdm.Chromosome.non_gender.value,
-    gene_region=pdm.GeneRegion.yes.value,
-    geo=pdm.CommonTypes.any.value,
-    probe_class=pdm.CommonTypes.any.value
+    exclude='none',
+    cross_reactive='ex',
+    snp='ex',
+    chr='NS',
+    gene_region='yes',
+    geo='any',
+    probe_class='any'
 )
 
 observables = pdm.Observables(
-    file_name='observables',
+    name='observables',
     types={}
 )
 
 cells = pdm.Cells(
-    file_name='cells',
-    types=pdm.CommonTypes.any.value
+    name='cells',
+    types='any'
 )
 
 attributes = pdm.Attributes(
@@ -57,13 +57,13 @@ attributes = pdm.Attributes(
 observables_types_primary = [
     {'gender': 'F'},
     {'gender': 'M'},
-    {'gender': pdm.CommonTypes.any.value}
+    {'gender': 'any'}
 ]
 
 for observable_type in observables_types_primary:
 
     observables_primary = pdm.Observables(
-        file_name='observables',
+        name='observables',
         types=observable_type
     )
 
@@ -87,4 +87,4 @@ for observable_type in observables_types_primary:
         attributes=attributes_primary,
     )
 
-    pdm.advanced(config, [config_primary])
+    pdm.run(config, [config_primary])

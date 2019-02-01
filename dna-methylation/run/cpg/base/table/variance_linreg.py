@@ -4,13 +4,13 @@ data = pdm.Data(
     name='cpg_beta',
     type=pdm.DataType.cpg,
     path='',
-    base='GSE40279'
+    base='EPIC'
 )
 
 setup = pdm.Setup(
     experiment=pdm.Experiment.base,
     task=pdm.Task.table,
-    method=pdm.Method.linreg,
+    method=pdm.Method.variance_linreg,
     params={}
 )
 
