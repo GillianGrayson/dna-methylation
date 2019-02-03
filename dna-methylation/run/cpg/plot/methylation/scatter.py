@@ -4,13 +4,13 @@ data = pdm.Data(
     name='cpg_beta',
     type=pdm.DataType.cpg,
     path='',
-    base='EPIC'
+    base='GSE87571'
 )
 
 setup_primary = pdm.Setup(
     experiment=pdm.Experiment.base,
     task=pdm.Task.table,
-    method=pdm.Method.variance_linreg,
+    method=pdm.Method.linreg,
     params={}
 )
 
@@ -18,8 +18,11 @@ setup = pdm.Setup(
     experiment=pdm.Experiment.plot,
     task=pdm.Task.methylation,
     method=pdm.Method.scatter,
-    params={'item': '',
-            'method': setup_primary.method.value}
+    params={
+        'item': '',
+        'method': setup_primary.method.value,
+        'x_range': [10, 110]
+    }
 )
 
 annotations = pdm.Annotations(

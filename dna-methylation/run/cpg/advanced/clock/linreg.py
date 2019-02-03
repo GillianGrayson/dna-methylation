@@ -4,7 +4,7 @@ data = pdm.Data(
     name='cpg_beta',
     type=pdm.DataType.cpg,
     path='',
-    base='GSE87571'
+    base='EPIC'
 )
 
 setup_primary = pdm.Setup(
@@ -19,6 +19,7 @@ setup = pdm.Setup(
     task=pdm.Task.clock,
     method=pdm.Method.linreg,
     params={
+        'method': setup_primary.method.value,
         'part': 0.25,
         'type': pdm.ClockExogType.all.value,
         'exogs': 100,
