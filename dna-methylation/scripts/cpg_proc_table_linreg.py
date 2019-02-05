@@ -2,7 +2,6 @@ import pydnameth as pdm
 
 data = pdm.Data(
     name='cpg_beta',
-    type=pdm.DataType.cpg,
     path='',
     base='GSE87571'
 )
@@ -42,7 +41,7 @@ for obs in obs_list:
         cells=cells
     )
 
-    pdm.proc_table_linreg(
+    pdm.cpg_proc_table_linreg(
         data=data,
         annotations=annotations,
         attributes=attributes
