@@ -19,7 +19,7 @@ annotations = pdm.Annotations(
 
 observables = pdm.Observables(
     name='observables',
-    types={'gender': 'vs'}
+    types={}
 )
 
 cells = pdm.Cells(
@@ -28,20 +28,23 @@ cells = pdm.Cells(
 )
 
 attributes = pdm.Attributes(
-    target='age',
+    target='smoke',
     observables=observables,
     cells=cells
 )
 
 observables_list = [
-    {'gender': 'any'},
     {'gender': 'F'},
-    {'gender': 'M'},
+    {'gender': 'M'}
 ]
 
 pdm.attributes_plot_observables_histogram(
     data=data,
     annotations=annotations,
     attributes=attributes,
-    observables_list=observables_list
+    observables_list=observables_list,
+    params={
+        'bin_size': 1.0,
+        'opacity': 0.75
+    }
 )

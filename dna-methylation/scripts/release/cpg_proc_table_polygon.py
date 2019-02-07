@@ -19,7 +19,7 @@ annotations = pdm.Annotations(
 
 observables = pdm.Observables(
     name='observables',
-    types={'gender': 'vs'}
+    types={}
 )
 
 cells = pdm.Cells(
@@ -34,8 +34,8 @@ attributes = pdm.Attributes(
 )
 
 observables_list = [
-    {'smoke': ['1', '2']},
-    {'smoke': ['3', '4']}
+    {'gender': 'F'},
+    {'gender': 'M'}
 ]
 
 pdm.cpg_proc_table_polygon(
