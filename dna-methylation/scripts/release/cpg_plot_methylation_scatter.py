@@ -1,5 +1,8 @@
 import pydnameth as pdm
 
+f = open('cpgs.txt', 'r')
+cpg_list = f.read().splitlines()
+
 data = pdm.Data(
     name='cpg_beta',
     path='',
@@ -38,10 +41,10 @@ observables_list = [
     {'gender': 'M'}
 ]
 
-pdm.cpg_proc_table_z_test_linreg(
+pdm.cpg_plot_methylation_scatter(
     data=data,
     annotations=annotations,
     attributes=attributes,
     observables_list=observables_list,
-    child_method=pdm.Method.linreg
+    cpg_list=cpg_list
 )

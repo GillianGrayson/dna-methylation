@@ -42,6 +42,5 @@ pdm.cpg_proc_table_polygon(
     data=data,
     annotations=annotations,
     attributes=attributes,
-    observables_list=observables_list,
-    child_method=pdm.Method.linreg
+    observables_list=observables_list
 )
