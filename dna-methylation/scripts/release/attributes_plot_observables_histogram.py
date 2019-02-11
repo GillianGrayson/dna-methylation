@@ -28,14 +28,14 @@ cells = pdm.Cells(
 )
 
 attributes = pdm.Attributes(
-    target='age',
+    target='smoke',
     observables=observables,
     cells=cells
 )
 
 observables_list = [
     {'gender': 'F'},
-    {'gender': 'M'}
+    {'gender': 'M'},
 ]
 
 pdm.attributes_plot_observables_histogram(
@@ -46,6 +46,6 @@ pdm.attributes_plot_observables_histogram(
     params={
         'bin_size': 1.0,
         'opacity': 0.75,
-        'barmode': 'overlay'
+        'barmode': 'stack'
     }
 )

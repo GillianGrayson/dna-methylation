@@ -34,8 +34,8 @@ attributes = pdm.Attributes(
 )
 
 observables_list = [
-    {'gender': 'F'},
-    {'gender': 'M'}
+    {'smoke': 0},
+    {'smoke': [1, 2, 3, 4]}
 ]
 
 pdm.cpg_proc_table_polygon(

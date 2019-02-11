@@ -25,7 +25,6 @@ cells = pdm.Cells(
 obs_list = [
     {'gender': 'F'},
     {'gender': 'M'},
-    {'gender': 'any'}
 ]
 
 for obs in obs_list:

@@ -37,8 +37,8 @@ attributes = pdm.Attributes(
 )
 
 observables_list = [
-    {'gender': 'F'},
-    {'gender': 'M'}
+    {'smoke': 0},
+    {'smoke': [1, 2, 3, 4]}
 ]
 
 pdm.cpg_plot_methylation_scatter(
@@ -48,6 +48,6 @@ pdm.cpg_plot_methylation_scatter(
     observables_list=observables_list,
     cpg_list=cpg_list,
     params={
-        'x_range': [10, 110]
+        'x_range': 'auto'
     }
 )
