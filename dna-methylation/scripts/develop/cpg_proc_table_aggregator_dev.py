@@ -34,13 +34,14 @@ attributes = pdm.Attributes(
 )
 
 observables_list = [
-    {'smoke': 0},
-    {'smoke': [1, 2, 3, 4]}
+    {'gender': 'F'},
+    {'gender': 'M'}
 ]
 
-pdm.cpg_proc_table_polygon(
+pdm.cpg_proc_table_aggregator_dev(
     data=data,
     annotations=annotations,
     attributes=attributes,
-    observables_list=observables_list
+    observables_list=observables_list,
+    params=None
 )

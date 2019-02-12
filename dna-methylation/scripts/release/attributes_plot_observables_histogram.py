@@ -35,7 +35,7 @@ attributes = pdm.Attributes(
 
 observables_list = [
     {'gender': 'F'},
-    {'gender': 'M'}
+    {'gender': 'M'},
 ]
 
 pdm.attributes_plot_observables_histogram(
@@ -45,6 +45,7 @@ pdm.attributes_plot_observables_histogram(
     observables_list=observables_list,
     params={
         'bin_size': 1.0,
-        'opacity': 0.75
+        'opacity': 0.75,
+        'barmode': 'stack'
     }
 )

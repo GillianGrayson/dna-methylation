@@ -1,5 +1,7 @@
 import pydnameth as pdm
 
+file = 'special.xlsx'
+
 data = pdm.Data(
     name='cpg_beta',
     path='',
@@ -25,6 +27,7 @@ cells = pdm.Cells(
 obs_list = [
     {'gender': 'F'},
     {'gender': 'M'},
+    {'gender': 'any'}
 ]
 
 for obs in obs_list:
@@ -40,8 +43,15 @@ for obs in obs_list:
         cells=cells
     )
 
-    pdm.cpg_proc_table_linreg(
+    pdm.cpg_proc_special_clock_linreg_dev(
         data=data,
         annotations=annotations,
-        attributes=attributes
+        attributes=attributes,
+        file=file,
+        params={
+            'type': 'all',
+            'part': 0.25,
+            'size': 100,
+            'runs': 100,
+        }
     )

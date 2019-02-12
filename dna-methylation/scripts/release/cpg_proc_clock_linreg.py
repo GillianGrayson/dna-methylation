@@ -44,5 +44,11 @@ for obs in obs_list:
     pdm.cpg_proc_clock_linreg(
         data=data,
         annotations=annotations,
-        attributes=attributes
+        attributes=attributes,
+        params={
+            'type': 'all',
+            'part': 0.25,
+            'size': 100,
+            'runs': 100,
+        }
     )

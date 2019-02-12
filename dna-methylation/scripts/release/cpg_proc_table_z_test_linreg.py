@@ -3,7 +3,7 @@ import pydnameth as pdm
 data = pdm.Data(
     name='cpg_beta',
     path='',
-    base='GSE87571'
+    base='EPIC'
 )
 
 annotations = pdm.Annotations(
@@ -19,7 +19,7 @@ annotations = pdm.Annotations(
 
 observables = pdm.Observables(
     name='observables',
-    types={'gender': 'vs'}
+    types={}
 )
 
 cells = pdm.Cells(

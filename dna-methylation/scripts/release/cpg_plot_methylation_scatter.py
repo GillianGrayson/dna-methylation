@@ -22,7 +22,7 @@ annotations = pdm.Annotations(
 
 observables = pdm.Observables(
     name='observables',
-    types={'gender': 'vs'}
+    types={}
 )
 
 cells = pdm.Cells(
@@ -37,8 +37,8 @@ attributes = pdm.Attributes(
 )
 
 observables_list = [
-    {'gender': 'F'},
-    {'gender': 'M'}
+    {'smoke': 0},
+    {'smoke': [1, 2, 3, 4]}
 ]
 
 pdm.cpg_plot_methylation_scatter(
@@ -46,5 +46,8 @@ pdm.cpg_plot_methylation_scatter(
     annotations=annotations,
     attributes=attributes,
     observables_list=observables_list,
-    cpg_list=cpg_list
+    cpg_list=cpg_list,
+    params={
+        'x_range': 'auto'
+    }
 )
