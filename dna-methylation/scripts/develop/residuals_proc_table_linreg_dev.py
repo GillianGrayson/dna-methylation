@@ -3,7 +3,7 @@ import pydnameth as pdm
 data = pdm.Data(
     name='cpg_beta',
     path='',
-    base='GSE87571'
+    base='EPIC'
 )
 
 annotations = pdm.Annotations(
@@ -17,9 +17,11 @@ annotations = pdm.Annotations(
     probe_class='any'
 )
 
+cells_types = ['B', 'CD4T', 'NK', 'CD8T', 'Gran']
+
 cells = pdm.Cells(
     name='cells',
-    types='any'
+    types=cells_types
 )
 
 obs_list = [
@@ -39,7 +41,7 @@ for obs in obs_list:
         cells=cells
     )
 
-    pdm.cpg_proc_table_linreg(
+    pdm.residuals_proc_table_linreg_dev(
         data=data,
         annotations=annotations,
         attributes=attributes

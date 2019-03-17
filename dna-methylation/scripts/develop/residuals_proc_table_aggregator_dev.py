@@ -1,12 +1,9 @@
 import pydnameth as pdm
 
-f = open('cpgs.txt', 'r')
-cpg_list = f.read().splitlines()
-
 data = pdm.Data(
     name='cpg_beta',
     path='',
-    base='GSE87571'
+    base='GSE40279'
 )
 
 annotations = pdm.Annotations(
@@ -25,9 +22,11 @@ observables = pdm.Observables(
     types={}
 )
 
+cells_types = ['B', 'CD4T', 'NK', 'CD8T', 'Gran']
+
 cells = pdm.Cells(
     name='cells',
-    types='any'
+    types=cells_types
 )
 
 attributes = pdm.Attributes(
@@ -41,13 +40,10 @@ observables_list = [
     {'gender': 'M'}
 ]
 
-pdm.cpg_plot_methylation_scatter(
+pdm.residuals_proc_table_aggregator_dev(
     data=data,
     annotations=annotations,
     attributes=attributes,
     observables_list=observables_list,
-    cpg_list=cpg_list,
-    params={
-        'x_range': [10, 110]
-    }
+    params=None
 )
