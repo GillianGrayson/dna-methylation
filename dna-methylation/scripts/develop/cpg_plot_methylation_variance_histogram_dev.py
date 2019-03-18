@@ -6,7 +6,7 @@ cpg_list = f.read().splitlines()
 data = pdm.Data(
     name='cpg_beta',
     path='',
-    base='EPIC'
+    base='GSE87571'
 )
 
 annotations = pdm.Annotations(

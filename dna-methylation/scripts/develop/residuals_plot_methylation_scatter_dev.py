@@ -6,7 +6,7 @@ cpg_list = f.read().splitlines()
 data = pdm.Data(
     name='cpg_beta',
     path='',
-    base='GSE87571'
+    base='GSE40279'
 )
 
 annotations = pdm.Annotations(
@@ -41,7 +41,7 @@ observables_list = [
     {'gender': 'M'}
 ]
 
-pdm.cpg_plot_methylation_scatter(
+pdm.residuals_plot_methylation_scatter_dev(
     data=data,
     annotations=annotations,
     attributes=attributes,
