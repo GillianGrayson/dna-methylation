@@ -3,7 +3,7 @@ import pydnameth as pdm
 data = pdm.Data(
     name='cpg_beta',
     path='',
-    base='GSE40279'
+    base='EPIC'
 )
 
 annotations = pdm.Annotations(
@@ -40,7 +40,7 @@ observables_list = [
     {'gender': 'M'}
 ]
 
-pdm.residuals_proc_table_aggregator_dev(
+pdm.residuals_special_proc_table_aggregator_dev(
     data=data,
     annotations=annotations,
     attributes=attributes,

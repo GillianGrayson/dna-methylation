@@ -25,9 +25,11 @@ observables = pdm.Observables(
     types={}
 )
 
+cells_types = ['B', 'CD4T', 'NK', 'CD8T', 'Gran']
+
 cells = pdm.Cells(
     name='cells',
-    types='any'
+    types=cells_types
 )
 
 attributes = pdm.Attributes(
@@ -41,7 +43,7 @@ observables_list = [
     {'gender': 'M'}
 ]
 
-pdm.residuals_plot_methylation_scatter_dev(
+pdm.residuals_common_plot_methylation_scatter_dev(
     data=data,
     annotations=annotations,
     attributes=attributes,

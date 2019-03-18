@@ -41,7 +41,7 @@ for obs in obs_list:
         cells=cells
     )
 
-    pdm.residuals_proc_table_linreg_dev(
+    pdm.residuals_common_proc_table_linreg_dev(
         data=data,
         annotations=annotations,
         attributes=attributes
