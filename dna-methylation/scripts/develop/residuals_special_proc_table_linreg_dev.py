@@ -3,7 +3,7 @@ import pydnameth as pdm
 data = pdm.Data(
     name='cpg_beta',
     path='',
-    base='GSE87571'
+    base='EPIC'
 )
 
 annotations = pdm.Annotations(
@@ -17,7 +17,8 @@ annotations = pdm.Annotations(
     probe_class='any'
 )
 
-cells_types = ['B', 'CD4T', 'NK', 'CD8T', 'Gran']
+#cells_types = ['B', 'CD4T', 'NK', 'CD8T', 'Gran']
+cells_types = 'any'
 
 cells = pdm.Cells(
     name='cells',
@@ -25,7 +26,7 @@ cells = pdm.Cells(
 )
 
 obs_list = [
-    {'gender': 'F'},
+    {'gender': 'any'},
 ]
 
 for obs in obs_list:

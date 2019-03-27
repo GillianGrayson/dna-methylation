@@ -22,7 +22,8 @@ observables = pdm.Observables(
     types={}
 )
 
-cells_types = ['B', 'CD4T', 'NK', 'CD8T', 'Gran']
+#cells_types = ['B', 'CD4T', 'NK', 'CD8T', 'Gran']
+cells_types = 'any'
 
 cells = pdm.Cells(
     name='cells',

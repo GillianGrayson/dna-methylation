@@ -6,7 +6,7 @@ cpg_list = f.read().splitlines()
 data = pdm.Data(
     name='cpg_beta',
     path='',
-    base='GSE40279'
+    base='EPIC'
 )
 
 annotations = pdm.Annotations(
@@ -25,7 +25,7 @@ observables = pdm.Observables(
     types={}
 )
 
-cells_types = ['B', 'CD4T', 'NK', 'CD8T', 'Gran']
+cells_types = 'any'
 
 cells = pdm.Cells(
     name='cells',
