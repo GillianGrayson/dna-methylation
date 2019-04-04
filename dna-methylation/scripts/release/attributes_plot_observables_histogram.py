@@ -3,7 +3,7 @@ import pydnameth as pdm
 data = pdm.Data(
     name='cpg_beta',
     path='',
-    base='GSE87571'
+    base='EPIC'
 )
 
 annotations = pdm.Annotations(
@@ -28,14 +28,14 @@ cells = pdm.Cells(
 )
 
 attributes = pdm.Attributes(
-    target='smoke',
+    target='age',
     observables=observables,
     cells=cells
 )
 
 observables_list = [
     {'gender': 'F'},
-    {'gender': 'M'},
+    {'gender': 'M'}
 ]
 
 pdm.attributes_plot_observables_histogram(
@@ -45,7 +45,8 @@ pdm.attributes_plot_observables_histogram(
     observables_list=observables_list,
     params={
         'bin_size': 1.0,
-        'opacity': 0.75,
-        'barmode': 'stack'
+        'opacity': 0.80,
+        'barmode': 'overlay',
+        'x_range': [5, 105]
     }
 )

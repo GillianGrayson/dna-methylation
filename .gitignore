@@ -110,3 +110,15 @@ venv.bak/
 figures/
 
 *.asv
+
+*.csv
+
+dna-methylation/r/fisher/CRC_paraffina_input_Fisher_E075_nominal0\.001_POSNEG_ClassAGreater2\.txt
+
+*.RData
+
+*.html
+
+*.pdf
+
+*.png

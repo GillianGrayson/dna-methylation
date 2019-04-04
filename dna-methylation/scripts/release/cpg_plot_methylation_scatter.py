@@ -11,11 +11,11 @@ data = pdm.Data(
 
 annotations = pdm.Annotations(
     name='annotations',
-    exclude='none',
-    cross_reactive='ex',
-    snp='ex',
+    exclude='bad_cpgs',
+    cross_reactive='any',
+    snp='any',
     chr='NS',
-    gene_region='yes',
+    gene_region='any',
     geo='any',
     probe_class='any'
 )
@@ -48,6 +48,7 @@ pdm.cpg_plot_methylation_scatter(
     observables_list=observables_list,
     cpg_list=cpg_list,
     params={
-        'x_range': [10, 110]
+        'x_range': [5, 105],
+        'details': 1
     }
 )
