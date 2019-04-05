@@ -17,7 +17,8 @@ annotations = pdm.Annotations(
     probe_class='any'
 )
 
-cells_types = ['B', 'CD4T', 'NK', 'CD8T', 'Gran']
+#cells_types = ['B', 'CD4T', 'NK', 'CD8T', 'Gran']
+cells_types = 'any'
 
 cells = pdm.Cells(
     name='cells',
@@ -41,7 +42,7 @@ for obs in obs_list:
         cells=cells
     )
 
-    pdm.residuals_proc_table_linreg_dev(
+    pdm.residuals_common_proc_table_linreg_dev(
         data=data,
         annotations=annotations,
         attributes=attributes

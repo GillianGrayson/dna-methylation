@@ -8,11 +8,11 @@ data = pdm.Data(
 
 annotations = pdm.Annotations(
     name='annotations',
-    exclude='bad_cpgs',
-    cross_reactive='any',
-    snp='any',
+    exclude='none',
+    cross_reactive='ex',
+    snp='ex',
     chr='NS',
-    gene_region='any',
+    gene_region='yes',
     geo='any',
     probe_class='any'
 )
@@ -22,9 +22,12 @@ observables = pdm.Observables(
     types={}
 )
 
+#cells_types = ['B', 'CD4T', 'NK', 'CD8T', 'Gran']
+cells_types = 'any'
+
 cells = pdm.Cells(
     name='cells',
-    types='any'
+    types=cells_types
 )
 
 attributes = pdm.Attributes(
@@ -38,7 +41,7 @@ observables_list = [
     {'gender': 'M'}
 ]
 
-pdm.cpg_proc_table_aggregator_dev(
+pdm.residuals_common_proc_table_aggregator_dev(
     data=data,
     annotations=annotations,
     attributes=attributes,
