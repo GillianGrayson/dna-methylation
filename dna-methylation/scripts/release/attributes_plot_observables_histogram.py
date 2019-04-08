@@ -3,16 +3,16 @@ import pydnameth as pdm
 data = pdm.Data(
     name='cpg_beta',
     path='',
-    base='EPIC'
+    base='GSE40279'
 )
 
 annotations = pdm.Annotations(
     name='annotations',
-    exclude='none',
-    cross_reactive='ex',
-    snp='ex',
+    exclude='bad_cpgs',
+    cross_reactive='any',
+    snp='any',
     chr='NS',
-    gene_region='yes',
+    gene_region='any',
     geo='any',
     probe_class='any'
 )

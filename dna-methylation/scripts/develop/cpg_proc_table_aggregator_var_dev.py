@@ -38,10 +38,9 @@ observables_list = [
     {'gender': 'M'}
 ]
 
-pdm.cpg_proc_table_aggregator_dev(
+pdm.cpg_proc_table_aggregator_var_dev(
     data=data,
     annotations=annotations,
     attributes=attributes,
-    observables_list=observables_list,
-    params=None
+    observables_list=observables_list
 )
