@@ -3,7 +3,7 @@ import pydnameth as pdm
 data = pdm.Data(
     name='cpg_beta',
     path='',
-    base='EPIC'
+    base='GSE40279'
 )
 
 annotations = pdm.Annotations(

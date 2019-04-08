@@ -1,5 +1,8 @@
 import pydnameth as pdm
 
+f = open('cpgs.txt', 'r')
+cpg_list = f.read().splitlines()
+
 data = pdm.Data(
     name='cpg_beta',
     path='',
@@ -38,10 +41,14 @@ observables_list = [
     {'gender': 'M'}
 ]
 
-pdm.cpg_proc_table_aggregator_dev(
+pdm.cpg_plot_methylation_scatter_var_dev(
     data=data,
     annotations=annotations,
     attributes=attributes,
     observables_list=observables_list,
-    params=None
+    cpg_list=cpg_list,
+    params={
+        'x_range': [5, 105],
+        'details': 2
+    }
 )
