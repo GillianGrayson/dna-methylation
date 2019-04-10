@@ -48,9 +48,9 @@ for id in range(0, len(y_data)):
             y=[y_data[id] - 1.0],
             base=[1.0],
             marker=dict(
-                color='rgba(219, 64, 82, 0.7)',
+                color='rgba(55, 128, 191, 0.7)',
                 line=dict(
-                    color='rgba(219, 64, 82, 1.0)',
+                    color='rgba(55, 128, 191, 1.0)',
                     width=2,
                 )
             )

@@ -1,11 +1,16 @@
 rm(list=ls())
 library(minfi)
+library(shinyMethyl)
+library(wateRmelon)
 source("https://bioconductor.org/biocLite.R")
 biocLite("FlowSorted.Blood.450k")
 
 # ====== Parameters =======
 dataset <- "test"
 calc_cell_counts = TRUE
+control_analysis = TRUE
+shinyMethyl_analysis = TRUE
+pfilter_analysis = TRUE
 raw_analysis = TRUE
 funnorm_analysis = TRUE
 # =========================
@@ -51,6 +56,28 @@ if (calc_cell_counts){
 }
 # =========================
 
+# ======= Control probes ========
+if (control_analysis){
+  df_TypeControl <- data.frame(getProbeInfo(RGset, type = "Control"))
+  pdf("control_negative.pdf",width=15,height=5)
+  controlStripPlot(RGset, controls="NEGATIVE")
+  dev.off()
+}
+# ===============================
+
+# ======= shinyMethyl =======
+if (shinyMethyl_analysis){
+  summary <- shinySummarize(RGset)
+  save(summary,file="summary_shinyMethyl.RData")
+}
+# ===========================
+
+# ========= pfilter ===========
+if (pfilter_analysis){
+  wateRmelon_filtered <- pfilter(RGset, pnthresh=0.05,perc=5, pthresh=1)
+}
+# =============================
+
 # ======== preprocessRaw =========
 if (raw_analysis){
   MSet_raw <- preprocessRaw(RGset)
@@ -92,3 +119,4 @@ if (funnorm_analysis){
   save(beta_funnorm,file="beta_funnorm.RData")
   write.table(beta_funnorm,file="beta_funnorm.txt",row.names=F,sep="\t",quote=F)
 }
+# ====================================
