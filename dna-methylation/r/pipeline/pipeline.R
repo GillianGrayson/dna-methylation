@@ -12,7 +12,6 @@ if (nodename == "MSI"){
   root_path <- getwd()
 }
 
-
 # ====== Parameters: =======
 dataset <- "test"
 calc_cell_counts = TRUE
@@ -20,7 +19,7 @@ calc_cell_counts = TRUE
 
 raw_path <- "raw"
 setwd(paste(root_path, "/", dataset, "/", raw_path, sep=''))
-input_data_path <- "raw/input_data"
+input_data_path <- "raw/rg"
 
 RGset_fn <- paste(root_path, "/", dataset, "/", raw_path, "/", "RGset.RData",  sep='')
 if (!file.exists(RGset_fn)){
