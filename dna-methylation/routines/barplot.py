@@ -11,7 +11,8 @@ def save_figure(fn, fig):
     pio.write_image(fig, fn + '.png')
     pio.write_image(fig, fn + '.pdf')
 
-fn = "C:/Users/user/Google Drive/mlmg/draft/tests/GSE87571/fisher_table_Relation_to_UCSC_CpG_Island.csv"
+fn = "C:/Users/user/Google Drive/mlmg/draft/residuals/fisher/GSE87571/CHR.csv"
+
 
 table_dict = defaultdict(list)
 with open(fn, 'r') as f:
@@ -20,8 +21,8 @@ with open(fn, 'r') as f:
         for col, dat in row.items():
             table_dict[col].append(dat)
 
-#x_data = [('chr' + str(x)) for x in table_dict['CHR']]
-x_data = table_dict['Relation_to_UCSC_CpG_Island']
+x_data = [('chr' + str(x)) for x in table_dict['CHR']]
+#x_data = table_dict['group']
 y_data = list(map(float, table_dict['OR']))
 
 less_ids = [id for id in range(0, len(y_data)) if y_data[id] < 1]
@@ -48,9 +49,9 @@ for id in range(0, len(y_data)):
             y=[y_data[id] - 1.0],
             base=[1.0],
             marker=dict(
-                color='rgba(219, 64, 82, 0.7)',
+                color='rgba(55, 128, 191, 0.7)',
                 line=dict(
-                    color='rgba(219, 64, 82, 1.0)',
+                    color='rgba(55, 128, 191, 1.0)',
                     width=2,
                 )
             )
@@ -80,7 +81,8 @@ layout = go.Layout(
         ),
         exponentformat='e',
         showexponent='all',
-        #tickvals=[0.001, 0.002, 0.005, 0.01, 0.02, 0.05, 0.1, 0.2, 0.5, 0.8, 1, 2, 5, 10],
+        tickvals=[0.001, 0.002, 0.005, 0.01, 0.02, 0.05, 0.1, 0.2, 0.5, 1, 2, 5, 10],
+        #tickvals=[0.4, 0.06, 0.8, 1.0, 1.4, 1.8, 2.2, 2.6],
         #ticktext=['One', 'Three', 'Five', 'Seven', 'Nine', 'Eleven']
     ),
     xaxis=dict(

@@ -87,16 +87,16 @@ input=read.table("CRC_paraffina_input_Fisher_E075_nominal0.001_POSNEG_ClassAGrea
 
 exactfisher.res=matrix(data=NA,nrow=nrow(input),ncol=4)
 for (i in 1:nrow(input)) {
-	table=matrix(nrow=2,ncol=2)
-	table[1,1]= input[i,2]
-	table[2,1]= input[i,3]-input[i,2]
-	table[1,2]= input[i,4]-input[i,2]
-	table[2,2]= input[i,5]-(table[1,1]+table[2,1]+table[1,2])
-	f=fisher.test(table)
-	exactfisher.res[i,1]=f[[1]][1]
-	exactfisher.res[i,2]=f[[2]][1]
-	exactfisher.res[i,3]=f[[2]][2]
-	exactfisher.res[i,4]=f[[3]][[1]]
+  table=matrix(nrow=2,ncol=2)
+  table[1,1]= input[i,2]
+  table[2,1]= input[i,3]-input[i,2]
+  table[1,2]= input[i,4]-input[i,2]
+  table[2,2]= input[i,5]-(table[1,1]+table[2,1]+table[1,2])
+  f=fisher.test(table)
+  exactfisher.res[i,1]=f[[1]][1]
+  exactfisher.res[i,2]=f[[2]][1]
+  exactfisher.res[i,3]=f[[2]][2]
+  exactfisher.res[i,4]=f[[3]][[1]]
 }
 colnames(exactfisher.res) <- c("pvalue","Confidence interval Inf","Confidence interval Sup","OR")
 input_exactfisher=cbind(input,exactfisher.res)

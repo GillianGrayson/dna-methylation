@@ -11,11 +11,11 @@ data = pdm.Data(
 
 annotations = pdm.Annotations(
     name='annotations',
-    exclude='none',
-    cross_reactive='ex',
-    snp='ex',
+    exclude='bad_cpgs',
+    cross_reactive='any',
+    snp='any',
     chr='NS',
-    gene_region='yes',
+    gene_region='any',
     geo='any',
     probe_class='any'
 )
@@ -25,7 +25,7 @@ observables = pdm.Observables(
     types={}
 )
 
-cells_types = 'any'
+cells_types = ['B', 'CD4T', 'NK', 'CD8T', 'Gran']
 
 cells = pdm.Cells(
     name='cells',
@@ -50,6 +50,8 @@ pdm.residuals_common_plot_methylation_scatter_dev(
     observables_list=observables_list,
     cpg_list=cpg_list,
     params={
-        'x_range': [10, 110]
+        'x_range': [5, 105],
+        'y_range': [-0.4, 0.4],
+        'details': 1
     }
 )

@@ -1,8 +1,21 @@
 rm(list=ls())
 library(minfi)
+library(shinyMethyl)
+library(wateRmelon)
 source("https://bioconductor.org/biocLite.R")
 biocLite("FlowSorted.Blood.450k")
 
+# ====== Parameters =======
+dataset <- "test"
+calc_cell_counts = TRUE
+control_analysis = TRUE
+shinyMethyl_analysis = TRUE
+pfilter_analysis = TRUE
+raw_analysis = TRUE
+funnorm_analysis = TRUE
+# =========================
+
+# ====== File system =======
 nodename <- Sys.info()[[4]]
 if (nodename == "MSI"){
   root_path <- "D:/YandexDisk/Work/pydnameth"
@@ -12,20 +25,16 @@ if (nodename == "MSI"){
   root_path <- getwd()
 }
 
-
-# ====== Parameters: =======
-dataset <- "test"
-calc_cell_counts = TRUE
-# ==========================
-
 raw_path <- "raw"
 setwd(paste(root_path, "/", dataset, "/", raw_path, sep=''))
-input_data_path <- "raw/input_data"
+raw_rg_path <- "raw/rg"
+# ==========================
 
+# ======= RGset ========
 RGset_fn <- paste(root_path, "/", dataset, "/", raw_path, "/", "RGset.RData",  sep='')
 if (!file.exists(RGset_fn)){
   # Setting up targets
-  baseDir <- paste(root_path, "/", dataset, "/", input_data_path, sep='')
+  baseDir <- paste(root_path, "/", dataset, "/", raw_rg_path, sep='')
   list.files(baseDir)
   targets <- read.metharray.sheet(baseDir)
   RGset <- read.metharray.exp(targets = targets)
@@ -33,54 +42,81 @@ if (!file.exists(RGset_fn)){
 } else {
   load(RGset_fn)
 }
+# ======================
 
+# ======= CellCounts ======
 if (calc_cell_counts){
-  CellCounts_fn <- paste(root_path, "/", dataset, "/", raw_path, "/", "RCellCounts.RData",  sep='')
-  if (!file.exists(RGset_fn)){
+  CellCounts_fn <- paste(root_path, "/", dataset, "/", raw_path, "/", "CellCounts.RData",  sep='')
+  if (!file.exists(CellCounts_fn)){
     CellCounts <- estimateCellCounts(RGset)
-    
+  }
+  else{
+    load(CellCounts_fn)
   }
 }
+# =========================
 
-CellCounts <- estimateCellCounts(RGset)
-save(CellCounts,file="GSE87571_CellCounts.RData")
-load("GSE87571_CellCounts.RData")
-ls()
-head(CellCounts)
-list.files()
+# ======= Control probes ========
+if (control_analysis){
+  df_TypeControl <- data.frame(getProbeInfo(RGset, type = "Control"))
+  pdf("control_negative.pdf",width=15,height=5)
+  controlStripPlot(RGset, controls="NEGATIVE")
+  dev.off()
+}
+# ===============================
 
-MSet_Raw <- preprocessRaw(RGset)
+# ======= shinyMethyl =======
+if (shinyMethyl_analysis){
+  summary <- shinySummarize(RGset)
+  save(summary,file="summary_shinyMethyl.RData")
+}
+# ===========================
 
-green <- getGreen(RGset)
-red <- getRed(RGset)
-beta <- getBeta(RGset)
+# ========= pfilter ===========
+if (pfilter_analysis){
+  wateRmelon_filtered <- pfilter(RGset, pnthresh=0.05,perc=5, pthresh=1)
+}
+# =============================
 
-pdf("GSE87571_boxplots_intensities.pdf",width=15,height=5)
-par(mfrow=c(3,1))
-boxplot(green,outline=F)
-boxplot(red,outline=F)
-boxplot(beta,outline=F)
-dev.off()
+# ======== preprocessRaw =========
+if (raw_analysis){
+  MSet_raw <- preprocessRaw(RGset)
+  green <- getGreen(RGset)
+  red <- getRed(RGset)
+  beta_raw <- getBeta(RGset)
+  
+  pdf("boxplots_intensities.pdf", width=15, height=5)
+  par(mfrow=c(3,1))
+  boxplot(green,outline=F)
+  boxplot(red,outline=F)
+  boxplot(beta_raw,outline=F)
+  dev.off()
+  
+  qc <- getQC(MSet_raw)
+  pdf("QCplot.pdf")
+  plotQC(qc)
+  dev.off()
+  
+  pdf("boxplots_beta_raw.pdf",width=15,height=5)
+  par(mfrow=c(1,1))
+  boxplot(beta_raw,outline=F,main="No Normalization")
+  dev.off()
+}
+# ===============================
 
-# Controlli di qualità
-# qcplot
-qc <- getQC(MSet_Raw)
-pdf("GSE87571_QCplot.pdf")
-plotQC(qc)
-dev.off()
-
-funnorm <- preprocessFunnorm(RGset)
-beta_funnorm <- getBeta(funnorm)
-pdf("GSE87571_boxplots_beta_Funnorm.pdf",width=15,height=5)
-par(mfrow=c(2,1))
-boxplot(beta,outline=F,main="No Normalization")
-boxplot(beta_funnorm,outline=F,main="Funnorm Normalization")
-dev.off()
-
-beta_funnorm <- data.frame(row.names(beta_funnorm),beta_funnorm)
-colnames(beta_funnorm)[1] <- "ID_REF"
-dim(beta_funnorm)
-str(beta_funnorm)
-getwd()
-save(beta_funnorm,file="GSE87571_beta_funnorm.RData")
-write.table(beta_funnorm,file="GSE87571_beta_funnorm.txt",row.names=F,sep="\t",quote=F)
+# ======== preprocessFunnorm =========
+if (funnorm_analysis){
+  funnorm <- preprocessFunnorm(RGset)
+  beta_funnorm <- getBeta(funnorm)
+  
+  pdf("boxplots_beta_funnorm.pdf",width=15,height=5)
+  par(mfrow=c(1,1))
+  boxplot(beta_funnorm,outline=F,main="Funnorm Normalization")
+  dev.off()
+  
+  beta_funnorm <- data.frame(row.names(beta_funnorm),beta_funnorm)
+  colnames(beta_funnorm)[1] <- "ID_REF"
+  save(beta_funnorm,file="beta_funnorm.RData")
+  write.table(beta_funnorm,file="beta_funnorm.txt",row.names=F,sep="\t",quote=F)
+}
+# ====================================

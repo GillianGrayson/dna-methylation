@@ -13,7 +13,7 @@ def save_figure(fn, fig):
 trace0 = go.Scatter(
     x=[0.5, 1.5, 2.5, 1.5, 1.5, 0.87, 2.10],
     y=[0.75, 2.5, 0.75, 0.67, 1.4, 1.67, 1.67],
-    text=['GSE40279<br>3', 'EPIC<br>553', 'GSE87571<br>262', '0', '9', '0', '59'],
+    text=['GSE40279<br>6', 'EPIC<br>373', 'GSE87571<br>243', '0', '3', '0', '49'],
     mode='text',
     textfont=dict(
         color='black',
