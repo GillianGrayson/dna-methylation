@@ -6,4 +6,4 @@ data = pdm.Data(
     base='GSE87571'
 )
 
-pdm.load_epimutations_dev(data)
+pdm.epimutations_load_dev(data)

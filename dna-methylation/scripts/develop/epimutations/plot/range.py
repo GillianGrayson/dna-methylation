@@ -1,0 +1,52 @@
+import pydnameth as pdm
+
+data = pdm.Data(
+    name='cpg_beta',
+    path='',
+    base='EPIC'
+)
+
+annotations = pdm.Annotations(
+    name='annotations',
+    exclude='bad_cpgs',
+    cross_reactive='any',
+    snp='any',
+    chr='NS',
+    gene_region='any',
+    geo='any',
+    probe_class='any'
+)
+
+observables = pdm.Observables(
+    name='observables',
+    types={}
+)
+
+cells = pdm.Cells(
+    name='cells',
+    types='any'
+)
+
+attributes = pdm.Attributes(
+    target='age',
+    observables=observables,
+    cells=cells
+)
+
+observables_list = [
+    {'gender': 'F'},
+    {'gender': 'M'}
+]
+
+pdm.epimutations_plot_range_dev(
+    data=data,
+    annotations=annotations,
+    attributes=attributes,
+    observables_list=observables_list,
+    params={
+        'borders': [0, 20, 40, 60, 80, 100, 120],
+        'x_range': [0, 120],
+        'y_range': 'auto',
+        'y_type': 'log'
+    }
+)

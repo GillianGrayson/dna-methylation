@@ -38,7 +38,7 @@ observables_list = [
     {'gender': 'M'}
 ]
 
-pdm.attributes_plot_observables_histogram(
+pdm.observables_plot_histogram(
     data=data,
     annotations=annotations,
     attributes=attributes,
