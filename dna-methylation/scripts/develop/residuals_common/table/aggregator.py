@@ -37,14 +37,12 @@ observables_list = [
     {'gender': 'M'}
 ]
 
-pdm.epimutations_plot_scatter_dev(
+data_params = {'cells': ['B', 'CD4T', 'NK', 'CD8T', 'Gran']}
+
+pdm.residuals_common_table_aggregator_dev(
     data=data,
     annotations=annotations,
     attributes=attributes,
     observables_list=observables_list,
-    method_params={
-        'x_range': [5, 105],
-        'y_range': 'auto',
-        'y_type': 'log'
-    }
+    data_params=data_params
 )

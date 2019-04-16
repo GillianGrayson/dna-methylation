@@ -1,9 +1,8 @@
 import pydnameth as pdm
 
 data = pdm.Data(
-    name='cpg_beta',
     path='',
-    base='GSE87571'
+    base='EPIC'
 )
 
 annotations = pdm.Annotations(
@@ -38,10 +37,20 @@ observables_list = [
     {'gender': 'M'}
 ]
 
-pdm.cpg_proc_table_aggregator_dev(
+data_params = {
+    'data': 'betas_adj',
+    'observables': ['age'],
+    'cells': ['B', 'CD4T', 'NK', 'CD8T', 'Gran']
+}
+
+pdm.entropy_plot_scatter_dev(
     data=data,
     annotations=annotations,
     attributes=attributes,
     observables_list=observables_list,
-    params=None
+    data_params=data_params,
+    method_params={
+        'x_range': [5, 105],
+        'y_range': 'auto',
+    }
 )

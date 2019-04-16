@@ -1,7 +1,6 @@
 import pydnameth as pdm
 
 data = pdm.Data(
-    name='cpg_beta',
     path='',
     base='EPIC'
 )
@@ -43,7 +42,7 @@ pdm.epimutations_plot_range_dev(
     annotations=annotations,
     attributes=attributes,
     observables_list=observables_list,
-    params={
+    method_params={
         'borders': [0, 20, 40, 60, 80, 100, 120],
         'x_range': [0, 120],
         'y_range': 'auto',

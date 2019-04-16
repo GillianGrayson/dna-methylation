@@ -37,14 +37,9 @@ observables_list = [
     {'gender': 'M'}
 ]
 
-pdm.epimutations_plot_scatter_dev(
+pdm.betas_table_aggregator_dev(
     data=data,
     annotations=annotations,
     attributes=attributes,
-    observables_list=observables_list,
-    method_params={
-        'x_range': [5, 105],
-        'y_range': 'auto',
-        'y_type': 'log'
-    }
+    observables_list=observables_list
 )
