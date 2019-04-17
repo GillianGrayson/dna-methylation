@@ -2,7 +2,7 @@ import pydnameth as pdm
 
 data = pdm.Data(
     path='',
-    base='EPIC'
+    base='GSE87571'
 )
 
 annotations = pdm.Annotations(

@@ -1,26 +1,25 @@
-import plotly.plotly as py
-import plotly.graph_objs as go
+from __future__ import print_function
+from statsmodels.compat import lzip
+import statsmodels
+import numpy as np
+import pandas as pd
+import statsmodels.formula.api as smf
+import statsmodels.stats.api as sms
 
-trace1 = go.Scatter(
-    x=[1, 2, 3],
-    y=[4, 3, 2]
-)
-trace2 = go.Scatter(
-    x=[20, 30, 40],
-    y=[30, 40, 50],
-    xaxis='x2',
-    yaxis='y2'
-)
-data = [trace1, trace2]
-layout = go.Layout(
-    xaxis2=dict(
-        domain=[0.6, 0.95],
-        anchor='y2'
-    ),
-    yaxis2=dict(
-        domain=[0.6, 0.95],
-        anchor='x2'
-    )
-)
-fig = go.Figure(data=data, layout=layout)
-py.plot(fig, filename='simple-inset')
+# Load data
+url = 'https://raw.githubusercontent.com/vincentarelbundock/Rdatasets/master/csv/HistData/Guerry.csv'
+dat = pd.read_csv(url)
+
+# Fit regression model (using the natural log of one of the regressors)
+results = smf.ols('Lottery ~ Literacy + np.log(Pop1831)', data=dat).fit()
+
+# Inspect the results
+print(results.summary())
+
+name = ['Lagrange multiplier statistic', 'p-value',
+        'f-value', 'f p-value']
+test = sms.het_breuschpagan(results.resid, results.model.exog)
+lzip(name, test)
+
+
+a = 0
