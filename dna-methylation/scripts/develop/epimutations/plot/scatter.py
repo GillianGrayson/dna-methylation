@@ -1,10 +1,6 @@
 import pydnameth as pdm
 
-f = open('cpgs.txt', 'r')
-cpg_list = f.read().splitlines()
-
 data = pdm.Data(
-    name='cpg_beta',
     path='',
     base='EPIC'
 )
@@ -25,11 +21,9 @@ observables = pdm.Observables(
     types={}
 )
 
-cells_types = ['B', 'CD4T', 'NK', 'CD8T', 'Gran']
-
 cells = pdm.Cells(
     name='cells',
-    types=cells_types
+    types='any'
 )
 
 attributes = pdm.Attributes(
@@ -43,15 +37,14 @@ observables_list = [
     {'gender': 'M'}
 ]
 
-pdm.residuals_common_plot_methylation_scatter_dev(
+pdm.epimutations_plot_scatter_dev(
     data=data,
     annotations=annotations,
     attributes=attributes,
     observables_list=observables_list,
-    cpg_list=cpg_list,
-    params={
+    method_params={
         'x_range': [5, 105],
-        'y_range': [-0.4, 0.4],
-        'details': 1
+        'y_range': 'auto',
+        'y_type': 'log'
     }
 )

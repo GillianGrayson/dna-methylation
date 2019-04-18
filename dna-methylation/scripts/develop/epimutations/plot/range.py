@@ -1,9 +1,8 @@
 import pydnameth as pdm
 
 data = pdm.Data(
-    name='cpg_beta',
     path='',
-    base='GSE40279'
+    base='EPIC'
 )
 
 annotations = pdm.Annotations(
@@ -38,15 +37,15 @@ observables_list = [
     {'gender': 'M'}
 ]
 
-pdm.attributes_plot_observables_histogram(
+pdm.epimutations_plot_range_dev(
     data=data,
     annotations=annotations,
     attributes=attributes,
     observables_list=observables_list,
-    params={
-        'bin_size': 1.0,
-        'opacity': 0.80,
-        'barmode': 'overlay',
-        'x_range': [5, 105]
+    method_params={
+        'borders': [0, 20, 40, 60, 80, 100, 120],
+        'x_range': [0, 120],
+        'y_range': 'auto',
+        'y_type': 'log'
     }
 )

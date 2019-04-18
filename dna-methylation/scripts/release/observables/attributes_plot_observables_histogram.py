@@ -3,7 +3,7 @@ import pydnameth as pdm
 data = pdm.Data(
     name='cpg_beta',
     path='',
-    base='GSE87571'
+    base='GSE40279'
 )
 
 annotations = pdm.Annotations(
@@ -38,10 +38,15 @@ observables_list = [
     {'gender': 'M'}
 ]
 
-pdm.cpg_proc_table_aggregator_dev(
+pdm.observables_plot_histogram(
     data=data,
     annotations=annotations,
     attributes=attributes,
     observables_list=observables_list,
-    params=None
+    params={
+        'bin_size': 1.0,
+        'opacity': 0.80,
+        'barmode': 'overlay',
+        'x_range': [5, 105]
+    }
 )
