@@ -2,12 +2,12 @@ import pydnameth as pdm
 
 data = pdm.Data(
     path='',
-    base='EPIC'
+    base='GSE40279'
 )
 
 annotations = pdm.Annotations(
     name='annotations',
-    exclude='bad_cpgs',
+    exclude='non27_cpgs',
     cross_reactive='any',
     snp='any',
     chr='NS',

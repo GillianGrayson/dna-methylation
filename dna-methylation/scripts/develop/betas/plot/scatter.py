@@ -50,6 +50,7 @@ pdm.betas_plot_scatter_dev(
     method_params={
         'x_range': [5, 105],
         'y_range': 'auto',
-        'details': 1
+        'details': 1,
+        'std_semi_window': 8
     }
 )

@@ -5,7 +5,7 @@ cpg_list = f.read().splitlines()
 
 data = pdm.Data(
     path='',
-    base='EPIC'
+    base='GSE87571'
 )
 
 annotations = pdm.Annotations(
@@ -40,7 +40,10 @@ observables_list = [
     {'gender': 'M'}
 ]
 
-data_params = {'cells': ['B', 'CD4T', 'NK', 'CD8T', 'Gran']}
+data_params = {
+    'cells': ['B', 'CD4T', 'NK', 'CD8T', 'Gran'],
+    'observables': ['age']
+}
 
 pdm.residuals_common_plot_scatter_dev(
     data=data,
@@ -51,7 +54,8 @@ pdm.residuals_common_plot_scatter_dev(
     data_params = data_params,
     method_params={
         'x_range': [5, 105],
-        'y_range': [-0.4, 0.4],
-        'details': 1
+        'y_range': 'auto',
+        'details': 1,
+        'std_semi_window': 8
     },
 )
