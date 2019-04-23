@@ -1,13 +1,17 @@
 import pydnameth as pdm
 
+
+f = open('cpgs.txt', 'r')
+cpg_list = f.read().splitlines()
+
 data = pdm.Data(
     path='',
-    base='EPIC'
+    base='GSE87571'
 )
 
 annotations = pdm.Annotations(
     name='annotations',
-    exclude='non27_cpgs',
+    exclude='bad_cpgs',
     cross_reactive='any',
     snp='any',
     chr='NS',
@@ -37,14 +41,14 @@ observables_list = [
     {'gender': 'M'}
 ]
 
-pdm.epimutations_plot_scatter_dev(
+pdm.betas_clock_plot_curve_dev(
     data=data,
     annotations=annotations,
     attributes=attributes,
     observables_list=observables_list,
     method_params={
-        'x_range': [5, 105],
-        'y_range': 'auto',
-        'y_type': 'log'
+        'x': 'count',
+        'y': 'rms',
+        'number_of_points': 100
     }
 )

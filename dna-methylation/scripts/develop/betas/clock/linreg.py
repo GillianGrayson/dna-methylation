@@ -1,18 +1,17 @@
 import pydnameth as pdm
 
 data = pdm.Data(
-    name='cpg_beta',
     path='',
     base='GSE87571'
 )
 
 annotations = pdm.Annotations(
     name='annotations',
-    exclude='none',
-    cross_reactive='ex',
-    snp='ex',
+    exclude='bad_cpgs',
+    cross_reactive='any',
+    snp='any',
     chr='NS',
-    gene_region='yes',
+    gene_region='any',
     geo='any',
     probe_class='any'
 )
@@ -24,8 +23,7 @@ cells = pdm.Cells(
 
 obs_list = [
     {'gender': 'F'},
-    {'gender': 'M'},
-    {'gender': 'any'}
+    {'gender': 'M'}
 ]
 
 for obs in obs_list:
@@ -41,11 +39,11 @@ for obs in obs_list:
         cells=cells
     )
 
-    pdm.cpg_proc_clock_linreg(
+    pdm.betas_clock_linreg_dev(
         data=data,
         annotations=annotations,
         attributes=attributes,
-        params={
+        method_params={
             'type': 'all',
             'part': 0.25,
             'size': 100,
