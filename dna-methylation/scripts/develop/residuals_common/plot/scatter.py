@@ -45,7 +45,7 @@ data_params = {
     'observables': ['age']
 }
 
-pdm.residuals_common_plot_scatter_dev(
+pdm.residuals_common_plot_scatter(
     data=data,
     annotations=annotations,
     attributes=attributes,
@@ -55,7 +55,8 @@ pdm.residuals_common_plot_scatter_dev(
     method_params={
         'x_range': [5, 105],
         'y_range': 'auto',
-        'details': 1,
-        'std_semi_window': 8
+        'line': 'no',
+        'add': 'box',
+        'semi_window': 8
     },
 )
