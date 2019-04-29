@@ -7,7 +7,7 @@ data = pdm.Data(
 
 annotations = pdm.Annotations(
     name='annotations',
-    exclude='non27_cpgs',
+    exclude='bad_cpgs',
     cross_reactive='any',
     snp='any',
     chr='NS',
