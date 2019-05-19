@@ -1,4 +1,5 @@
 from tqdm import tqdm
+import numpy as np
 
 def get_line_list(line):
     line_list = line.split('\t')
@@ -6,39 +7,40 @@ def get_line_list(line):
         line_list[val_id] = line_list[val_id].replace('"', '').rstrip()
     return line_list
 
-fn_data = 'E:/YandexDisk/Work/pydnameth/GSE55763/betas'
-fn_txt = fn_data + '.txt'
+fn_path = 'E:/YandexDisk/Work/pydnameth/GSE55763/'
+fn_txt = fn_path + 'betas_raw.txt'
+
+num_lines = 473865
+num_cpgs = num_lines - 1
 
 f = open(fn_txt)
 header_line = f.readline()
 headers = header_line.split('\t')
 headers = [x.rstrip() for x in headers]
-subjects = headers[1:len(headers)]
 
-morphology_info = np.zeros(len(del_ids),
-                           dtype=[('var1', int), ('var2', 'U50'), ('var3', int), ('var4', float),
-                                  ('var5', int), ('var6', int), ('var7', int), ('var8', int)])
-fmt = "%d %s %d %8e %d %d %d %d"
+betas_indexes = [0] + list(range(1, len(headers), 2))
+pvals_indexes = [0] + list(range(2, len(headers), 2))
+betas_cols = [headers[i] for i in betas_indexes]
+pvals_cols = [headers[i] for i in betas_indexes]
+num_cols = len(betas_cols)
 
-morphology_info['var1'] = del_ids
-morphology_info['var2'] = names
-morphology_info['var3'] = indexes
-morphology_info['var4'] = values
-morphology_info['var5'] = signs
-morphology_info['var6'] = degrees
-morphology_info['var7'] = branch_ids_0
-morphology_info['var8'] = branch_ids_1
+np.savetxt(fn_path + 'subjects.txt', np.asarray(betas_cols[1::]), fmt='%s')
 
-np.savetxt(data_file_name, morphology_info, fmt=fmt)
+row_id = 0
+betas_arr = np.zeros(num_lines, dtype=object)
+betas_arr[row_id] = '\t'.join(betas_cols)
+pvals_arr = np.zeros(num_lines, dtype=object)
+pvals_arr[row_id] = '\t'.join(pvals_cols)
 
-config.betas_data = np.zeros((num_cpgs, len(subjects)), dtype=np.float32)
-
-cpg_id = 0
-for line in tqdm(f, mininterval=60.0, desc='betas_data creating'):
+row_id += 1
+for line in tqdm(f, mininterval=60.0, desc='betas_dict creating'):
     line_list = get_line_list(line)
-    curr_data = list(map(np.float32, line_list[1::]))
-    config.betas_data[cpg_id] = curr_data
-    cpg_id += 1
+    betas_cols = [line_list[i] for i in betas_indexes]
+    pvals_cols = [line_list[i] for i in pvals_indexes]
+    betas_arr[row_id] = '\t'.join(betas_cols)
+    pvals_arr[row_id] = '\t'.join(pvals_cols)
+    row_id += 1
 f.close()
 
-np.savez_compressed(fn_npz, data=config.betas_data)
+np.savetxt(fn_path + 'betas.txt', betas_arr, fmt='%s')
+np.savetxt(fn_path + 'pvals.txt', pvals_arr, fmt='%s')
