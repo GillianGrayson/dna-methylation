@@ -43,7 +43,7 @@ for obs in obs_list:
         cells=cells
     )
 
-    pdm.betas_table_cluster_dev(
+    pdm.betas_table_cluster(
         data=data,
         annotations=annotations,
         attributes=attributes,

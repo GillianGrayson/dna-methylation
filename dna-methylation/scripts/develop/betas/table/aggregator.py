@@ -37,7 +37,7 @@ observables_list = [
     {'gender': 'M'}
 ]
 
-pdm.betas_table_aggregator_dev(
+pdm.betas_table_aggregator_linreg(
     data=data,
     annotations=annotations,
     attributes=attributes,

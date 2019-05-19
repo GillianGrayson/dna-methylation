@@ -38,7 +38,7 @@ for obs in obs_list:
         cells=cells
     )
 
-    pdm.betas_table_linreg_dev(
+    pdm.betas_table_linreg(
         data=data,
         annotations=annotations,
         attributes=attributes
