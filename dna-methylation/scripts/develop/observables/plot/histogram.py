@@ -33,8 +33,8 @@ attributes = pdm.Attributes(
 )
 
 observables_list = [
-    {'gender': 'F', 'description': 'population_study_sample'},
-    {'gender': 'M', 'description': 'population_study_sample'}
+    {'gender': 'F', 'is_duplicate': '0'},
+    {'gender': 'M', 'is_duplicate': '0'}
 ]
 
 pdm.observables_plot_histogram(

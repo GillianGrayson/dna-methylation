@@ -57,8 +57,8 @@ for cpg_id in range(0, len(cpgs)):
         )
 
         observables_list = [
-            {'gender': 'F'},
-            {'gender': 'M'}
+            {'gender': 'F', 'is_duplicate': '0'},
+            {'gender': 'M', 'is_duplicate': '0'}
         ]
 
         pdm.betas_plot_scatter(
@@ -72,6 +72,7 @@ for cpg_id in range(0, len(cpgs)):
                 'y_range': [y_begin, y_end],
                 'line': 'yes',
                 'fit': 'no',
-                'semi_window': 'none'
+                'semi_window': 'none',
+                'legend_size': 1
             }
         )
