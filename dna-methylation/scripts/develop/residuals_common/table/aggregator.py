@@ -39,7 +39,7 @@ observables_list = [
 
 data_params = {'cells': ['B', 'CD4T', 'NK', 'CD8T', 'Gran']}
 
-pdm.residuals_common_table_aggregator_dev(
+pdm.residuals_common_table_aggregator_linreg(
     data=data,
     annotations=annotations,
     attributes=attributes,

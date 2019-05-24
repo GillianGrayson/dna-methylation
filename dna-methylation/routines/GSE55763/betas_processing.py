@@ -10,7 +10,7 @@ def get_line_list(line):
 fn_path = 'E:/YandexDisk/Work/pydnameth/GSE55763/'
 fn_txt = fn_path + 'betas_raw.txt'
 
-num_lines = 473865
+num_lines = 473865 - 41958
 num_cpgs = num_lines - 1
 
 f = open(fn_txt)
@@ -32,15 +32,30 @@ betas_arr[row_id] = '\t'.join(betas_cols)
 pvals_arr = np.zeros(num_lines, dtype=object)
 pvals_arr[row_id] = '\t'.join(pvals_cols)
 
+total_NA_cpgs = 0
+NA_indexes = np.zeros(num_cols)
+
 row_id += 1
 for line in tqdm(f, mininterval=60.0, desc='betas_dict creating'):
     line_list = get_line_list(line)
     betas_cols = [line_list[i] for i in betas_indexes]
-    pvals_cols = [line_list[i] for i in pvals_indexes]
-    betas_arr[row_id] = '\t'.join(betas_cols)
-    pvals_arr[row_id] = '\t'.join(pvals_cols)
-    row_id += 1
+
+    if 'NA' in betas_cols:
+        total_NA_cpgs += 1
+        NA_indexes_curr = [i for i, x in enumerate(betas_cols) if x == 'NA']
+        for NA_index in NA_indexes_curr:
+            NA_indexes[NA_index] += 1
+    else:
+        pvals_cols = [line_list[i] for i in pvals_indexes]
+        betas_arr[row_id] = '\t'.join(betas_cols)
+        pvals_arr[row_id] = '\t'.join(pvals_cols)
+        row_id += 1
+
 f.close()
 
-np.savetxt(fn_path + 'betas.txt', betas_arr, fmt='%s')
-np.savetxt(fn_path + 'pvals.txt', pvals_arr, fmt='%s')
+print(f'total_NA_cpgs: {total_NA_cpgs}')
+print(f'num_rows: {row_id}')
+np.savetxt(fn_path + 'NA_indexes.txt', NA_indexes, fmt='%d')
+
+np.savetxt(fn_path + 'betas11.txt', betas_arr, fmt='%s')
+np.savetxt(fn_path + 'pvals11.txt', pvals_arr, fmt='%s')

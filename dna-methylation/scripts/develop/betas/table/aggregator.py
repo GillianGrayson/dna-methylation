@@ -2,7 +2,7 @@ import pydnameth as pdm
 
 data = pdm.Data(
     path='',
-    base='EPIC'
+    base='GSE55763'
 )
 
 annotations = pdm.Annotations(
@@ -33,8 +33,8 @@ attributes = pdm.Attributes(
 )
 
 observables_list = [
-    {'gender': 'F'},
-    {'gender': 'M'}
+    {'gender': 'F', 'description': 'population_study_sample'},
+    {'gender': 'M', 'description': 'population_study_sample'}
 ]
 
 pdm.betas_table_aggregator_linreg(

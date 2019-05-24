@@ -2,78 +2,76 @@ import pydnameth as pdm
 import pandas as pd
 import os.path
 
+fn = 'cpgs.xlsx'
+table_dict = {}
+if os.path.isfile(fn):
+    df = pd.read_excel(fn)
+    tmp_dict = df.to_dict()
+    for key in tmp_dict:
+        curr_dict = tmp_dict[key]
+        table_dict[key] = list(curr_dict.values())
 
-f = open('cpgs.txt', 'r')
-cpg_list = f.read().splitlines()
+cpgs = table_dict['cpg']
+y_begins = table_dict['begin']
+y_ends = table_dict['end']
 
-# fn = 'cpgs.xlsx'
-# table_dict = {}
-# if os.path.isfile(fn):
-#     df = pd.read_excel(fn)
-#     tmp_dict = df.to_dict()
-#     for key in tmp_dict:
-#         curr_dict = tmp_dict[key]
-#         table_dict[key] = list(curr_dict.values())
+data_bases = ['GSE55763']
 
-# cpgs = table_dict['cpg']
-# y_begins = table_dict['begin']
-# y_ends = table_dict['end']
+for cpg_id in range(0, len(cpgs)):
+    cpg_list = [cpgs[cpg_id]]
+    y_begin = y_begins[cpg_id]
+    y_end = y_ends[cpg_id]
 
-data_bases = ['GSE87571']
+    for data_base in data_bases:
 
-#for cpg_id in range(0, len(cpgs)):
-    #cpg_list = [cpgs[cpg_id]]
-    #y_begin = y_begins[cpg_id]
-    #y_end = y_ends[cpg_id]
+        data = pdm.Data(
+            path='',
+            base=data_base
+        )
 
-for data_base in data_bases:
-    data = pdm.Data(
-        name='cpg_beta',
-        path='',
-        base=data_base
-    )
+        annotations = pdm.Annotations(
+            name='annotations',
+            exclude='bad_cpgs',
+            cross_reactive='any',
+            snp='any',
+            chr='NS',
+            gene_region='any',
+            geo='any',
+            probe_class='any'
+        )
 
-    annotations = pdm.Annotations(
-        name='annotations',
-        exclude='bad_cpgs',
-        cross_reactive='any',
-        snp='any',
-        chr='NS',
-        gene_region='any',
-        geo='any',
-        probe_class='any'
-    )
+        observables = pdm.Observables(
+            name='observables',
+            types={}
+        )
 
-    observables = pdm.Observables(
-        name='observables',
-        types={}
-    )
+        cells = pdm.Cells(
+            name='cells',
+            types='any'
+        )
 
-    cells = pdm.Cells(
-        name='cells',
-        types='any'
-    )
+        attributes = pdm.Attributes(
+            target='age',
+            observables=observables,
+            cells=cells
+        )
 
-    attributes = pdm.Attributes(
-        target='age',
-        observables=observables,
-        cells=cells
-    )
+        observables_list = [
+            {'gender': 'F'},
+            {'gender': 'M'}
+        ]
 
-    observables_list = [
-        {'gender': 'F'},
-        {'gender': 'M'}
-    ]
-
-    pdm.cpg_plot_methylation_scatter(
-        data=data,
-        annotations=annotations,
-        attributes=attributes,
-        observables_list=observables_list,
-        cpg_list=cpg_list,
-        params={
-            'x_range': [5, 105],
-            #'y_range': [y_begin, y_end],
-            'details': 1
-        }
-    )
+        pdm.betas_plot_scatter(
+            data=data,
+            annotations=annotations,
+            attributes=attributes,
+            observables_list=observables_list,
+            cpg_list=cpg_list,
+            method_params={
+                'x_range': [5, 105],
+                'y_range': [y_begin, y_end],
+                'line': 'yes',
+                'fit': 'no',
+                'semi_window': 'none'
+            }
+        )

@@ -1,9 +1,8 @@
 import pydnameth as pdm
 
 data = pdm.Data(
-    name='cpg_beta',
     path='',
-    base='GSE40279'
+    base='GSE55763'
 )
 
 annotations = pdm.Annotations(
@@ -34,8 +33,8 @@ attributes = pdm.Attributes(
 )
 
 observables_list = [
-    {'gender': 'F'},
-    {'gender': 'M'}
+    {'gender': 'F', 'description': 'population_study_sample'},
+    {'gender': 'M', 'description': 'population_study_sample'}
 ]
 
 pdm.observables_plot_histogram(
@@ -43,10 +42,11 @@ pdm.observables_plot_histogram(
     annotations=annotations,
     attributes=attributes,
     observables_list=observables_list,
-    params={
+    method_params={
         'bin_size': 1.0,
         'opacity': 0.80,
         'barmode': 'overlay',
-        'x_range': [5, 105]
+        'x_range': [5, 105],
+        'legend_size': 1
     }
 )
