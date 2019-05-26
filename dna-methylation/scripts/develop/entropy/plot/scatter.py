@@ -32,10 +32,16 @@ attributes = pdm.Attributes(
     cells=cells
 )
 
-observables_list = [
-    {'gender': 'F'},
-    {'gender': 'M'}
-]
+if data.base == 'GSE55763':
+    observables_list = [
+        {'gender': 'F', 'is_duplicate': '0'},
+        {'gender': 'M', 'is_duplicate': '0'}
+    ]
+else:
+    observables_list = [
+        {'gender': 'F'},
+        {'gender': 'M'}
+    ]
 
 data_params = {
     'data': 'betas_adj',
@@ -43,7 +49,7 @@ data_params = {
     'cells': ['B', 'CD4T', 'NK', 'CD8T', 'Gran']
 }
 
-pdm.entropy_plot_scatter_dev(
+pdm.entropy_plot_scatter(
     data=data,
     annotations=annotations,
     attributes=attributes,

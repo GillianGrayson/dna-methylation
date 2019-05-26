@@ -35,10 +35,16 @@ attributes = pdm.Attributes(
     cells=cells
 )
 
-observables_list = [
-    {'gender': 'F'},
-    {'gender': 'M'}
-]
+if data.base == 'GSE55763':
+    observables_list = [
+        {'gender': 'F', 'is_duplicate': '0'},
+        {'gender': 'M', 'is_duplicate': '0'}
+    ]
+else:
+    observables_list = [
+        {'gender': 'F'},
+        {'gender': 'M'}
+    ]
 
 data_params = {
     'cells': ['B', 'CD4T', 'NK', 'CD8T', 'Gran'],
@@ -58,7 +64,7 @@ pdm.residuals_common_plot_scatter(
         'line': 'no',
         'fit': 'yes',
         'semi_window': 8,
-        'box_b': 'Q1',
-        'box_t': 'Q3'
+        'box_b': 'Q5',
+        'box_t': 'Q95'
     },
 )

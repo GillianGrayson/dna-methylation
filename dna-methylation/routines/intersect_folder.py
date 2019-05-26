@@ -2,7 +2,7 @@ import pandas as pd
 
 
 path = 'C:/Users/user/Desktop/New folder'
-files_names = ['GSE40279.xlsx', 'GSE87571.xlsx', 'EPIC.xlsx', 'GSE55763.xlsx']
+files_names = ['GSE40279.xlsx', 'GSE87571.xlsx', 'EPIC.xlsx']
 files_pathes = [path + '\\' + file_name for file_name in files_names]
 
 cpg_dict = dict.fromkeys([file_name[:-5] for file_name in files_names], [])

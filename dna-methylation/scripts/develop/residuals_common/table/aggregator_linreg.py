@@ -2,7 +2,7 @@ import pydnameth as pdm
 
 data = pdm.Data(
     path='',
-    base='EPIC'
+    base='GSE55763'
 )
 
 annotations = pdm.Annotations(
@@ -22,7 +22,7 @@ observables = pdm.Observables(
 )
 
 cells = pdm.Cells(
-    name='cells',
+    name='cells_horvath_calculator',
     types='any'
 )
 
@@ -32,12 +32,18 @@ attributes = pdm.Attributes(
     cells=cells
 )
 
-observables_list = [
-    {'gender': 'F'},
-    {'gender': 'M'}
-]
+if data.base == 'GSE55763':
+    observables_list = [
+        {'gender': 'F', 'is_duplicate': '0'},
+        {'gender': 'M', 'is_duplicate': '0'}
+    ]
+else:
+    observables_list = [
+        {'gender': 'F'},
+        {'gender': 'M'}
+    ]
 
-data_params = {'cells': ['B', 'CD4T', 'NK', 'CD8T', 'Gran']}
+data_params = {'cells': ['CD8T', 'CD4T', 'NK', 'Bcell', 'Gran']}
 
 pdm.residuals_common_table_aggregator_linreg(
     data=data,

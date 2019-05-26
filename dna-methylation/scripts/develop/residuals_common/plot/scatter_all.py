@@ -15,7 +15,7 @@ cpgs = table_dict['cpg']
 y_begins = table_dict['begin']
 y_ends = table_dict['end']
 
-data_bases = ['GSE55763']
+data_bases = ['GSE40279']
 
 for cpg_id in range(0, len(cpgs)):
     cpg_list = [cpgs[cpg_id]]
@@ -56,7 +56,7 @@ for cpg_id in range(0, len(cpgs)):
             cells=cells
         )
 
-        if data.base == 'GSE55763':
+        if data_base == 'GSE55763':
             observables_list = [
                 {'gender': 'F', 'is_duplicate': '0'},
                 {'gender': 'M', 'is_duplicate': '0'}
@@ -67,12 +67,18 @@ for cpg_id in range(0, len(cpgs)):
                 {'gender': 'M'}
             ]
 
-        pdm.betas_plot_scatter(
+        data_params = {
+            #'cells': ['B', 'CD4T', 'NK', 'CD8T', 'Gran']
+            'cells': ['CD8T', 'CD4T', 'NK', 'Bcell', 'Gran']
+        }
+
+        pdm.residuals_common_plot_scatter(
             data=data,
             annotations=annotations,
             attributes=attributes,
             observables_list=observables_list,
             cpg_list=cpg_list,
+            data_params=data_params,
             method_params={
                 'x_range': [5, 105],
                 'y_range': [y_begin, y_end],

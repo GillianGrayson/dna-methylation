@@ -21,16 +21,21 @@ cells = pdm.Cells(
     types='any'
 )
 
-obs_list = [
-    {'gender': 'any'},
-]
+if data.base == 'GSE55763':
+    observables_list = [
+        {'gender': 'any', 'is_duplicate': '0'},
+    ]
+else:
+    observables_list = [
+        {'gender': 'any'},
+    ]
 
 method_params = {
     'eps': 0.2,
     'min_samples_percentage': 1
 }
 
-for obs in obs_list:
+for obs in observables_list:
 
     observables = pdm.Observables(
         name='observables',
