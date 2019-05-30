@@ -1,9 +1,9 @@
 rm(list=ls())
 
 setwd("D:/Work/dna-methylation/dna-methylation/r/fisher")
-database = "GSE87571"
-fn_all = "D:/YandexDisk/Work/pydnameth/GSE55763/betas/table/aggregator/8f2e583182438a5af2b50eff926d3392/default.xlsx"
-fn_target = "C:/Users/user/Google Drive/mlmg/draft/tables/GSE87571.csv"
+database = "GSE55763"
+fn_all = "D:/YandexDisk/Work/pydnameth/GSE55763/betas/table/aggregator/8f2e583182438a5af2b50eff926d3392/default.csv"
+fn_target = "C:/Users/user/Google Drive/mlmg/draft/tables/GSE55763.csv"
 
 all_cpgs = read.csv(fn_all, header = TRUE)
 target_cpgs = read.csv(fn_target, header = TRUE)
@@ -83,7 +83,7 @@ table_Relation_to_UCSC_CpG_Island <- merge(target_table_Relation_to_UCSC_CpG_Isl
 table_Relation_to_UCSC_CpG_Island$TARGET_TOT <- rep(sum(table_Relation_to_UCSC_CpG_Island[,2]),nrow(table_Relation_to_UCSC_CpG_Island))
 table_Relation_to_UCSC_CpG_Island$ALL_TOT <- rep(sum(table_Relation_to_UCSC_CpG_Island[,3]),nrow(table_Relation_to_UCSC_CpG_Island))
 
-save(table_CHR, table_Relation_to_UCSC_CpG_Island, table_UCSC_RefGene_Group, file=paste(database, "_tables.RData",  sep=''))
+save(table_CHR, table_Relation_to_UCSC_CpG_Island, table_group, file=paste(database, "_tables.RData",  sep=''))
 
 input = table_group
 exactfisher.res=matrix(data=NA,nrow=nrow(input),ncol=4)
