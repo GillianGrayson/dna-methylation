@@ -4,7 +4,7 @@ colnames(GSE87571_all) <- c("UCSC_RefGene_Group", "TOTAL")
 colnames(GSE87571_curr) <- c("UCSC_RefGene_Group", "CURR")
 GSE87571_UCSC_RefGene_Group <- merge(GSE87571_all, GSE87571_curr, by="UCSC_RefGene_Group")
 
-all_cpgs = read.csv("D:/YandexDisk/Work/pydnameth/GSE87571/cpg/table/aggregator/fa2d86228045113f0b5226ab49036f23/default.csv", header = TRUE)
+all_cpgs = read.csv("D:/YandexDisk/Work/pydnameth/GSE87571/betas/table/aggregator/d1bf8fe4acc69f65972ad2e2300002cf/default.csv", header = TRUE)
 target_cpgs = read.csv("C:/Users/user/Google Drive/mlmg/draft/tables/GSE87571.csv", header = TRUE)
 
 load("D:/YandexDisk/Work/MG/2/Illumina450Manifest.RData")
@@ -79,7 +79,7 @@ table_Relation_to_UCSC_CpG_Island$TARGET_TOT <- rep(sum(table_Relation_to_UCSC_C
 table_Relation_to_UCSC_CpG_Island$ALL_TOT <- rep(sum(table_Relation_to_UCSC_CpG_Island[,3]),nrow(table_Relation_to_UCSC_CpG_Island))
 
 
-save(table_CHR, table_Relation_to_UCSC_CpG_Island, table_UCSC_RefGene_Group, file="EPIC_tables.RData")
+save(table_CHR, table_Relation_to_UCSC_CpG_Island, table_UCSC_RefGene_Group, file="GSE87571_tables.RData")
 
 input = table_group
 
