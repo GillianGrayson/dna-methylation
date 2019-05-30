@@ -11,7 +11,7 @@ def save_figure(fn, fig):
     pio.write_image(fig, fn + '.png')
     pio.write_image(fig, fn + '.pdf')
 
-fn = "C:/Users/user/Google Drive/mlmg/draft/residuals/fisher/GSE87571/CHR.csv"
+fn = "C:/Users/user/Google Drive/mlmg/draft/fisher/GSE55763/UCSC_RefGene_Group.csv"
 
 
 table_dict = defaultdict(list)
@@ -21,8 +21,8 @@ with open(fn, 'r') as f:
         for col, dat in row.items():
             table_dict[col].append(dat)
 
-x_data = [('chr' + str(x)) for x in table_dict['CHR']]
-#x_data = table_dict['group']
+#x_data = [('chr' + str(x)) for x in table_dict['CHR']]
+x_data = table_dict['group']
 y_data = list(map(float, table_dict['OR']))
 
 less_ids = [id for id in range(0, len(y_data)) if y_data[id] < 1]
