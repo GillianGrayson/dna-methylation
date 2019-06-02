@@ -37,13 +37,16 @@ if data.base == 'GSE55763':
         {'gender': 'F', 'is_duplicate': '0'},
         {'gender': 'M', 'is_duplicate': '0'}
     ]
+
+    data_params = {'cells': ['CD8T', 'CD4T', 'NK', 'Bcell', 'Gran']}
 else:
     observables_list = [
         {'gender': 'F'},
         {'gender': 'M'}
     ]
 
-data_params = {'cells': ['CD8T', 'CD4T', 'NK', 'Bcell', 'Gran']}
+    data_params = {'cells': ['CD8T', 'CD4T', 'NK', 'B', 'Gran']}
+
 
 pdm.residuals_common_table_aggregator_linreg(
     data=data,

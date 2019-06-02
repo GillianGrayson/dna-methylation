@@ -2,7 +2,7 @@ import pydnameth as pdm
 
 data = pdm.Data(
     path='',
-    base='EPIC'
+    base='GSE55763'
 )
 
 annotations = pdm.Annotations(
@@ -51,6 +51,7 @@ pdm.epimutations_plot_scatter(
     method_params={
         'x_range': [5, 105],
         'y_range': 'auto',
-        'y_type': 'log'
+        'y_type': 'log',
+        'legend_size': 1
     }
 )
