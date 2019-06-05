@@ -6,7 +6,7 @@ cpg_list = f.read().splitlines()
 
 data = pdm.Data(
     path='',
-    base='GSE87571'
+    base='GSE55763'
 )
 
 annotations = pdm.Annotations(
@@ -38,8 +38,8 @@ attributes = pdm.Attributes(
 
 if data.base == 'GSE55763':
     observables_list = [
-        {'gender': 'F', 'is_duplicate': '0'},
-        {'gender': 'M', 'is_duplicate': '0'}
+        {'gender': 'F', 'is_duplicate': '0', 'age': (35, 100)},
+        {'gender': 'M', 'is_duplicate': '0', 'age': (35, 100)}
     ]
 else:
     observables_list = [
@@ -60,6 +60,7 @@ pdm.betas_plot_scatter(
         'fit': 'yes',
         'semi_window': 8,
         'box_b': 'Q5',
-        'box_t': 'Q95'
+        'box_t': 'Q95',
+        'legend_size': 1
     }
 )

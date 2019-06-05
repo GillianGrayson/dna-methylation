@@ -2,7 +2,7 @@ import pydnameth as pdm
 
 data = pdm.Data(
     path='',
-    base='E-MTAB-7309'
+    base='GSE55763'
 )
 
 annotations = pdm.Annotations(
@@ -21,23 +21,16 @@ observables = pdm.Observables(
     types={}
 )
 
-cells = pdm.Cells(
-    name='cells',
-    types='any'
-)
-
-attributes = pdm.Attributes(
-    target='age',
-    observables=observables,
-    cells=cells
-)
-
 if data.base == 'GSE55763':
     data_params = None
     observables_list = [
         {'gender': 'F', 'is_duplicate': '0', 'age': (35, 100)},
         {'gender': 'M', 'is_duplicate': '0', 'age': (35, 100)}
     ]
+    cells = pdm.Cells(
+        name='cells_horvath_calculator',
+        types='any'
+    )
 elif data.base == 'E-MTAB-7309' or data.base == 'E-MTAB-7309-FILTERED':
     data_params = {
         'norm': 'quantile',
@@ -46,12 +39,26 @@ elif data.base == 'E-MTAB-7309' or data.base == 'E-MTAB-7309-FILTERED':
         {'sex': 'female'},
         {'sex': 'male'}
     ]
+    cells = pdm.Cells(
+        name='cells_horvath_calculator',
+        types='any'
+    )
 else:
     data_params = None
     observables_list = [
         {'gender': 'F'},
         {'gender': 'M'}
     ]
+    cells = pdm.Cells(
+        name='cells',
+        types='any'
+    )
+
+attributes = pdm.Attributes(
+    target='age',
+    observables=observables,
+    cells=cells
+)
 
 pdm.betas_table_aggregator_linreg(
     data=data,

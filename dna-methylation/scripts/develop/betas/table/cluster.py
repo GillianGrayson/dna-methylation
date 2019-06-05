@@ -16,22 +16,25 @@ annotations = pdm.Annotations(
     probe_class='any'
 )
 
-cells = pdm.Cells(
-    name='cells',
-    types='any'
-)
-
 if data.base == 'GSE55763':
     observables_list = [
-        {'gender': 'any', 'is_duplicate': '0'},
+        {'is_duplicate': '0', 'age': (35, 100)},
     ]
+    cells = pdm.Cells(
+        name='cells_horvath_calculator',
+        types='any'
+    )
 else:
     observables_list = [
         {'gender': 'any'},
     ]
+    cells = pdm.Cells(
+        name='cells',
+        types='any'
+    )
 
 method_params = {
-    'eps': 0.2,
+    'eps': 0.15,
     'min_samples_percentage': 1
 }
 

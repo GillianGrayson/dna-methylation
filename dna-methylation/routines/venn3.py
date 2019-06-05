@@ -13,7 +13,7 @@ def save_figure(fn, fig):
 trace0 = go.Scatter(
     x=[0.5, 1.5, 2.5, 1.5, 1.5, 0.87, 2.10],
     y=[0.75, 2.5, 0.75, 0.67, 1.4, 1.67, 1.67],
-    text=['GSE40279<br>6', 'EPIC<br>373', 'GSE87571<br>243', '0', '3', '0', '49'],
+    text=['GSE87571<br>190', 'EPIC<br>371', 'GSE55763<br>56', '53', '26', '26', '2'],
     mode='text',
     textfont=dict(
         color='black',
@@ -24,7 +24,7 @@ trace0 = go.Scatter(
 
 data = [trace0]
 
-colors = cl.scales['8']['qual']['Dark2'][0:3]
+colors = cl.scales['8']['qual']['Dark2'][0:4]
 coordinates = [color[4:-1].split(',') for color in colors]
 colors_transparent = ['rgba(' + ','.join(coordinate) + ',' + str(0.9) + ')' for coordinate in coordinates]
 
@@ -46,7 +46,7 @@ layout = {
             'opacity': 0.5,
             'xref': 'x',
             'yref': 'y',
-            'fillcolor': colors[0],
+            'fillcolor': colors[3],
             'x0': 0,
             'y0': 0,
             'x1': 2,
@@ -60,7 +60,7 @@ layout = {
             'opacity': 0.5,
             'xref': 'x',
             'yref': 'y',
-            'fillcolor': colors[1],
+            'fillcolor': colors[2],
             'x0': 1,
             'y0': 0,
             'x1': 3,
@@ -74,7 +74,7 @@ layout = {
             'opacity': 0.5,
             'xref': 'x',
             'yref': 'y',
-            'fillcolor': colors[2],
+            'fillcolor': colors[1],
             'x0': 0.5,
             'y0': 1,
             'x1': 2.5,
@@ -98,4 +98,4 @@ fig = {
     'data': data,
     'layout': layout,
 }
-save_figure('venn', fig)
+save_figure('venn3', fig)

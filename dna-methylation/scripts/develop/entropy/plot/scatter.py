@@ -23,8 +23,8 @@ observables = pdm.Observables(
 
 if data.base == 'GSE55763':
     observables_list = [
-        {'gender': 'F', 'is_duplicate': '0'},
-        {'gender': 'M', 'is_duplicate': '0'}
+        {'gender': 'F', 'is_duplicate': '0', 'age': (35, 100)},
+        {'gender': 'M', 'is_duplicate': '0', 'age': (35, 100)}
     ]
 
     data_params = {
