@@ -33,20 +33,38 @@ attributes = pdm.Attributes(
 )
 
 if data.base == 'GSE55763':
-    observables_list = [
-        {'gender': 'F', 'is_duplicate': '0'},
-        {'gender': 'M', 'is_duplicate': '0'}
-    ]
-
     data_params = {'cells': ['CD8T', 'CD4T', 'NK', 'Bcell', 'Gran']}
+    observables_list = [
+        {'gender': 'F', 'is_duplicate': '0', 'age': (35, 100)},
+        {'gender': 'M', 'is_duplicate': '0', 'age': (35, 100)}
+    ]
+    cells = pdm.Cells(
+        name='cells_horvath_calculator',
+        types='any'
+    )
+elif data.base == 'E-MTAB-7309' or data.base == 'E-MTAB-7309-FILTERED':
+    data_params = {
+        'norm': 'quantile',
+        'cells': ['CD8T', 'CD4T', 'NK', 'B', 'Gran']
+    }
+    observables_list = [
+        {'sex': 'female'},
+        {'sex': 'male'}
+    ]
+    cells = pdm.Cells(
+        name='cells_horvath_calculator',
+        types='any'
+    )
 else:
+    data_params = {'cells': ['CD8T', 'CD4T', 'NK', 'B', 'Gran']}
     observables_list = [
         {'gender': 'F'},
         {'gender': 'M'}
     ]
-
-    data_params = {'cells': ['CD8T', 'CD4T', 'NK', 'B', 'Gran']}
-
+    cells = pdm.Cells(
+        name='cells',
+        types='any'
+    )
 
 pdm.residuals_common_table_aggregator_linreg(
     data=data,
