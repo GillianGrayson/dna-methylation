@@ -1,9 +1,8 @@
 import pydnameth as pdm
 
 data = pdm.Data(
-    name='cpg_beta',
     path='',
-    base='GSE40279'
+    base='GSE55763'
 )
 
 annotations = pdm.Annotations(
@@ -23,7 +22,7 @@ observables = pdm.Observables(
 )
 
 cells = pdm.Cells(
-    name='cells',
+    name='cells_horvath_calculator',
     types='any'
 )
 
@@ -33,20 +32,26 @@ attributes = pdm.Attributes(
     cells=cells
 )
 
-observables_list = [
-    {'gender': 'F'},
-    {'gender': 'M'}
-]
+if data.base == 'GSE55763':
+    observables_list = [
+        {'gender': 'F', 'is_duplicate': '0'},
+        {'gender': 'M', 'is_duplicate': '0'}
+    ]
 
-pdm.observables_plot_histogram(
+    data_params = {'cells': ['CD8T', 'CD4T', 'NK', 'Bcell', 'Gran']}
+else:
+    observables_list = [
+        {'gender': 'F'},
+        {'gender': 'M'}
+    ]
+
+    data_params = {'cells': ['CD8T', 'CD4T', 'NK', 'B', 'Gran']}
+
+
+pdm.residuals_common_table_aggregator_linreg(
     data=data,
     annotations=annotations,
     attributes=attributes,
     observables_list=observables_list,
-    params={
-        'bin_size': 1.0,
-        'opacity': 0.80,
-        'barmode': 'overlay',
-        'x_range': [5, 105]
-    }
+    data_params=data_params
 )

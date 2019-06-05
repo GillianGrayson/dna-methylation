@@ -2,7 +2,7 @@ import pydnameth as pdm
 
 data = pdm.Data(
     path='',
-    base='EPIC'
+    base='GSE55763'
 )
 
 annotations = pdm.Annotations(
@@ -32,12 +32,18 @@ attributes = pdm.Attributes(
     cells=cells
 )
 
-observables_list = [
-    {'gender': 'F'},
-    {'gender': 'M'}
-]
+if data.base == 'GSE55763':
+    observables_list = [
+        {'gender': 'F', 'is_duplicate': '0'},
+        {'gender': 'M', 'is_duplicate': '0'}
+    ]
+else:
+    observables_list = [
+        {'gender': 'F'},
+        {'gender': 'M'}
+    ]
 
-pdm.epimutations_plot_scatter_dev(
+pdm.epimutations_plot_scatter(
     data=data,
     annotations=annotations,
     attributes=attributes,
@@ -45,6 +51,7 @@ pdm.epimutations_plot_scatter_dev(
     method_params={
         'x_range': [5, 105],
         'y_range': 'auto',
-        'y_type': 'log'
+        'y_type': 'log',
+        'legend_size': 1
     }
 )

@@ -74,7 +74,7 @@ if (shinyMethyl_analysis){
 
 # ========= pfilter ===========
 if (pfilter_analysis){
-  wateRmelon_filtered <- pfilter(RGset, pnthresh=0.05,perc=5, pthresh=1)
+  wateRmelon_filtered <- pfilter(RGset, pnthresh=0.05, perc=5, pthresh=1)
 }
 # =============================
 

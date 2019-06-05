@@ -2,7 +2,7 @@ import pydnameth as pdm
 
 data = pdm.Data(
     path='',
-    base='EPIC'
+    base='E-MTAB-7309'
 )
 
 annotations = pdm.Annotations(
@@ -32,14 +32,28 @@ attributes = pdm.Attributes(
     cells=cells
 )
 
-observables_list = [
-    {'gender': 'F'},
-    {'gender': 'M'}
-]
+if data.base == 'GSE55763':
+    data_params = None
+    observables_list = [
+        {'gender': 'F', 'is_duplicate': '0', 'age': (35, 100)},
+        {'gender': 'M', 'is_duplicate': '0', 'age': (35, 100)}
+    ]
+elif data.base == 'E-MTAB-7309' or data.base == 'E-MTAB-7309-FILTERED':
+    data_params = {
+        'norm': 'quantile',
+    }
+    observables_list = [
+        {'sex': 'female'},
+        {'sex': 'male'}
+    ]
+else:
+    data_params = None
+    observables_list = [
+        {'gender': 'F'},
+        {'gender': 'M'}
+    ]
 
-data_params = {'cells': ['B', 'CD4T', 'NK', 'CD8T', 'Gran']}
-
-pdm.residuals_common_table_aggregator_dev(
+pdm.betas_table_aggregator_linreg(
     data=data,
     annotations=annotations,
     attributes=attributes,
