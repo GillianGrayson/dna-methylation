@@ -2,7 +2,7 @@ import pydnameth as pdm
 
 data = pdm.Data(
     path='',
-    base='GSE55763'
+    base='GSE87571'
 )
 
 annotations = pdm.Annotations(
@@ -26,7 +26,7 @@ if data.base == 'GSE55763':
     )
 else:
     observables_list = [
-        {'gender': 'any'},
+        {},
     ]
     cells = pdm.Cells(
         name='cells',
