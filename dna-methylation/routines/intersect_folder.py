@@ -2,13 +2,13 @@ import pandas as pd
 
 import itertools
 
-stuff = ['EPIC.xlsx', 'GSE55763.xlsx']
+stuff = ['1.xlsx', '2.xlsx', '3.xlsx', '4.xlsx']
 for L in range(0, len(stuff)+1):
     for subset in itertools.combinations(stuff, L):
         files_names = list(subset)
         if len(files_names) >= 2:
 
-            path = 'C:/Users/user/Desktop/New folder'
+            path = 'C:/Users/user/Desktop/v2'
             files_pathes = [path + '\\' + file_name for file_name in files_names]
 
             cpg_dict = dict.fromkeys([file_name[:-5] for file_name in files_names], [])

@@ -41,6 +41,11 @@ if data.base == 'GSE55763':
         {'gender': 'F', 'is_duplicate': '0', 'age': (35, 100)},
         {'gender': 'M', 'is_duplicate': '0', 'age': (35, 100)}
     ]
+elif data.base == 'GSE64244':
+    observables_list = [
+        {'disease_status': 'Turner_syndrome_45,X_(Maternal)'},
+        {'disease_status': 'Turner_syndrome_45,X_(Paternal)'}
+    ]
 else:
     observables_list = [
         {'gender': 'F'},
@@ -61,6 +66,7 @@ pdm.betas_plot_scatter(
         'semi_window': 8,
         'box_b': 'Q5',
         'box_t': 'Q95',
-        'legend_size': 1
+        'legend_size': 1,
+        'add': 'none'
     }
 )
