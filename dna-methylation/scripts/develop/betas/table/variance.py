@@ -30,6 +30,12 @@ else:
         {'gender': 'any'},
     ]
 
+method_params = {
+    'semi_window': 8,
+    'box_b': 'Q5',
+    'box_t': 'Q95',
+}
+
 for obs in observables_list:
 
     observables = pdm.Observables(
@@ -43,8 +49,9 @@ for obs in observables_list:
         cells=cells
     )
 
-    pdm.betas_table_linreg(
+    pdm.betas_table_variance(
         data=data,
         annotations=annotations,
-        attributes=attributes
+        attributes=attributes,
+        method_params=method_params
     )
