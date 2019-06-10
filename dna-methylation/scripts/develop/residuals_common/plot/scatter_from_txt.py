@@ -1,12 +1,14 @@
 import pydnameth as pdm
 
-
 f = open('cpgs.txt', 'r')
-cpg_list = f.read().splitlines()
+items = f.read().splitlines()
+x_ranges = [[5, 105]] * len(items)
+y_ranges = ['auto'] * len(items)
+
 
 data = pdm.Data(
     path='',
-    base='GSE55763'
+    base='GSE87571'
 )
 
 annotations = pdm.Annotations(
@@ -25,10 +27,38 @@ observables = pdm.Observables(
     types={}
 )
 
-cells = pdm.Cells(
-    name='cells',
-    types='any'
-)
+
+if data.base == 'GSE55763':
+    observables_list = [
+        {'gender': 'F', 'is_duplicate': '0', 'age': (35, 100)},
+        {'gender': 'M', 'is_duplicate': '0', 'age': (35, 100)}
+    ]
+
+    data_params = {
+        'cells': ['Bcell', 'CD4T', 'NK', 'CD8T', 'Gran'],
+        'observables': ['age']
+    }
+
+    cells = pdm.Cells(
+        name='cells_horvath_calculator',
+        types='any'
+    )
+
+else:
+    observables_list = [
+        {'gender': 'F'},
+        {'gender': 'M'}
+    ]
+
+    data_params = {
+        'cells': ['B', 'CD4T', 'NK', 'CD8T', 'Gran'],
+        'observables': ['age']
+    }
+
+    cells = pdm.Cells(
+        name='cells',
+        types='any'
+    )
 
 attributes = pdm.Attributes(
     target='age',
@@ -36,31 +66,15 @@ attributes = pdm.Attributes(
     cells=cells
 )
 
-if data.base == 'GSE55763':
-    observables_list = [
-        {'gender': 'F', 'is_duplicate': '0', 'age': (35, 100)},
-        {'gender': 'M', 'is_duplicate': '0', 'age': (35, 100)}
-    ]
-elif data.base == 'GSE64244':
-    observables_list = [
-        {'disease_status': 'Turner_syndrome_45,X_(Maternal)'},
-        {'disease_status': 'Turner_syndrome_45,X_(Paternal)'}
-    ]
-else:
-    observables_list = [
-        {'gender': 'F'},
-        {'gender': 'M'}
-    ]
-
-pdm.betas_plot_scatter(
+pdm.residuals_common_plot_scatter(
     data=data,
     annotations=annotations,
     attributes=attributes,
     observables_list=observables_list,
-    cpg_list=cpg_list,
     method_params={
-        'x_range': [5, 105],
-        'y_range': 'auto',
+        'items': items,
+        'x_ranges': x_ranges,
+        'y_ranges': y_ranges,
         'line': 'no',
         'fit': 'yes',
         'semi_window': 8,
