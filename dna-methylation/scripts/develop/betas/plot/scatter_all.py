@@ -15,7 +15,7 @@ cpgs = table_dict['cpg']
 y_begins = table_dict['begin']
 y_ends = table_dict['end']
 
-data_bases = ['GSE55763']
+data_bases = ['GSE40279', 'GSE87571', 'EPIC', 'GSE55763']
 
 for cpg_id in range(0, len(cpgs)):
     cpg_list = [cpgs[cpg_id]]
@@ -76,9 +76,11 @@ for cpg_id in range(0, len(cpgs)):
             method_params={
                 'x_range': [5, 105],
                 'y_range': [y_begin, y_end],
-                'line': 'yes',
-                'fit': 'no',
-                'semi_window': 'none',
+                'line': 'no',
+                'fit': 'yes',
+                'semi_window': 8,
+                'box_b': 'Q5',
+                'box_t': 'Q95',
                 'legend_size': 1
             }
         )

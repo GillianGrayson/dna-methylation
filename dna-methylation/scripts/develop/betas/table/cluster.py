@@ -2,7 +2,7 @@ import pydnameth as pdm
 
 data = pdm.Data(
     path='',
-    base='GSE87571'
+    base='GSE55763'
 )
 
 annotations = pdm.Annotations(
@@ -34,7 +34,7 @@ else:
     )
 
 method_params = {
-    'eps': 0.15,
+    'eps': 0.2,
     'min_samples_percentage': 1
 }
 
