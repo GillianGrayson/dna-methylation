@@ -5,7 +5,7 @@ import plotly
 import numpy as np
 
 data_path = 'D:/Aaron/Bio/variance/v2/'
-data_files = ['R2_mean.csv']
+data_files = ['I.csv']
 
 eps = 0.00000001
 
@@ -14,6 +14,7 @@ for data_file in data_files:
     column_names = list(raw_data.columns)
     curr_data = []
     curr_plot_data = []
+    lines = []
     max_y = -1
     min_y = 1000
     for column_name in column_names:
@@ -28,20 +29,18 @@ for data_file in data_files:
             max_x = 1.0
             min_x = 0.0
         else:
-            max_x = np.max([np.max(curr_data[i]) for i in range(0, len(curr_data))])
-            min_x = np.min([np.min(curr_data[i]) for i in range(0, len(curr_data))])
+            max_x = 3.0
+            min_x = 1.0
         num_bins = 1000
         shift = (max_x - min_x) / num_bins
-        x = [(shift / 2) + i * shift for i in range(0, num_bins)]
+        x = [min_x + (shift / 2) + i * shift for i in range(0, num_bins)]
         y = [0] * num_bins
         num_outliers = 0
-        for curr_y in curr_data[id]:
-            if 'mean' in data_file:
-                curr_y = curr_y / 2
+        for row_id, curr_y in enumerate(curr_data[id]):
             if curr_y > max_x or curr_y < min_x:
                 num_outliers += 1
             else:
-                index = int(round((curr_y - min_x) / (max_x - min_x + eps) * num_bins))
+                index = int(np.floor((curr_y - min_x) / (max_x - min_x + eps) * num_bins))
                 y[index] += 1
 
         sum_y = sum(y)
@@ -50,6 +49,11 @@ for data_file in data_files:
             min_y = min(y)
         if max(y) > max_y:
             max_y = max(y)
+
+        percentile = np.percentile(curr_data[id], 75)
+
+        #print('Num outliers in ', column_names[id], ' : ', num_outliers)
+        print('75% in ', column_names[id], ' : ', percentile)
 
         # Colors setup
         color = cl.scales['8']['qual']['Set1'][id]
@@ -69,22 +73,29 @@ for data_file in data_files:
         )
         curr_plot_data.append(scatter)
 
+        curr_line = {
+            'type': 'line',
+            'x0': percentile,
+            'y0': min_y,
+            'x1': percentile,
+            'y1': max_y,
+            'line': {
+                'color': color_border,
+                'width': 4,
+            },
+        }
+
+        lines.append(curr_line)
+
+    if 'I' in data_file:
+        x_name = r'$I$'
+    elif 'mean' in data_file:
+        x_name = r'$\frac{R_F^2 + R_M^2}{2}$'
+    elif 'R2' in data_file:
+        x_name = r'$R^2$'
+
     layout = go.Layout(
-        title=dict(
-            text='',
-            font=dict(
-                family='Arial',
-                size=33,
-            )
-        ),
         autosize=True,
-        margin=go.layout.Margin(
-            l=95,
-            r=10,
-            b=80,
-            t=85,
-            pad=0
-        ),
         barmode='overlay',
         legend=dict(
             font=dict(
@@ -92,29 +103,36 @@ for data_file in data_files:
                 size=16,
             ),
             orientation="h",
-            x=0.33,
+            x=0.11,
             y=1.11,
         ),
+        margin=go.layout.Margin(
+            l=95,
+            r=10,
+            b=80,
+            t=85,
+            pad=0
+        ),
+        shapes=lines,
         xaxis=dict(
-            title='R2',
+            exponentformat='e',
+            mirror='ticks',
+            showexponent='all',
             showgrid=True,
             showline=True,
-            mirror='ticks',
-            titlefont=dict(
-                family='Arial',
-                size=33,
-                color='black'
-            ),
             showticklabels=True,
             tickangle=0,
             tickfont=dict(
+                color='black',
                 family='Arial',
-                size=30,
-                color='black'
+                size=30
             ),
-            exponentformat='e',
-            showexponent='all',
-            range=(min_x, max_x)
+            title=dict(
+                font=dict(
+                    color='black',
+                    family='Arial',
+                    size=50),
+                text=x_name)
         ),
         yaxis=dict(
             title='PDF',
@@ -134,10 +152,11 @@ for data_file in data_files:
                 color='black'
             ),
             exponentformat='e',
-            showexponent='all',
-            range=(min_y, max_y)
-        ),
+            showexponent='all'
+        )
     )
 
     figure = go.Figure(data=curr_plot_data, layout=layout)
+    plotly.offline.plot(figure, filename=data_path + data_file[:-4] + '.html', auto_open=False, show_link=True)
     plotly.io.write_image(figure, data_path + data_file[:-4] + '.png')
+    #plotly.io.write_image(figure, data_path + data_file[:-4] + '.pdf')
