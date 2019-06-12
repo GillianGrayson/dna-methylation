@@ -43,16 +43,9 @@ else:
         {'gender': 'M'}
     ]
 
-pdm.observables_plot_histogram(
+pdm.epimutations_table_ancova(
     data=data,
     annotations=annotations,
     attributes=attributes,
-    observables_list=observables_list,
-    method_params={
-        'bin_size': 1.0,
-        'opacity': 0.80,
-        'barmode': 'overlay',
-        'x_range': [5, 105],
-        'legend_size': 1
-    }
+    observables_list=observables_list
 )

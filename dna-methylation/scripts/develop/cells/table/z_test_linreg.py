@@ -53,14 +53,9 @@ for data_set in data_sets:
                 {'gender': 'M'}
             ]
 
-        pdm.cells_plot_scatter(
+        pdm.cells_table_z_test_linreg(
             data=data,
             annotations=annotations,
             attributes=attributes,
-            observables_list=observables_list,
-            method_params={
-                'x_range': [5, 105],
-                'y_range': 'auto',
-                'legend_size': 1
-            }
+            observables_list=observables_list
         )
