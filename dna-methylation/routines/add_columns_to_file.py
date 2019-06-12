@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 
-cpg_file_path = 'D:/Aaron/Bio/variance/v12/'
+cpg_file_path = 'D:/Aaron/Bio/variance/v13/'
 cpg_file_name = '1_2_3_4.xlsx'
 
 data_file_path = 'D:/Aaron/Bio/variance/v2/'
