@@ -9,9 +9,5 @@ cg02063488
 cg02907374
 cg20318166
 cg11117266
-<<<<<<< refs/remotes/GillianGrayson/master
-cg05593641
-=======
 cg02742906
 cg10697286
->>>>>>> paper scripts fixes
