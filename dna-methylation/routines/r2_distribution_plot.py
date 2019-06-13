@@ -5,9 +5,12 @@ import plotly
 import numpy as np
 
 data_path = 'D:/Aaron/Bio/variance/v2/'
-data_files = ['I.csv']
+data_files = ['Area.csv', 'R2_min.csv', 'I.csv']
 
 eps = 0.00000001
+
+percentile_value = 75
+percentile_value_area = 100 - percentile_value
 
 for data_file in data_files:
     raw_data = pd.read_csv(data_path + data_file)
@@ -25,7 +28,7 @@ for data_file in data_files:
 
     for id in range(0, len(curr_data)):
 
-        if 'R2' in data_file:
+        if 'R2' or 'Area' in data_file:
             max_x = 1.0
             min_x = 0.0
         else:
@@ -50,10 +53,17 @@ for data_file in data_files:
         if max(y) > max_y:
             max_y = max(y)
 
-        percentile = np.percentile(curr_data[id], 75)
+        if 'Area' in data_file:
+            percentile = np.percentile(curr_data[id], percentile_value_area)
+        else:
+            percentile = np.percentile(curr_data[id], percentile_value)
 
         #print('Num outliers in ', column_names[id], ' : ', num_outliers)
-        print('75% in ', column_names[id], ' : ', percentile)
+
+        if 'Area' in data_file:
+            print(data_file[:-4], percentile_value_area, '% in', column_names[id], ':', percentile)
+        else:
+            print(data_file[:-4], percentile_value, '% in', column_names[id], ':', percentile)
 
         # Colors setup
         color = cl.scales['8']['qual']['Set1'][id]
@@ -93,6 +103,8 @@ for data_file in data_files:
         x_name = r'$\frac{R_F^2 + R_M^2}{2}$'
     elif 'R2' in data_file:
         x_name = r'$R^2$'
+    elif 'Area' in data_file:
+        x_name = r'Area'
 
     layout = go.Layout(
         autosize=True,
