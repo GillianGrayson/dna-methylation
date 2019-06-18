@@ -5,7 +5,7 @@ import plotly
 import numpy as np
 
 data_path = 'D:/Aaron/Bio/variance/v2/'
-data_files = ['Area.csv', 'R2_min.csv', 'I.csv']
+data_files = ['R2_min.csv']
 
 eps = 0.00000001
 
@@ -28,7 +28,7 @@ for data_file in data_files:
 
     for id in range(0, len(curr_data)):
 
-        if 'R2' or 'Area' in data_file:
+        if 'R2' in data_file or 'Area' in data_file:
             max_x = 1.0
             min_x = 0.0
         else:

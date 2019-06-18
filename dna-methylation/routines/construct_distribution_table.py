@@ -9,6 +9,7 @@ data_m = []
 data_f = []
 data_mean = []
 data_min = []
+data_max = []
 data_area = []
 data_i = []
 
@@ -19,6 +20,7 @@ for data_file in data_files:
     curr_r2_f = list(curr_data.best_R2_gender_M)
     curr_r2_mean = list(curr_data.r2_mean)
     curr_r2_min = list(curr_data.r2_min)
+    curr_r2_max = list(curr_data.r2_max)
     curr_area = list(curr_data.area_intersection_rel_box_common)
     curr_i = list(curr_data.increasing_1_box_common)
 
@@ -31,6 +33,8 @@ for data_file in data_files:
             curr_r2_mean[id] = 0.0
         if curr_r2_min[id] == -1:
             curr_r2_min[id] = 0.0
+        if curr_r2_max[id] == -1:
+            curr_r2_max[id] = 0.0
         if curr_i[id] == 0:
             curr_i[id] = 1.0
 
@@ -38,6 +42,7 @@ for data_file in data_files:
     data_f.append([data_file[:-5]] + curr_r2_f)
     data_mean.append([data_file[:-5]] + curr_r2_mean)
     data_min.append([data_file[:-5]] + curr_r2_min)
+    data_max.append([data_file[:-5]] + curr_r2_max)
     data_area.append([data_file[:-5]] + curr_area)
     data_i.append([data_file[:-5]] + curr_i)
 
@@ -59,6 +64,11 @@ with open(data_path + "R2_mean.csv","w", newline='') as f:
 with open(data_path + "R2_min.csv","w", newline='') as f:
     writer = csv.writer(f)
     for values in zip_longest(*data_min):
+        writer.writerow(values)
+
+with open(data_path + "R2_max.csv","w", newline='') as f:
+    writer = csv.writer(f)
+    for values in zip_longest(*data_max):
         writer.writerow(values)
 
 with open(data_path + "Area.csv","w", newline='') as f:
