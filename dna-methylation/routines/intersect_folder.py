@@ -8,7 +8,7 @@ for L in range(0, len(stuff)+1):
         files_names = list(subset)
         if len(files_names) >= 2:
 
-            path = 'C:/Users/user/Desktop/v2'
+            path = 'D:/Aaron/Bio/variance/v19'
             files_pathes = [path + '\\' + file_name for file_name in files_names]
 
             cpg_dict = dict.fromkeys([file_name[:-5] for file_name in files_names], [])
