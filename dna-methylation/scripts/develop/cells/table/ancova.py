@@ -55,7 +55,7 @@ for data_set in data_sets:
                 {'gender': 'M'}
             ]
 
-        pdm.cells_table_z_test_linreg(
+        pdm.cells_table_ancova(
             data=data,
             annotations=annotations,
             attributes=attributes,

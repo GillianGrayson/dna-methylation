@@ -5,8 +5,10 @@ data_sets = ['GSE40279', 'GSE87571', 'EPIC', 'GSE55763']
 for data_set in data_sets:
 
     cell_types = ['B', 'CD4T', 'NK', 'CD8T', 'Gran']
+    cell_name = 'cells'
     if data_set == 'GSE55763':
         cell_types = ['Bcell', 'CD4T', 'NK', 'CD8T', 'Gran']
+        cell_name = 'cells_horvath_calculator'
 
     for cell_type in cell_types:
 
@@ -32,7 +34,7 @@ for data_set in data_sets:
         )
 
         cells = pdm.Cells(
-            name='cells',
+            name=cell_name,
             types=cell_type
         )
 
