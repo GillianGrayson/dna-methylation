@@ -171,4 +171,4 @@ for data_file in data_files:
     figure = go.Figure(data=curr_plot_data, layout=layout)
     plotly.offline.plot(figure, filename=data_path + data_file[:-4] + '.html', auto_open=False, show_link=True)
     plotly.io.write_image(figure, data_path + data_file[:-4] + '.png')
-    #plotly.io.write_image(figure, data_path + data_file[:-4] + '.pdf')
+    plotly.io.write_image(figure, data_path + data_file[:-4] + '.pdf')
