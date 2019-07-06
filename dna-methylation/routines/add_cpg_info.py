@@ -1,20 +1,22 @@
 import pandas as pd
+from tqdm import tqdm
 
-cpg_file_path = 'D:/Aaron/Bio/variance/v19/'
-cpg_file_name = 'Supp_variance.xlsx'
+cpg_file_path = 'C:/Users/user/Desktop/New folder/'
+cpg_file_name = 'union_1_2_3_4.xlsx'
 
-data_file_path = 'C:/Users/User/YandexDisk/pydnameth/GSE87571/'
+data_file_path = 'E:/YandexDisk/Work/pydnameth/GSE87571/'
 data_file_name = 'annotations.txt'
 
 df = pd.read_excel(cpg_file_path + cpg_file_name)
 data_dict = {}
-data_dict['ID_REF'] = list(df.cpg)
+#data_dict['ID_REF'] = list(df.cpg)
+data_dict['ID_REF'] = list(df.item)
 data_dict['UCSC_REFGENE_NAME'] = []
 data_dict['MAPINFO'] = []
 data_dict['CHR'] = []
 data_dict['RELATION_TO_UCSC_CPG_ISLAND'] = []
 data_dict['UCSC_REFGENE_GROUP'] = []
-data_dict['MEAN_I'] = list(df.mean_I)
+#data_dict['MEAN_I'] = list(df.mean_I)
 
 keys = [
     'ID_REF',
@@ -40,7 +42,7 @@ for line in f:
         cpg_info_dict[keys[key_id]].append(values[index])
 f.close()
 
-for id in range(0,len(data_dict['ID_REF'])):
+for id in tqdm(range(0,len(data_dict['ID_REF']))):
     curr_cpg = data_dict['ID_REF'][id]
     index = cpg_info_dict['ID_REF'].index(curr_cpg)
     data_dict['UCSC_REFGENE_NAME'].append(cpg_info_dict['UCSC_REFGENE_NAME'][index])

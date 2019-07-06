@@ -1,6 +1,7 @@
 import pandas as pd
+from tqdm import tqdm
 
-path = 'C:/Users/user/Desktop/sex_specific'
+path = 'C:/Users/user/Desktop/New folder'
 files_names = ['1.xlsx', '2.xlsx', '3.xlsx', '4.xlsx']
 
 files_paths = [path + '\\' + file_name for file_name in files_names]
@@ -25,17 +26,10 @@ u_cpgs = list(u_cpgs)
 # Table for intersection
 u_dict = {}
 u_dict['item'] = []
-u_dict['aux'] = []
 
-for f_id in range(0, len(u_cpgs)):
+for f_id in tqdm(range(0, len(u_cpgs))):
     cpg = u_cpgs[f_id]
     u_dict['item'].append(cpg)
-    for file_id in range(0, len(files_names)):
-        if cpg in cpg_dict[files_names[file_id][:-5]]:
-            gene_id = cpg_dict[files_names[file_id][:-5]].index(cpg)
-            gene = gene_dict[files_names[file_id][:-5]][gene_id]
-            break
-    u_dict['aux'].append(gene)
 
 i_df = pd.DataFrame(u_dict)
 name = 'union_' + '_'.join([file_name[:-5] for file_name in files_names])
