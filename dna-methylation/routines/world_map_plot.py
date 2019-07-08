@@ -12,16 +12,25 @@ def save_figure(fn, fig):
 YRI = {
     'long': [4.56611111],
     'lat': [7.46611111],
-    'name': 'Yoruba'
+    'name': 'Yoruba in Ibadan, Nigeria',
+    'metrics': 0
 }
 
 CHB = {
     'long': [108.94111111],
     'lat': [34.15361111],
-    'name': 'Han Chinese'
+    'name': 'Han Chinese in Beijing, China',
+    'metrics': 1
 }
 
-populations = [YRI, CHB]
+JPT = {
+    'long': [139.839478],
+    'lat': [35.652832],
+    'name': 'Japanese in Tokyo, Japan',
+    'metrics': 2
+}
+
+populations = [YRI, CHB, JPT]
 
 colors = cl.scales['8']['qual']['Dark2'][0:len(populations)]
 coordinates = [color[4:-1].split(',') for color in colors]
@@ -51,6 +60,9 @@ for id, population in enumerate(populations):
         go.Scattergeo(
             lon = (populations[0]['long'][0], population['long'][0]),
             lat = (populations[0]['lat'][0], population['lat'][0]),
+            name=str(population['metrics']),
+            hoverinfo='text',
+            text=str(population['metrics']),
             mode = 'lines',
             line = go.scattergeo.Line(
                 width = 2,
@@ -68,6 +80,14 @@ layout = go.Layout(
         showland = True,
         landcolor = 'rgb(243, 243, 243)',
         countrycolor = 'rgb(204, 204, 204)',
+        lataxis = go.layout.geo.Lataxis(
+            range = [-50, 90],
+            dtick = 10
+        ),
+        lonaxis = go.layout.geo.Lonaxis(
+            range = [-20, 190],
+            dtick = 10
+        ),
     ),
 )
 
