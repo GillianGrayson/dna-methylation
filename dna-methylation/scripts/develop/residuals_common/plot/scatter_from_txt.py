@@ -35,7 +35,7 @@ if data.base == 'GSE55763':
     ]
 
     data_params = {
-        'cells': ['Bcell', 'CD4T', 'NK', 'CD8T', 'Gran'],
+        'cells': ['CD8T', 'CD4T', 'NK', 'Bcell', 'Gran'],
         'observables': ['age']
     }
 
@@ -51,12 +51,12 @@ else:
     ]
 
     data_params = {
-        'cells': ['B', 'CD4T', 'NK', 'CD8T', 'Gran'],
+        'cells': ['CD8T', 'CD4T', 'NK', 'Bcell', 'Gran'],
         'observables': ['age']
     }
 
     cells = pdm.Cells(
-        name='cells',
+        name='cells_horvath_calculator',
         types='any'
     )
 
