@@ -85,5 +85,9 @@ pdm.betas_plot_scatter_comparison(
         'line': 'no',
         'fit': 'yes',
         'semi_window': '8',
+        'box_b': 'Q5',
+        'box_t': 'Q95',
+        'legend_size': 1,
+        'add': 'none'
     }
 )

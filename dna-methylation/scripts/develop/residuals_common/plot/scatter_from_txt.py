@@ -35,8 +35,7 @@ if data.base == 'GSE55763':
     ]
 
     data_params = {
-        'cells': ['CD8T', 'CD4T', 'NK', 'Bcell', 'Gran'],
-        'observables': ['age']
+        'cells': ['CD8T', 'CD4T', 'NK', 'Bcell', 'Gran']
     }
 
     cells = pdm.Cells(
@@ -51,8 +50,7 @@ else:
     ]
 
     data_params = {
-        'cells': ['CD8T', 'CD4T', 'NK', 'Bcell', 'Gran'],
-        'observables': ['age']
+        'cells': ['CD8T', 'CD4T', 'NK', 'Bcell', 'Gran']
     }
 
     cells = pdm.Cells(
@@ -71,6 +69,7 @@ pdm.residuals_common_plot_scatter(
     annotations=annotations,
     attributes=attributes,
     observables_list=observables_list,
+    data_params=data_params,
     method_params={
         'items': items,
         'x_ranges': x_ranges,
