@@ -4,7 +4,7 @@ import colorlover as cl
 import plotly
 import numpy as np
 
-data_path = 'D:/Aaron/Bio/variance/v2/'
+data_path = 'C:/Users/User/YandexDisk/pydnameth/variance/residuals/'
 data_files = ['R2_min.csv']
 
 eps = 0.00000001

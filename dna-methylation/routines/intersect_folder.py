@@ -2,13 +2,13 @@ import pandas as pd
 
 import itertools
 
-stuff = ['1.xlsx', '2.xlsx', '3.xlsx', '4.xlsx']
+stuff = ['betas_equal.xlsx', 'residuals_equal_fixed.xlsx']
 for L in range(0, len(stuff)+1):
     for subset in itertools.combinations(stuff, L):
         files_names = list(subset)
         if len(files_names) >= 2:
 
-            path = 'D:/Aaron/Bio/variance/v19'
+            path = 'C:/Users/User/YandexDisk/pydnameth/variance/betas'
             files_pathes = [path + '\\' + file_name for file_name in files_names]
 
             cpg_dict = dict.fromkeys([file_name[:-5] for file_name in files_names], [])
@@ -17,8 +17,8 @@ for L in range(0, len(stuff)+1):
                 file_name = files_names[file_id][:-5]
                 file_path = files_pathes[file_id]
                 df = pd.read_excel(file_path)
-                cpg_dict[file_name] = list(df.item)
-                gene_dict[file_name] = list(df.aux)
+                cpg_dict[file_name] = list(df.cpg)
+                gene_dict[file_name] = list(df.gene)
 
             i_cpgs = set(cpg_dict[files_names[0][:-5]])
             for file_id in range(1, len(files_names)):
