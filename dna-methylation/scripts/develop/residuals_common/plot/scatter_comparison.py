@@ -27,6 +27,10 @@ annotations_list = []
 attributes_list = []
 observables_list = []
 
+data_params = {
+    'cells': ['CD8T', 'CD4T', 'NK', 'Bcell', 'Gran']
+}
+
 for data_base in data_bases:
 
     data = pdm.Data(
@@ -52,7 +56,7 @@ for data_base in data_bases:
         types={}
     )
     cells = pdm.Cells(
-        name='cells',
+        name='cells_horvath_calculator',
         types='any'
     )
     attributes = pdm.Attributes(
@@ -72,15 +76,17 @@ for data_base in data_bases:
             {'gender': 'F'},
             {'gender': 'M'}
         ]
+
     observables_list.append(obs)
 
-pdm.betas_plot_scatter_comparison(
+pdm.residuals_common_plot_scatter_comparison(
     data_list=data_list,
     annotations_list=annotations_list,
     attributes_list=attributes_list,
     observables_list=observables_list,
     rows_dict=rows_dict,
     cols_dict=cols_dict,
+    data_params=data_params,
     method_params={
         'line': 'no',
         'fit': 'yes',

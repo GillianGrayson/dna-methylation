@@ -1,9 +1,9 @@
 rm(list=ls())
 
 setwd("D:/Work/dna-methylation/dna-methylation/r/fisher")
-database = "GSE55763"
-fn_all = "D:/YandexDisk/Work/pydnameth/GSE55763/betas/table/aggregator/8f2e583182438a5af2b50eff926d3392/default.csv"
-fn_target = "C:/Users/user/Google Drive/mlmg/draft/tables/GSE55763.csv"
+database = "GSE87571"
+fn_all = "D:/YandexDisk/Work/pydnameth/GSE87571/betas/table/aggregator/d1bf8fe4acc69f65972ad2e2300002cf/default.csv"
+fn_target = ""D:/YandexDisk/Work/pydnameth/draft/tables/v1/GSE87571.csv""
 
 all_cpgs = read.csv(fn_all, header = TRUE)
 target_cpgs = read.csv(fn_target, header = TRUE)
