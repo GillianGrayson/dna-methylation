@@ -2,7 +2,7 @@ import pandas as pd
 
 import itertools
 
-stuff = ['betas_125.xlsx', 'residuals_125.xlsx']
+stuff = ['betas_equal.xlsx', 'residuals_equal_fixed.xlsx']
 for L in range(0, len(stuff)+1):
     for subset in itertools.combinations(stuff, L):
         files_names = list(subset)

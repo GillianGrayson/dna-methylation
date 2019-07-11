@@ -1,10 +1,10 @@
 import pandas as pd
 import numpy as np
 
-cpg_file_path = 'D:/Aaron/Bio/variance/v20/'
-cpg_file_name = '1_2_3_4.xlsx'
+cpg_file_path = 'C:/Users/User/YandexDisk/pydnameth/variance/residuals/'
+cpg_file_name = 'betas_equal.xlsx'
 
-data_file_path = 'D:/Aaron/Bio/variance/v20/'
+data_file_path = 'C:/Users/User/YandexDisk/pydnameth/variance/residuals/'
 data_file_names = ['GSE40279.xlsx', 'GSE87571.xlsx', 'EPIC.xlsx', 'GSE55763.xlsx']
 
 df = pd.read_excel(cpg_file_path + cpg_file_name)
