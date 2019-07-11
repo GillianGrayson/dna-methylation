@@ -1,11 +1,11 @@
 import pandas as pd
 import numpy as np
 
-data_file_path = 'C:/Users/User/YandexDisk/pydnameth/variance/residuals/'
-data_file_name = '1_2_3_4_with_r2.xlsx'
+data_file_path = 'C:/Users/User/YandexDisk/pydnameth/variance/betas/'
+data_file_name = 'residuals_fixed.xlsx'
 
 cpg_file_path = 'C:/Users/User/YandexDisk/pydnameth/variance/betas/'
-cpg_file_name = 'betas_equal.xlsx'
+cpg_file_name = 'betas_equal_residuals_equal_fixed.xlsx'
 
 df = pd.read_excel(cpg_file_path + cpg_file_name)
 cpg_list = list(df.cpg)
