@@ -1,7 +1,7 @@
 import pandas as pd
 
-data_file_path = 'D:/YandexDisk/Work/pydnameth/draft/variance/residuals/'
-data_file_name = 'residuals_GSE87571.xlsx'
+data_file_path = 'D:/YandexDisk/Work/pydnameth/draft/tables/v1/intersection/'
+data_file_name = 'GSE87571_EPIC_GSE55763.xlsx'
 
 df = pd.read_excel(data_file_path + data_file_name)
 genes = list(df.gene)
