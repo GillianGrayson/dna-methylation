@@ -11,7 +11,7 @@ def save_figure(fn, fig):
     pio.write_image(fig, fn + '.png')
     pio.write_image(fig, fn + '.pdf')
 
-fn = "C:/Users/user/Google Drive/mlmg/draft/fisher/GSE55763/UCSC_RefGene_Group.csv"
+fn = "D:/YandexDisk/Work/pydnameth/draft/variance/residuals/fisher/only_GSE87571/Relation_to_UCSC_CpG_Island.csv"
 
 
 table_dict = defaultdict(list)
@@ -22,7 +22,7 @@ with open(fn, 'r') as f:
             table_dict[col].append(dat)
 
 #x_data = [('chr' + str(x)) for x in table_dict['CHR']]
-x_data = table_dict['group']
+x_data = table_dict['Relation_to_UCSC_CpG_Island']
 y_data = list(map(float, table_dict['OR']))
 
 less_ids = [id for id in range(0, len(y_data)) if y_data[id] < 1]
@@ -33,8 +33,8 @@ for id in range(0, len(y_data)):
     if y_data[id] < 1.0:
         trace = go.Bar(
             x=[x_data[id]],
-            y=[y_data[id]],
-            base=[1.0 - y_data[id]],
+            y=[1 - y_data[id]],
+            base=[y_data[id]],
             marker=dict(
                 color='rgba(55, 128, 191, 0.7)',
                 line=dict(
