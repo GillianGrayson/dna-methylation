@@ -52,10 +52,43 @@ for data_base in data_bases:
         name='observables',
         types={}
     )
-    cells = pdm.Cells(
-        name='cells',
-        types='any'
-    )
+
+    if data.base == 'GSE55763':
+        obs = [
+            {'gender': 'F', 'is_duplicate': '0', 'age': (35, 100)},
+            {'gender': 'M', 'is_duplicate': '0', 'age': (35, 100)}
+        ]
+
+        data_params = {
+            'data': 'betas_adj',
+            'observables': ['age'],
+            'cells': ['Bcell', 'CD4T', 'NK', 'CD8T', 'Gran']
+        }
+
+        cells = pdm.Cells(
+            name='cells_horvath_calculator',
+            types='any'
+        )
+    else:
+        obs = [
+            {'gender': 'F'},
+            {'gender': 'M'}
+        ]
+
+        data_params = {
+            'data': 'betas_adj',
+            'observables': ['age'],
+            'cells': ['B', 'CD4T', 'NK', 'CD8T', 'Gran']
+        }
+
+        cells = pdm.Cells(
+            name='cells',
+            types='any'
+        )
+
+    observables_list.append(obs)
+    data_params_list.append(data_params)
+
     attributes = pdm.Attributes(
         target='age',
         observables=observables,
@@ -63,20 +96,7 @@ for data_base in data_bases:
     )
     attributes_list.append(attributes)
 
-    if data.base == 'GSE55763':
-        obs = [
-            {'gender': 'F', 'is_duplicate': '0', 'age': (35, 100)},
-            {'gender': 'M', 'is_duplicate': '0', 'age': (35, 100)}
-        ]
-    else:
-        obs = [
-            {'gender': 'F'},
-            {'gender': 'M'}
-        ]
-    observables_list.append(obs)
-    data_params_list.append([])
-
-pdm.betas_plot_scatter_comparison(
+pdm.entropy_plot_scatter_comparison(
     data_list=data_list,
     annotations_list=annotations_list,
     attributes_list=attributes_list,
