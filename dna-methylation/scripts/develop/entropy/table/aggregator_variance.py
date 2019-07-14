@@ -65,7 +65,7 @@ for data_set in data_sets:
     )
 
 
-    pdm.entropy_table_aggregator_linreg(
+    pdm.entropy_table_aggregator_variance(
         data=data,
         annotations=annotations,
         attributes=attributes,

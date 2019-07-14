@@ -7,7 +7,7 @@ y_ranges = ['auto'] * len(items)
 
 data = pdm.Data(
     path='',
-    base='GSE55763'
+    base='GSE87571'
 )
 
 annotations = pdm.Annotations(

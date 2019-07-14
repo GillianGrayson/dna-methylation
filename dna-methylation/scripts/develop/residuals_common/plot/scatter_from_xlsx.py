@@ -18,7 +18,7 @@ for index in range(0, len(items)):
     y_ranges.append([table_dict['begin'][index], table_dict['end'][index]])
 
 
-data_bases = ['GSE55763']
+data_bases = ['GSE87571']
 
 for data_base in data_bases:
 
@@ -64,11 +64,11 @@ for data_base in data_bases:
         ]
 
         data_params = {
-            'cells': ['B', 'CD4T', 'NK', 'CD8T', 'Gran']
+            'cells': ['CD8T', 'CD4T', 'NK', 'Bcell', 'Gran']
         }
 
         cells = pdm.Cells(
-            name='cells',
+            name='cells_horvath_calculator',
             types='any'
         )
 
@@ -83,6 +83,7 @@ for data_base in data_bases:
         annotations=annotations,
         attributes=attributes,
         observables_list=observables_list,
+        data_params=data_params,
         method_params={
             'items': items,
             'x_ranges': x_ranges,
@@ -90,6 +91,8 @@ for data_base in data_bases:
             'line': 'yes',
             'fit': 'no',
             'semi_window': 'none',
-            'legend_size': 1
+            'legend_size': 1,
+            'box_b': 'Q5',
+            'box_t': 'Q95'
         }
     )

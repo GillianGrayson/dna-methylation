@@ -68,8 +68,14 @@ pdm.entropy_plot_scatter(
     observables_list=observables_list,
     data_params=data_params,
     method_params={
-        'x_range': [5, 105],
-        'y_range': 'auto',
-        'legend_size': 1
+        'legend_size': 1,
+        'x_ranges': [5, 105],
+        'y_ranges': 'auto',
+        'line': 'no',
+        'fit': 'yes',
+        'semi_window': 8,
+        'box_b': 'Q5',
+        'box_t': 'Q95',
+        'add': 'none',
     }
 )
