@@ -52,43 +52,10 @@ for data_base in data_bases:
         name='observables',
         types={}
     )
-
-    if data.base == 'GSE55763':
-        obs = [
-            {'gender': 'F', 'is_duplicate': '0', 'age': (35, 100)},
-            {'gender': 'M', 'is_duplicate': '0', 'age': (35, 100)}
-        ]
-
-        data_params = {
-            'data': 'betas_adj',
-            'observables': ['age'],
-            'cells': ['Bcell', 'CD4T', 'NK', 'CD8T', 'Gran']
-        }
-
-        cells = pdm.Cells(
-            name='cells_horvath_calculator',
-            types='any'
-        )
-    else:
-        obs = [
-            {'gender': 'F'},
-            {'gender': 'M'}
-        ]
-
-        data_params = {
-            'data': 'betas_adj',
-            'observables': ['age'],
-            'cells': ['B', 'CD4T', 'NK', 'CD8T', 'Gran']
-        }
-
-        cells = pdm.Cells(
-            name='cells',
-            types='any'
-        )
-
-    observables_list.append(obs)
-    data_params_list.append(data_params)
-
+    cells = pdm.Cells(
+        name='cells_horvath_calculator',
+        types='any'
+    )
     attributes = pdm.Attributes(
         target='age',
         observables=observables,
@@ -96,7 +63,32 @@ for data_base in data_bases:
     )
     attributes_list.append(attributes)
 
-pdm.entropy_plot_scatter_comparison(
+    if data.base == 'GSE55763':
+        data_params = {'source': 'betas'}
+        obs = [
+            {'gender': 'F', 'is_duplicate': '0', 'age': (35, 100)},
+            {'gender': 'M', 'is_duplicate': '0', 'age': (35, 100)}
+        ]
+    elif data.base == 'E-MTAB-7309' or data.base == 'E-MTAB-7309-FILTERED':
+        data_params = {
+            'source': 'betas',
+            'norm': 'quantile'
+        }
+        obs = [
+            {'sex': 'female'},
+            {'sex': 'male'}
+        ]
+    else:
+        data_params = {'source': 'betas'}
+        obs = [
+            {'gender': 'F'},
+            {'gender': 'M'}
+        ]
+    observables_list.append(obs)
+
+    data_params_list.append(data_params)
+
+pdm.genes_plot_scatter_comparison(
     data_list=data_list,
     annotations_list=annotations_list,
     attributes_list=attributes_list,

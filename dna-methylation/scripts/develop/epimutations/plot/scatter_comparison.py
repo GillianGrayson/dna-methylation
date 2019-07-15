@@ -85,8 +85,8 @@ pdm.epimutations_plot_scatter_comparison(
     rows_dict=rows_dict,
     cols_dict=cols_dict,
     method_params={
-        'line': 'no',
-        'fit': 'yes',
+        'line': 'yes',
+        'fit': 'none',
         'semi_window': 8,
         'box_b': 'Q5',
         'box_t': 'Q95',
