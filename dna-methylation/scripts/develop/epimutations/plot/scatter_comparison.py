@@ -76,7 +76,7 @@ for data_base in data_bases:
     observables_list.append(obs)
     data_params_list.append([])
 
-pdm.betas_plot_scatter_comparison(
+pdm.epimutations_plot_scatter_comparison(
     data_list=data_list,
     annotations_list=annotations_list,
     attributes_list=attributes_list,

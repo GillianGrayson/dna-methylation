@@ -26,10 +26,7 @@ data_list = []
 annotations_list = []
 attributes_list = []
 observables_list = []
-
-data_params = {
-    'cells': ['CD8T', 'CD4T', 'NK', 'Bcell', 'Gran']
-}
+data_params_list = []
 
 for data_base in data_bases:
 
@@ -76,17 +73,21 @@ for data_base in data_bases:
             {'gender': 'F'},
             {'gender': 'M'}
         ]
-
     observables_list.append(obs)
+
+    data_params = {
+        'cells': ['CD8T', 'CD4T', 'NK', 'Bcell', 'Gran']
+    }
+    data_params_list.append(data_params)
 
 pdm.residuals_common_plot_scatter_comparison(
     data_list=data_list,
     annotations_list=annotations_list,
     attributes_list=attributes_list,
     observables_list=observables_list,
+    data_params_list=data_params_list,
     rows_dict=rows_dict,
     cols_dict=cols_dict,
-    data_params=data_params,
     method_params={
         'line': 'no',
         'fit': 'yes',

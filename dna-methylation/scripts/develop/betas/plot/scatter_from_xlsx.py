@@ -76,6 +76,9 @@ for data_base in data_bases:
             'line': 'yes',
             'fit': 'no',
             'semi_window': 'none',
+            'box_b': 'Q5',
+            'box_t': 'Q95',
+            'add': 'none',
             'legend_size': 1
         }
     )

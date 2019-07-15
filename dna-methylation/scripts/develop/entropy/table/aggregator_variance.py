@@ -1,30 +1,12 @@
 import pydnameth as pdm
-import pandas as pd
-import os.path
 
-fn = 'cpgs.xlsx'
-table_dict = {}
-if os.path.isfile(fn):
-    df = pd.read_excel(fn)
-    tmp_dict = df.to_dict()
-    for key in tmp_dict:
-        curr_dict = tmp_dict[key]
-        table_dict[key] = list(curr_dict.values())
+data_sets = ['GSE40279', 'GSE87571', 'EPIC', 'GSE55763']
 
-items = table_dict['cpg']
-x_ranges = [[5, 105]] * len(items)
-y_ranges = []
-for index in range(0, len(items)):
-    y_ranges.append([table_dict['begin'][index], table_dict['end'][index]])
-
-
-data_bases = ['GSE87571']
-
-for data_base in data_bases:
+for data_set in data_sets:
 
     data = pdm.Data(
         path='',
-        base=data_base
+        base=data_set
     )
 
     annotations = pdm.Annotations(
@@ -43,14 +25,16 @@ for data_base in data_bases:
         types={}
     )
 
-    if data_base == 'GSE55763':
+    if data.base == 'GSE55763':
         observables_list = [
             {'gender': 'F', 'is_duplicate': '0', 'age': (35, 100)},
             {'gender': 'M', 'is_duplicate': '0', 'age': (35, 100)}
         ]
 
         data_params = {
-            'cells': ['CD8T', 'CD4T', 'NK', 'Bcell', 'Gran']
+            'data': 'betas_adj',
+            'observables': ['age'],
+            'cells': ['Bcell', 'CD4T', 'NK', 'CD8T', 'Gran']
         }
 
         cells = pdm.Cells(
@@ -64,11 +48,13 @@ for data_base in data_bases:
         ]
 
         data_params = {
-            'cells': ['CD8T', 'CD4T', 'NK', 'Bcell', 'Gran']
+            'data': 'betas_adj',
+            'observables': ['age'],
+            'cells': ['B', 'CD4T', 'NK', 'CD8T', 'Gran']
         }
 
         cells = pdm.Cells(
-            name='cells_horvath_calculator',
+            name='cells',
             types='any'
         )
 
@@ -78,21 +64,11 @@ for data_base in data_bases:
         cells=cells
     )
 
-    pdm.residuals_common_plot_scatter(
+
+    pdm.entropy_table_aggregator_variance(
         data=data,
         annotations=annotations,
         attributes=attributes,
         observables_list=observables_list,
-        data_params=data_params,
-        method_params={
-            'items': items,
-            'x_ranges': x_ranges,
-            'y_ranges': y_ranges,
-            'line': 'yes',
-            'fit': 'no',
-            'semi_window': 'none',
-            'legend_size': 1,
-            'box_b': 'Q5',
-            'box_t': 'Q95'
-        }
+        data_params=data_params
     )

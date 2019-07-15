@@ -52,20 +52,9 @@ for data_set in data_sets:
                 {'gender': 'M'}
             ]
 
-        pdm.cells_plot_scatter(
+        pdm.cells_table_aggregator_linreg(
             data=data,
             annotations=annotations,
             attributes=attributes,
-            observables_list=observables_list,
-            method_params={
-                'legend_size': 1,
-                'x_ranges': [5, 105],
-                'y_ranges': 'auto',
-                'line': 'no',
-                'fit': 'yes',
-                'semi_window': 8,
-                'box_b': 'Q5',
-                'box_t': 'Q95',
-                'add': 'none',
-            }
+            observables_list=observables_list
         )
