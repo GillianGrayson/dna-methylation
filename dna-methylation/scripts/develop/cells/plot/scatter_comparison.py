@@ -31,73 +31,69 @@ data_params_list = []
 cell_types = ['Bcell', 'CD4T', 'NK', 'CD8T', 'Gran']
 cell_name = 'cells_horvath_calculator'
 
-for cell_type in cell_types:
+for data_base in data_bases:
 
-    rows_dict['items'] = [cell_type]
-
-    for data_base in data_bases:
-
-        data = pdm.Data(
-            path='',
-            base=data_base
-        )
-        data_list.append(data)
-
-        annotations = pdm.Annotations(
-            name='annotations',
-            exclude='bad_cpgs',
-            cross_reactive='any',
-            snp='any',
-            chr='NS',
-            gene_region='any',
-            geo='any',
-            probe_class='any'
-        )
-        annotations_list.append(annotations)
-
-        observables = pdm.Observables(
-            name='observables',
-            types={}
-        )
-        cells = pdm.Cells(
-            name=cell_name,
-            types=cell_type
-        )
-        attributes = pdm.Attributes(
-            target='age',
-            observables=observables,
-            cells=cells
-        )
-        attributes_list.append(attributes)
-
-        if data.base == 'GSE55763':
-            obs = [
-                {'gender': 'F', 'is_duplicate': '0', 'age': (35, 100)},
-                {'gender': 'M', 'is_duplicate': '0', 'age': (35, 100)}
-            ]
-        else:
-            obs = [
-                {'gender': 'F'},
-                {'gender': 'M'}
-            ]
-        observables_list.append(obs)
-        data_params_list.append([])
-
-    pdm.cells_plot_scatter_comparison(
-        data_list=data_list,
-        annotations_list=annotations_list,
-        attributes_list=attributes_list,
-        observables_list=observables_list,
-        data_params_list=data_params_list,
-        rows_dict=rows_dict,
-        cols_dict=cols_dict,
-        method_params={
-            'line': 'no',
-            'fit': 'yes',
-            'semi_window': 8,
-            'box_b': 'Q5',
-            'box_t': 'Q95',
-            'legend_size': 1,
-            'add': 'none'
-        }
+    data = pdm.Data(
+        path='',
+        base=data_base
     )
+    data_list.append(data)
+
+    annotations = pdm.Annotations(
+        name='annotations',
+        exclude='bad_cpgs',
+        cross_reactive='any',
+        snp='any',
+        chr='NS',
+        gene_region='any',
+        geo='any',
+        probe_class='any'
+    )
+    annotations_list.append(annotations)
+
+    observables = pdm.Observables(
+        name='observables',
+        types={}
+    )
+    cells = pdm.Cells(
+        name=cell_name,
+        types=cell_types
+    )
+    attributes = pdm.Attributes(
+        target='age',
+        observables=observables,
+        cells=cells
+    )
+    attributes_list.append(attributes)
+
+    if data.base == 'GSE55763':
+        obs = [
+            {'gender': 'F', 'is_duplicate': '0', 'age': (35, 100)},
+            {'gender': 'M', 'is_duplicate': '0', 'age': (35, 100)}
+        ]
+    else:
+        obs = [
+            {'gender': 'F'},
+            {'gender': 'M'}
+        ]
+    observables_list.append(obs)
+    data_params_list.append([])
+
+pdm.cells_plot_scatter_comparison(
+    data_list=data_list,
+    annotations_list=annotations_list,
+    attributes_list=attributes_list,
+    observables_list=observables_list,
+    data_params_list=data_params_list,
+    rows_dict=rows_dict,
+    cols_dict=cols_dict,
+    method_params={
+        'line': 'yes',
+        'fit': 'none',
+        'semi_window': 8,
+        'box_b': 'Q5',
+        'box_t': 'Q95',
+        'legend_size': 1,
+        'add': 'none'
+    }
+)

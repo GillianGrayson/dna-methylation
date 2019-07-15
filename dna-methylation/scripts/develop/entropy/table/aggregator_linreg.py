@@ -1,6 +1,6 @@
 import pydnameth as pdm
 
-data_sets = ['GSE40279', 'GSE87571', 'EPIC', 'GSE55763']
+data_sets = ['GSE87571']
 
 for data_set in data_sets:
 
@@ -63,7 +63,6 @@ for data_set in data_sets:
         observables=observables,
         cells=cells
     )
-
 
     pdm.entropy_table_aggregator_linreg(
         data=data,
