@@ -12,7 +12,7 @@ annotations = pdm.Annotations(
     snp='any',
     chr='NS',
     gene_region='any',
-    geo='any',
+    geo='islands_shores',
     probe_class='any'
 )
 

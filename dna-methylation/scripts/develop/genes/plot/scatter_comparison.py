@@ -43,7 +43,7 @@ for data_base in data_bases:
         snp='any',
         chr='NS',
         gene_region='any',
-        geo='any',
+        geo='islands_shores',
         probe_class='any'
     )
     annotations_list.append(annotations)

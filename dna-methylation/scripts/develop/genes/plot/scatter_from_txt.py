@@ -8,7 +8,7 @@ y_ranges = ['auto'] * len(items)
 
 data = pdm.Data(
     path='',
-    base='GSE87571'
+    base='E-MTAB-7309-FILTERED'
 )
 
 annotations = pdm.Annotations(
@@ -18,7 +18,7 @@ annotations = pdm.Annotations(
     snp='any',
     chr='NS',
     gene_region='any',
-    geo='any',
+    geo='islands_shores',
     probe_class='any'
 )
 
