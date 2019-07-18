@@ -27,7 +27,7 @@ def convert_header(input_name, output_name):
             cur[0] = column_name
 
         cur = [x.replace(" ", "_") for x in cur]
-        cur = [x[:-1] if x[-1] == '.' else x for x in cur]
+        cur = [x[:-1] if len(x) > 0 and x[-1] == '.' else x for x in cur]
 
         res.append(cur)
         df[cur[0]] = cur[1:]
@@ -53,7 +53,7 @@ def convert_header(input_name, output_name):
     res
 
 
-input_name = "D:/YandexDisk/Work/pydnameth/GSE88890/tmp.txt"
-output_name = "D:/YandexDisk/Work/pydnameth/GSE88890/tmp_1.txt"
+input_name = "D:/YandexDisk/Work/pydnameth/GSE41826/tmp.txt"
+output_name = "D:/YandexDisk/Work/pydnameth/GSE41826/tmp_1.txt"
 convert_header(input_name, output_name)
 

@@ -7,7 +7,7 @@ y_ranges = ['auto'] * len(items)
 
 data = pdm.Data(
     path='',
-    base='GSE88890'
+    base='GSE41826'
 )
 
 annotations = pdm.Annotations(
@@ -54,6 +54,13 @@ elif data.base == 'GSE88890':
     observables_list = [
         {'gender': 'F'},
         {'gender': 'M'}
+    ]
+elif data.base == 'GSE41826':
+    x_ranges = ['auto'] * len(items)
+    target = 'age'
+    observables_list = [
+        {'Sex': 'Female'},
+        {'Sex': 'Male'}
     ]
 else:
     target = 'age'
