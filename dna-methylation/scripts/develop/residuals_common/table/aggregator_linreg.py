@@ -2,18 +2,16 @@ import pydnameth as pdm
 
 data = pdm.Data(
     path='',
-    base='GSE55763'
+    base='GSE87571_TEST'
 )
 
 annotations = pdm.Annotations(
     name='annotations',
+    type='450k',
     exclude='bad_cpgs',
-    cross_reactive='any',
-    snp='any',
-    chr='NS',
-    gene_region='any',
-    geo='any',
-    probe_class='any'
+    select_dict={
+        'CHR': ['-X', '-Y']
+    }
 )
 
 observables = pdm.Observables(
@@ -25,6 +23,7 @@ cells = pdm.Cells(
     name='cells_horvath_calculator',
     types='any'
 )
+data_params = {'cells': ['CD8T', 'CD4T', 'NK', 'Bcell', 'Gran']}
 
 attributes = pdm.Attributes(
     target='age',
@@ -33,38 +32,21 @@ attributes = pdm.Attributes(
 )
 
 if data.base == 'GSE55763':
-    data_params = {'cells': ['CD8T', 'CD4T', 'NK', 'Bcell', 'Gran']}
     observables_list = [
         {'gender': 'F', 'is_duplicate': '0', 'age': (35, 100)},
         {'gender': 'M', 'is_duplicate': '0', 'age': (35, 100)}
     ]
-    cells = pdm.Cells(
-        name='cells_horvath_calculator',
-        types='any'
-    )
 elif data.base == 'E-MTAB-7309' or data.base == 'E-MTAB-7309-FILTERED':
-    data_params = {
-        'norm': 'quantile',
-        'cells': ['CD8T', 'CD4T', 'NK', 'B', 'Gran']
-    }
+    data_params['norm'] = 'quantile'
     observables_list = [
         {'sex': 'female'},
         {'sex': 'male'}
     ]
-    cells = pdm.Cells(
-        name='cells_horvath_calculator',
-        types='any'
-    )
 else:
-    data_params = {'cells': ['CD8T', 'CD4T', 'NK', 'B', 'Gran']}
     observables_list = [
         {'gender': 'F'},
         {'gender': 'M'}
     ]
-    cells = pdm.Cells(
-        name='cells',
-        types='any'
-    )
 
 pdm.residuals_common_table_aggregator_linreg(
     data=data,

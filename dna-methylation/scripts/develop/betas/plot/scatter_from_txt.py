@@ -7,18 +7,16 @@ y_ranges = ['auto'] * len(items)
 
 data = pdm.Data(
     path='',
-    base='GSE87571'
+    base='GSE88890'
 )
 
 annotations = pdm.Annotations(
     name='annotations',
+    type='450k',
     exclude='bad_cpgs',
-    cross_reactive='any',
-    snp='any',
-    chr='NS',
-    gene_region='any',
-    geo='any',
-    probe_class='any'
+    select_dict={
+        'CHR': ['-X', '-Y']
+    }
 )
 
 observables = pdm.Observables(
@@ -31,27 +29,44 @@ cells = pdm.Cells(
     types='any'
 )
 
-attributes = pdm.Attributes(
-    target='age',
-    observables=observables,
-    cells=cells
-)
-
 if data.base == 'GSE55763':
+    target = 'age'
     observables_list = [
         {'gender': 'F', 'is_duplicate': '0', 'age': (35, 100)},
         {'gender': 'M', 'is_duplicate': '0', 'age': (35, 100)}
     ]
 elif data.base == 'GSE64244':
+    target = 'age'
     observables_list = [
         {'disease_status': 'Turner_syndrome_45,X_(Maternal)'},
         {'disease_status': 'Turner_syndrome_45,X_(Paternal)'}
     ]
-else:
+elif data.base == 'GSE43414':
+    x_ranges = ['auto'] * len(items)
+    target = 'age.brain'
+    observables_list = [
+        {'source_tissue': 'superior_temporal_gyrus', 'Sex': 'FEMALE'},
+        {'source_tissue': 'superior_temporal_gyrus', 'Sex': 'MALE'}
+    ]
+elif data.base == 'GSE88890':
+    x_ranges = ['auto'] * len(items)
+    target = 'age'
     observables_list = [
         {'gender': 'F'},
         {'gender': 'M'}
     ]
+else:
+    target = 'age'
+    observables_list = [
+        {'gender': 'F'},
+        {'gender': 'M'}
+    ]
+
+attributes = pdm.Attributes(
+    target=target,
+    observables=observables,
+    cells=cells
+)
 
 pdm.betas_plot_scatter(
     data=data,
@@ -67,7 +82,7 @@ pdm.betas_plot_scatter(
         'semi_window': 8,
         'box_b': 'Q5',
         'box_t': 'Q95',
-        'legend_size': 1,
+        'legend_size': 2,
         'add': 'none'
     }
 )

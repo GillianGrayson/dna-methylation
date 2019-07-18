@@ -17,7 +17,7 @@ y_ranges = []
 for index in range(0, len(items)):
     y_ranges.append([table_dict['begin'][index], table_dict['end'][index]])
 
-data_bases = ['GSE87571']
+data_bases = ['GSE87571_TEST']
 
 for data_base in data_bases:
 
@@ -28,13 +28,11 @@ for data_base in data_bases:
 
     annotations = pdm.Annotations(
         name='annotations',
+        type='450k',
         exclude='bad_cpgs',
-        cross_reactive='any',
-        snp='any',
-        chr='NS',
-        gene_region='any',
-        geo='any',
-        probe_class='any'
+        select_dict={
+            'CHR': ['-X', '-Y']
+        }
     )
 
     observables = pdm.Observables(
@@ -74,8 +72,8 @@ for data_base in data_bases:
             'x_ranges': x_ranges,
             'y_ranges': y_ranges,
             'line': 'yes',
-            'fit': 'no',
-            'semi_window': 'none',
+            'fit': 'yes',
+            'semi_window': 8,
             'box_b': 'Q5',
             'box_t': 'Q95',
             'add': 'none',

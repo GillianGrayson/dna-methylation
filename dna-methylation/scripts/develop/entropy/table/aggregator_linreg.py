@@ -1,6 +1,6 @@
 import pydnameth as pdm
 
-data_sets = ['GSE87571']
+data_sets = ['GSE87571_TEST']
 
 for data_set in data_sets:
 
@@ -11,13 +11,11 @@ for data_set in data_sets:
 
     annotations = pdm.Annotations(
         name='annotations',
+        type='450k',
         exclude='bad_cpgs',
-        cross_reactive='any',
-        snp='any',
-        chr='NS',
-        gene_region='any',
-        geo='any',
-        probe_class='any'
+        select_dict={
+            'CHR': ['-X', '-Y']
+        }
     )
 
     observables = pdm.Observables(

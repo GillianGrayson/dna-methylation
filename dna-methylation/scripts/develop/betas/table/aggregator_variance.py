@@ -2,18 +2,16 @@ import pydnameth as pdm
 
 data = pdm.Data(
     path='',
-    base='GSE40279'
+    base='GSE87571_TEST'
 )
 
 annotations = pdm.Annotations(
     name='annotations',
+    type='450k',
     exclude='bad_cpgs',
-    cross_reactive='any',
-    snp='any',
-    chr='NS',
-    gene_region='any',
-    geo='any',
-    probe_class='any'
+    select_dict={
+        'CHR': ['-X', '-Y']
+    }
 )
 
 observables = pdm.Observables(
