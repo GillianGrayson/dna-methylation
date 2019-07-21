@@ -1,6 +1,7 @@
 import pydnameth as pdm
 import pandas as pd
 import os.path
+from scripts.develop.routines import *
 
 fn = 'scatter_comparison_rows.xlsx'
 rows_dict = {}
@@ -38,13 +39,11 @@ for data_base in data_bases:
 
     annotations = pdm.Annotations(
         name='annotations',
+        type='450k',
         exclude='bad_cpgs',
-        cross_reactive='any',
-        snp='any',
-        chr='NS',
-        gene_region='any',
-        geo='any',
-        probe_class='any'
+        select_dict={
+            'CHR': ['-X', '-Y']
+        }
     )
     annotations_list.append(annotations)
 
@@ -56,23 +55,18 @@ for data_base in data_bases:
         name='cells',
         types='any'
     )
+
+    target = get_target(data.base)
+    obs = get_observables_list(data.base)
+    data_params = get_data_params(data.base)
+
     attributes = pdm.Attributes(
-        target='age',
+        target=target,
         observables=observables,
         cells=cells
     )
     attributes_list.append(attributes)
 
-    if data.base == 'GSE55763':
-        obs = [
-            {'gender': 'F', 'is_duplicate': '0', 'age': (35, 100)},
-            {'gender': 'M', 'is_duplicate': '0', 'age': (35, 100)}
-        ]
-    else:
-        obs = [
-            {'gender': 'F'},
-            {'gender': 'M'}
-        ]
     observables_list.append(obs)
     data_params_list.append([])
 

@@ -1,8 +1,9 @@
 import pydnameth as pdm
+from scripts.develop.routines import *
 
 f = open('cpgs.txt', 'r')
 items = f.read().splitlines()
-x_ranges = [[5, 105]] * len(items)
+x_ranges = ['auto'] * len(items)
 y_ranges = ['auto'] * len(items)
 
 data = pdm.Data(
@@ -29,45 +30,9 @@ cells = pdm.Cells(
     types='any'
 )
 
-if data.base == 'GSE55763':
-    target = 'age'
-    observables_list = [
-        {'gender': 'F', 'is_duplicate': '0', 'age': (35, 100)},
-        {'gender': 'M', 'is_duplicate': '0', 'age': (35, 100)}
-    ]
-elif data.base == 'GSE64244':
-    target = 'age'
-    observables_list = [
-        {'disease_status': 'Turner_syndrome_45,X_(Maternal)'},
-        {'disease_status': 'Turner_syndrome_45,X_(Paternal)'}
-    ]
-elif data.base == 'GSE43414':
-    x_ranges = ['auto'] * len(items)
-    target = 'age.brain'
-    observables_list = [
-        {'source_tissue': 'superior_temporal_gyrus', 'Sex': 'FEMALE'},
-        {'source_tissue': 'superior_temporal_gyrus', 'Sex': 'MALE'}
-    ]
-elif data.base == 'GSE88890':
-    x_ranges = ['auto'] * len(items)
-    target = 'age'
-    observables_list = [
-        {'gender': 'F'},
-        {'gender': 'M'}
-    ]
-elif data.base == 'GSE41826':
-    x_ranges = ['auto'] * len(items)
-    target = 'age'
-    observables_list = [
-        {'Sex': 'Female'},
-        {'Sex': 'Male'}
-    ]
-else:
-    target = 'age'
-    observables_list = [
-        {'gender': 'F'},
-        {'gender': 'M'}
-    ]
+target = get_target(data.base)
+observables_list = get_observables_list(data.base)
+data_params = get_data_params(data.base)
 
 attributes = pdm.Attributes(
     target=target,

@@ -1,6 +1,7 @@
 import pydnameth as pdm
 import pandas as pd
 import os.path
+from scripts.develop.routines import *
 
 fn = 'cpgs.xlsx'
 table_dict = {}
@@ -23,7 +24,7 @@ for data_base in data_bases:
 
     data = pdm.Data(
         path='',
-        base=data_base
+        base='GSE43414'
     )
 
     annotations = pdm.Annotations(
@@ -45,22 +46,15 @@ for data_base in data_bases:
         types='any'
     )
 
+    target = get_target(data.base)
+    observables_list = get_observables_list(data.base)
+    data_params = get_data_params(data.base)
+
     attributes = pdm.Attributes(
-        target='age',
+        target=target,
         observables=observables,
         cells=cells
     )
-
-    if data.base == 'GSE55763':
-        observables_list = [
-            {'gender': 'F', 'is_duplicate': '0', 'age': (35, 100)},
-            {'gender': 'M', 'is_duplicate': '0', 'age': (35, 100)}
-        ]
-    else:
-        observables_list = [
-            {'gender': 'F'},
-            {'gender': 'M'}
-        ]
 
     pdm.betas_plot_scatter(
         data=data,

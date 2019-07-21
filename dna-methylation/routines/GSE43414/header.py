@@ -53,7 +53,7 @@ def convert_header(input_name, output_name):
     res
 
 
-input_name = "D:/YandexDisk/Work/pydnameth/GSE41826/tmp.txt"
-output_name = "D:/YandexDisk/Work/pydnameth/GSE41826/tmp_1.txt"
+input_name = "D:/YandexDisk/Work/pydnameth/GSE61256/tmp.txt"
+output_name = "D:/YandexDisk/Work/pydnameth/GSE61256/tmp_1.txt"
 convert_header(input_name, output_name)
 

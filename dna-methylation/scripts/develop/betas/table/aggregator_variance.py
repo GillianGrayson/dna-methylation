@@ -1,4 +1,6 @@
 import pydnameth as pdm
+from scripts.develop.routines import *
+
 
 data = pdm.Data(
     path='',
@@ -19,33 +21,20 @@ observables = pdm.Observables(
     types={}
 )
 
-if data.base == 'GSE55763':
-    observables_list = [
-        {'gender': 'F', 'is_duplicate': '0', 'age': (35, 100)},
-        {'gender': 'M', 'is_duplicate': '0', 'age': (35, 100)}
-    ]
-    cells = pdm.Cells(
-        name='cells_horvath_calculator',
-        types='any'
-    )
+cells = pdm.Cells(
+    name='cells_horvath_calculator',
+    types='any'
+)
 
-else:
-    observables_list = [
-        {'gender': 'F'},
-        {'gender': 'M'}
-    ]
-    cells = pdm.Cells(
-        name='cells',
-        types='any'
-    )
+target = get_target(data.base)
+observables_list = get_observables_list(data.base)
+data_params = get_data_params(data.base)
 
 attributes = pdm.Attributes(
-    target='age',
+    target=target,
     observables=observables,
     cells=cells
 )
-
-data_params = {}
 
 pdm.betas_table_aggregator_variance(
     data=data,

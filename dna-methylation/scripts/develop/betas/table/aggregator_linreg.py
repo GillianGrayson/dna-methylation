@@ -1,4 +1,6 @@
 import pydnameth as pdm
+from scripts.develop.routines import *
+
 
 data = pdm.Data(
     path='',
@@ -19,41 +21,17 @@ observables = pdm.Observables(
     types={}
 )
 
-if data.base == 'GSE55763':
-    data_params = None
-    observables_list = [
-        {'gender': 'F', 'is_duplicate': '0', 'age': (35, 100)},
-        {'gender': 'M', 'is_duplicate': '0', 'age': (35, 100)}
-    ]
-    cells = pdm.Cells(
-        name='cells_horvath_calculator',
-        types='any'
-    )
-elif data.base == 'E-MTAB-7309' or data.base == 'E-MTAB-7309-FILTERED':
-    data_params = {
-        'norm': 'quantile',
-    }
-    observables_list = [
-        {'sex': 'female'},
-        {'sex': 'male'}
-    ]
-    cells = pdm.Cells(
-        name='cells_horvath_calculator',
-        types='any'
-    )
-else:
-    data_params = None
-    observables_list = [
-        {'gender': 'F'},
-        {'gender': 'M'}
-    ]
-    cells = pdm.Cells(
-        name='cells',
-        types='any'
-    )
+cells = pdm.Cells(
+    name='cells_horvath_calculator',
+    types='any'
+)
+
+target = get_target(data.base)
+observables_list = get_observables_list(data.base)
+data_params = get_data_params(data.base)
 
 attributes = pdm.Attributes(
-    target='age',
+    target=target,
     observables=observables,
     cells=cells
 )
