@@ -42,6 +42,26 @@ def get_observables_list(data_base):
             {'Sex': 'female'},
             {'Sex': 'male'}
         ]
+    elif data_base == 'control':
+        observables_list = [
+            {'Sex': 'F'},
+            {'Sex': 'M'}
+        ]
+    elif data_base == 'centenarian':
+        observables_list = [
+            {'Sex': 'F'},
+            {'Sex': 'M'}
+        ]
+    elif data_base == 'down':
+        observables_list = [
+            {'Sex': 'F'},
+            {'Sex': 'M'}
+        ]
+    elif data_base == 'offspring':
+        observables_list = [
+            {'Sex': 'F'},
+            {'Sex': 'M'}
+        ]
     else:
         observables_list = [
             {'gender': 'F'},
@@ -64,6 +84,14 @@ def get_target(data_base):
         target = 'age'
     elif data_base == 'GSE61256':
         target = 'age'
+    elif data_base == 'control':
+        target = 'Age'
+    elif data_base == 'centenarian':
+        target = 'Age'
+    elif data_base == 'down':
+        target = 'Age'
+    elif data_base == 'offspring':
+        target = 'Age'
     else:
         target = 'age'
 
