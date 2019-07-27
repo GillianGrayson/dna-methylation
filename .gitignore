@@ -124,3 +124,7 @@ dna-methylation/r/fisher/CRC_paraffina_input_Fisher_E075_nominal0\.001_POSNEG_Cl
 *.png
 
 dna-methylation/r/fisher/\.Rhistory
+
+dna-methylation/routines/mortality_score\.txt
+
+dna-methylation/routines/phenotypic_age\.txt

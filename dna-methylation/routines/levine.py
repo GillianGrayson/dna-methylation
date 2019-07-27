@@ -1,5 +1,8 @@
 import numpy as np
 import pandas as pd
+import statsmodels.api as sm
+from scipy.stats import shapiro, kstest, normaltest
+from statsmodels.stats.stattools import jarque_bera, omni_normtest, durbin_watson
 
 file_name = 'levine.xlsx'
 
@@ -45,5 +48,51 @@ for sub_id in range(0, len(data_dict['Age'])):
 
     phenotypic_age[sub_id] = 141.50225 + np.log(-0.00553 * np.log(1 - mortality_score[sub_id])) / 0.090165
 
+np.savetxt('mortality_score.txt', mortality_score)
+np.savetxt('phenotypic_age.txt', phenotypic_age)
+
+x = sm.add_constant(data_dict['Age'])
+
+results = sm.OLS(phenotypic_age, x).fit()
+
+residuals = results.resid
+
+jb, jbpv, skew, kurtosis = jarque_bera(results.wresid)
+omni, omnipv = omni_normtest(results.wresid)
+
+res_mean = np.mean(residuals)
+res_std = np.std(residuals)
+
+_, normality_p_value_shapiro = shapiro(residuals)
+_, normality_p_value_ks_wo_params = kstest(residuals, 'norm')
+_, normality_p_value_ks_with_params = kstest(residuals, 'norm', (res_mean, res_std))
+_, normality_p_value_dagostino = normaltest(residuals)
+
+metrics_dict = {}
+metrics_dict['R2'] = results.rsquared
+metrics_dict['R2_adj'] = results.rsquared_adj
+metrics_dict['f_stat'] = results.fvalue
+metrics_dict['prob(f_stat)'] = results.f_pvalue
+metrics_dict['log_likelihood'] = results.llf
+metrics_dict['AIC'] = results.aic
+metrics_dict['BIC'] = results.bic
+metrics_dict['omnibus'] = omni
+metrics_dict['prob(omnibus)'] = omnipv
+metrics_dict['skew'] = skew
+metrics_dict['kurtosis'] = kurtosis
+metrics_dict['durbin_watson'] = durbin_watson(results.wresid)
+metrics_dict['jarque_bera'] = jb
+metrics_dict['prob(jarque_bera)'] = jbpv
+metrics_dict['cond_no'] = results.condition_number
+metrics_dict['normality_p_value_shapiro'] = normality_p_value_shapiro
+metrics_dict['normality_p_value_ks_wo_params'] = normality_p_value_ks_wo_params
+metrics_dict['normality_p_value_ks_with_params'] = normality_p_value_ks_with_params
+metrics_dict['normality_p_value_dagostino'] = normality_p_value_dagostino
+metrics_dict['intercept'] = results.params[0]
+metrics_dict['slope'] = results.params[1]
+metrics_dict['intercept_std'] = results.bse[0]
+metrics_dict['slope_std'] = results.bse[1]
+metrics_dict['intercept_p_value'] = results.pvalues[0]
+metrics_dict['slope_p_value'] = results.pvalues[1]
 
 a = 1
