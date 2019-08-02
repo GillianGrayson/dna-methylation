@@ -3,7 +3,7 @@ rm(list=ls())
 setwd("E:/Work/dna-methylation/dna-methylation/r/fisher")
 database = "GSE87571"
 fn_all = "E:/YandexDisk/Work/pydnameth/GSE87571/betas/table/linreg/1aff455b68f5eae5fe4c89d0aa28ea74/default.csv"
-fn_target = "E:/YandexDisk/Work/pydnameth/draft/tables/v6/betas/GSE87571.csv"
+fn_target = "E:/YandexDisk/Work/pydnameth/draft/tables/residuals/v6/GSE87571.csv"
 
 all_cpgs = read.csv(fn_all, header = TRUE)
 target_cpgs = read.csv(fn_target, header = TRUE)
