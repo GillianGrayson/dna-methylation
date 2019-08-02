@@ -11,8 +11,7 @@ def save_figure(fn, fig):
     pio.write_image(fig, fn + '.png')
     pio.write_image(fig, fn + '.pdf')
 
-fn = "D:/YandexDisk/Work/pydnameth/draft/variance/betas/fisher/only_GSE87571/Relation_to_UCSC_CpG_Island.csv"
-
+fn = "E:/YandexDisk/Work/pydnameth/draft/fisher/GSE87571/betas/v6/Relation_to_UCSC_CpG_Island.csv"
 
 table_dict = defaultdict(list)
 with open(fn, 'r') as f:

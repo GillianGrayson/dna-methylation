@@ -1,7 +1,8 @@
 import numpy as np
 import pandas as pd
 import statsmodels.api as sm
-from scipy.stats import shapiro, kstest, normaltest
+import scipy.stats as ss
+from scipy.stats import shapiro, normaltest
 from statsmodels.stats.stattools import jarque_bera, omni_normtest, durbin_watson
 
 file_name = 'levine.xlsx'
@@ -12,7 +13,7 @@ data_dict = {}
 data_dict['Albumin'] = list(main_df.Albumin)
 data_dict['Creatinine'] = list(main_df.Creatinine)
 data_dict['Glucose_serum'] = list(main_df.Glucose_serum)
-data_dict['C_reactive_protein_log'] = np.log(list(main_df.C_reactive_protein_log))
+data_dict['C_reactive_protein_log'] = np.log(list(main_df.C_reactive_protein_log * 10))
 data_dict['Lymphocyte_percent'] = list(main_df.Lymphocyte_percent)
 data_dict['Mean_red_cell_volume'] = list(main_df.Mean_red_cell_volume)
 data_dict['Red_cell_distribution_width'] = list(main_df.Red_cell_distribution_width)
@@ -48,8 +49,8 @@ for sub_id in range(0, len(data_dict['Age'])):
 
     phenotypic_age[sub_id] = 141.50225 + np.log(-0.00553 * np.log(1 - mortality_score[sub_id])) / 0.090165
 
-np.savetxt('mortality_score.txt', mortality_score)
-np.savetxt('phenotypic_age.txt', phenotypic_age)
+np.savetxt('mortality_score_log_deci.txt', mortality_score)
+np.savetxt('phenotypic_age_log_deci.txt', phenotypic_age)
 
 x = sm.add_constant(data_dict['Age'])
 
@@ -64,8 +65,6 @@ res_mean = np.mean(residuals)
 res_std = np.std(residuals)
 
 _, normality_p_value_shapiro = shapiro(residuals)
-_, normality_p_value_ks_wo_params = kstest(residuals, 'norm')
-_, normality_p_value_ks_with_params = kstest(residuals, 'norm', (res_mean, res_std))
 _, normality_p_value_dagostino = normaltest(residuals)
 
 metrics_dict = {}
@@ -85,8 +84,6 @@ metrics_dict['jarque_bera'] = jb
 metrics_dict['prob(jarque_bera)'] = jbpv
 metrics_dict['cond_no'] = results.condition_number
 metrics_dict['normality_p_value_shapiro'] = normality_p_value_shapiro
-metrics_dict['normality_p_value_ks_wo_params'] = normality_p_value_ks_wo_params
-metrics_dict['normality_p_value_ks_with_params'] = normality_p_value_ks_with_params
 metrics_dict['normality_p_value_dagostino'] = normality_p_value_dagostino
 metrics_dict['intercept'] = results.params[0]
 metrics_dict['slope'] = results.params[1]
@@ -94,5 +91,9 @@ metrics_dict['intercept_std'] = results.bse[0]
 metrics_dict['slope_std'] = results.bse[1]
 metrics_dict['intercept_p_value'] = results.pvalues[0]
 metrics_dict['slope_p_value'] = results.pvalues[1]
+
+t_stat, p_val = ss.ttest_ind(phenotypic_age, data_dict['Age'], nan_policy='omit')
+p_val_left_sided = ss.t.cdf(t_stat, len(phenotypic_age) + len(data_dict['Age']) - 2)
+p_val_right_sided = ss.t.sf(t_stat, len(phenotypic_age) + len(data_dict['Age']) - 2)
 
 a = 1

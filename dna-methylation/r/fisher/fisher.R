@@ -1,14 +1,14 @@
 rm(list=ls())
 
-setwd("D:/Work/dna-methylation/dna-methylation/r/fisher")
+setwd("E:/Work/dna-methylation/dna-methylation/r/fisher")
 database = "GSE87571"
-fn_all = "D:/YandexDisk/Work/pydnameth/GSE87571/betas/table/aggregator/d1bf8fe4acc69f65972ad2e2300002cf/default.csv"
-fn_target = "D:/YandexDisk/Work/pydnameth/draft/variance/residuals/residuals_GSE87571.csv"
+fn_all = "E:/YandexDisk/Work/pydnameth/GSE87571/betas/table/linreg/1aff455b68f5eae5fe4c89d0aa28ea74/default.csv"
+fn_target = "E:/YandexDisk/Work/pydnameth/draft/tables/residuals/v6/GSE87571.csv"
 
 all_cpgs = read.csv(fn_all, header = TRUE)
 target_cpgs = read.csv(fn_target, header = TRUE)
 
-load("D:/YandexDisk/Work/MG/2/Illumina450Manifest.RData")
+load("E:/YandexDisk/Work/MG/2/Illumina450Manifest.RData")
 
 all_data = Illumina450Manifest[Illumina450Manifest$IlmnID %in% all_cpgs$item,]
 all_data = droplevels(all_data)
