@@ -8,7 +8,7 @@ y_ranges = ['auto'] * len(items)
 
 data = pdm.Data(
     path='',
-    base='GSE55763'
+    base='E-MTAB-7309'
 )
 
 annotations = pdm.Annotations(
@@ -45,6 +45,7 @@ pdm.betas_plot_scatter(
     annotations=annotations,
     attributes=attributes,
     observables_list=observables_list,
+    data_params=data_params,
     method_params={
         'items': items,
         'x_ranges': x_ranges,

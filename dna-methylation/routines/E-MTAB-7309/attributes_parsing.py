@@ -9,7 +9,7 @@ def is_float(value):
     except ValueError:
         return False
 
-path = 'D:/YandexDisk/Work/pydnameth/E-MTAB-7309/raw'
+path = 'E:/YandexDisk/Work/pydnameth/E-MTAB-7309/raw'
 
 fn_txt = path + '/E-MTAB-7309.sdrf.txt'
 
