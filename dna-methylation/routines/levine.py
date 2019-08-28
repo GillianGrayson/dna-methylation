@@ -13,7 +13,7 @@ data_dict = {}
 data_dict['Albumin'] = list(main_df.Albumin)
 data_dict['Creatinine'] = list(main_df.Creatinine)
 data_dict['Glucose_serum'] = list(main_df.Glucose_serum)
-data_dict['C_reactive_protein_log'] = np.log(list(main_df.C_reactive_protein_log * 10))
+data_dict['C_reactive_protein_log'] = np.log10(list(main_df.C_reactive_protein_log * 10))
 data_dict['Lymphocyte_percent'] = list(main_df.Lymphocyte_percent)
 data_dict['Mean_red_cell_volume'] = list(main_df.Mean_red_cell_volume)
 data_dict['Red_cell_distribution_width'] = list(main_df.Red_cell_distribution_width)
@@ -37,6 +37,8 @@ gamma = 0.0077
 
 linear_combinations = np.zeros(len(data_dict['Age']))
 mortality_score = np.zeros(len(data_dict['Age']))
+mortality_score_1_year = np.zeros(len(data_dict['Age']))
+mortality_score_2_year = np.zeros(len(data_dict['Age']))
 phenotypic_age = np.zeros(len(data_dict['Age']))
 
 for sub_id in range(0, len(data_dict['Age'])):
@@ -47,10 +49,15 @@ for sub_id in range(0, len(data_dict['Age'])):
 
     mortality_score[sub_id] = 1 - np.exp(-np.exp(linear_combinations[sub_id]) * (np.exp(120 * gamma) - 1) / gamma)
 
+    mortality_score_1_year[sub_id] = 1 - np.exp(-np.exp(linear_combinations[sub_id]) * (np.exp(12 * gamma) - 1) / gamma)
+    mortality_score_2_year[sub_id] = 1 - np.exp(-np.exp(linear_combinations[sub_id]) * (np.exp(24 * gamma) - 1) / gamma)
+
     phenotypic_age[sub_id] = 141.50225 + np.log(-0.00553 * np.log(1 - mortality_score[sub_id])) / 0.090165
 
-np.savetxt('mortality_score_log_deci.txt', mortality_score)
-np.savetxt('phenotypic_age_log_deci.txt', phenotypic_age)
+np.savetxt('mortality_score_log10_deci.txt', mortality_score)
+np.savetxt('phenotypic_age_log10_deci.txt', phenotypic_age)
+np.savetxt('mortality_score_1_year_log10_deci.txt', mortality_score_1_year, fmt='%.3f')
+np.savetxt('mortality_score_2_year_log10_deci.txt', mortality_score_2_year, fmt='%.3f')
 
 x = sm.add_constant(data_dict['Age'])
 
