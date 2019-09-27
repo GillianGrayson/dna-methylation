@@ -54,10 +54,10 @@ for sub_id in range(0, len(data_dict['Age'])):
 
     phenotypic_age[sub_id] = 141.50225 + np.log(-0.00553 * np.log(1 - mortality_score[sub_id])) / 0.090165
 
-np.savetxt('mortality_score_log10_deci.txt', mortality_score)
-np.savetxt('phenotypic_age_log10_deci.txt', phenotypic_age)
-np.savetxt('mortality_score_1_year_log10_deci.txt', mortality_score_1_year, fmt='%.3f')
-np.savetxt('mortality_score_2_year_log10_deci.txt', mortality_score_2_year, fmt='%.3f')
+np.savetxt('mortality_score_log10_deci.txt', mortality_score, fmt='%.2f')
+np.savetxt('phenotypic_age_log10_deci.txt', phenotypic_age, fmt='%.2f')
+np.savetxt('mortality_score_1_year_log10_deci.txt', mortality_score_1_year, fmt='%.2f')
+np.savetxt('mortality_score_2_year_log10_deci.txt', mortality_score_2_year, fmt='%.2f')
 
 x = sm.add_constant(data_dict['Age'])
 
