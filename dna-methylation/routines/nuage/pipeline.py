@@ -24,7 +24,7 @@ for subj in T0_subject_dict['CODE']:
 print('Number of T0 subjects with otus: ' + str(num_subj_with_otu))
 
 for val in target_vals:
-    subj_ids = [i for i, x in enumerate(T0_subject_dict[target_key]) if x == val and ]
+    subj_ids = [i for i, x in enumerate(T0_subject_dict[target_key]) if x == val]
     CODEs = [T0_subject_dict['CODE'][x] for x in subj_ids]
 
     distance_mtx = np.zeros((len(CODEs), len(CODEs)), dtype=np.float32)

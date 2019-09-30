@@ -49,14 +49,18 @@ def load_otu_counts(fn, num_subjects):
 
     subject_row_dict = {}
     curr_row_id = 0
+    subjects = []
+    times = []
     for line in tqdm(f, mininterval=60.0, desc='betas_data creating'):
         line_list = line.split('\t')
         line_list[-1] = line_list[-1].rstrip()
 
         subject = line_list[subj_id]
-        time = line_list[time_id]
-        type = line_list[type_id]
 
+        time = line_list[time_id]
+        times.append(time)
+        type = line_list[type_id]
+        subjects.append(subject)
         otus = line_list[3::]
         otus = np.float32(otus)
         if len(otus) != num_otus:
@@ -80,6 +84,11 @@ def load_otu_counts(fn, num_subjects):
             curr_row_id += 1
 
     f.close()
+
+    subjects = list(set(subjects))
+    print('Number of subjects with otus:' + str(len(subjects)))
+    print('Number of subjects with otus and only T0:' + str(times.count('T0')/3))
+    print('Number of subjects with otus and only T1:' + str(times.count('T1')/3))
 
     otu_counts = OTUCounts(
         otu_col_dict,
