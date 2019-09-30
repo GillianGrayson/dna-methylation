@@ -1,5 +1,9 @@
-from routines.nuage.routines import is_float
-
+def is_float(value):
+    try:
+        float(value)
+        return True
+    except ValueError:
+        return False
 
 def load_subject_info(fn):
     f = open(fn)
@@ -16,8 +20,11 @@ def load_subject_info(fn):
         for key_id in range(0, len(keys)):
             key = keys[key_id]
             value = values[key_id].rstrip()
-            if is_float(value):
-                subject_info_dict[key].append(float(value))
+            if key != 'CODE':
+                if is_float(value):
+                    subject_info_dict[key].append(float(value))
+                else:
+                    subject_info_dict[key].append(value)
             else:
                 subject_info_dict[key].append(value)
     f.close()
