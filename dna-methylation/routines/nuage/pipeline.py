@@ -1,7 +1,9 @@
 from routines.nuage.otu_counts import load_otu_counts
 from routines.nuage.subjects import load_subject_info, T0_T1_subject_separation
 from routines.nuage.distances import spearman_dist
-#from skbio.stats.ordination._principal_coordinate_analysis import pcoa
+from tqdm import tqdm
+from skbio.stats.ordination._principal_coordinate_analysis import pcoa
+from skbio.stats.distance._base import DistanceMatrix
 import numpy as np
 
 cpg_file_path = 'D:/YandexDisk/Work/nuage'
@@ -10,43 +12,67 @@ fn_subject_info = cpg_file_path + '/' + 'correct_subject_info.tsv'
 subject_info_dict = load_subject_info(fn_subject_info)
 T0_subject_dict, T1_subject_dict = T0_T1_subject_separation(subject_info_dict)
 fn_otu_counts = cpg_file_path + '/' + 'OTUcounts.tsv'
-otu_counts = load_otu_counts(fn_otu_counts, len(T0_subject_dict['CODE']))
+otu_counts = load_otu_counts(fn_otu_counts)
 
-target_key = 'country'
-target_vals = ['Italy', 'UK', 'Holland', 'Poland', 'France']
+country_key = 'country'
+country_vals = ['Italy', 'UK', 'Holland', 'Poland', 'France']
+country_dict = {}
 
-subject_row_dict = otu_counts.subject_row_dict
-print('Number of T0 subjects: ' + str(len(T0_subject_dict['CODE'])))
-num_subj_with_otu = 0
-for subj in T0_subject_dict['CODE']:
-    if subj in subject_row_dict:
-        num_subj_with_otu += 1
-print('Number of T0 subjects with otus: ' + str(num_subj_with_otu))
+status_key = 'status'
+status_vals = ['Subject', 'Control']
+status_dict = {}
 
-for val in target_vals:
-    subj_ids = [i for i, x in enumerate(T0_subject_dict[target_key]) if x == val]
-    CODEs = [T0_subject_dict['CODE'][x] for x in subj_ids]
+subject_row_dict_T0 = otu_counts.subject_row_dict_T0
+codes = list(subject_row_dict_T0.keys())
+countries = []
+statuses = []
+for code in codes:
+    index = T0_subject_dict['CODE'].index(code)
 
-    distance_mtx = np.zeros((len(CODEs), len(CODEs)), dtype=np.float32)
+    curr_country = T0_subject_dict[country_key][index]
+    curr_status = T0_subject_dict[status_key][index]
 
-    for sub_id_1, sub_1 in enumerate(CODEs):
-        otu_1 = otu_counts.normalized_T0[subject_row_dict[sub_1], :]
+    countries.append(curr_country)
+    statuses.append(curr_status)
 
-        for sub_id_2, sub_2 in enumerate(CODEs):
-            otu_2 = otu_counts.normalized_T0[subject_row_dict[sub_2], :]
+    if curr_country in country_dict:
+        country_dict[curr_country].append(code)
+    else:
+        country_dict[curr_country] = [code]
+
+    if curr_status in status_dict:
+        status_dict[curr_status].append(code)
+    else:
+        status_dict[curr_status] = [code]
+
+for country_val in country_vals:
+    print('Number of subjects in ' + country_val + ' is: ' + str(len(country_dict[country_val])))
+for status_val in status_vals:
+    print('Number of subjects in ' + status_val + ' is: ' + str(len(status_dict[status_val])))
+
+
+for country_val in country_vals[:1]:
+
+    target_codes = country_dict[country_val]
+    num_subjects = len(target_codes)
+
+    distance_mtx = np.zeros((num_subjects, num_subjects), dtype=np.float32)
+
+    for sub_id_1, sub_1 in tqdm(enumerate(target_codes)):
+        otu_1 = otu_counts.normalized_T0[subject_row_dict_T0[sub_1], :]
+
+        for sub_id_2, sub_2 in enumerate(target_codes):
+            otu_2 = otu_counts.normalized_T0[subject_row_dict_T0[sub_2], :]
 
             curr_dist = spearman_dist(otu_1, otu_2)
             distance_mtx[sub_id_1, sub_id_2] = curr_dist
 
-    a = 1
+    skbio_distance_matrix = DistanceMatrix(distance_mtx)
+    ord_result = pcoa(skbio_distance_matrix)
+    fig = ord_result.plot()
+    fig.show()
 
-
-
-
-
-
-
-a = 0
+    a = 0
 
 
 
