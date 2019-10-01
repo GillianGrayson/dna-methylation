@@ -37,6 +37,16 @@ def get_observables_list(data_base):
             {'Sex': 'Female'},
             {'Sex': 'Male'}
         ]
+    elif data_base == 'E-MTAB-7309':
+        observables_list = [
+            {'sex': 'female'},
+            {'sex': 'male'}
+        ]
+    elif data_base == 'E-MTAB-7309-FILTERED':
+        observables_list = [
+            {'sex': 'female'},
+            {'sex': 'male'}
+        ]
     elif data_base == 'GSE61256':
         observables_list = [
             {'Sex': 'female'},
@@ -81,6 +91,10 @@ def get_target(data_base):
     elif data_base == 'GSE88890':
         target = 'age'
     elif data_base == 'GSE41826':
+        target = 'age'
+    elif data_base == 'E-MTAB-7309':
+        target = 'age'
+    elif data_base == 'E-MTAB-7309-FILTERED':
         target = 'age'
     elif data_base == 'GSE61256':
         target = 'age'

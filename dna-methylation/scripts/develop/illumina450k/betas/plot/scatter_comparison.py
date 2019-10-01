@@ -68,7 +68,7 @@ for data_base in data_bases:
     attributes_list.append(attributes)
 
     observables_list.append(obs)
-    data_params_list.append([])
+    data_params_list.append(data_params)
 
 pdm.betas_plot_scatter_comparison(
     data_list=data_list,

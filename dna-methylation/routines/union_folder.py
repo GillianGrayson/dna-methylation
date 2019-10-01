@@ -1,8 +1,8 @@
 import pandas as pd
 from tqdm import tqdm
 
-path = 'C:/Users/user/Desktop/New folder'
-files_names = ['1.xlsx', '2.xlsx', '3.xlsx', '4.xlsx']
+path = 'D:/YandexDisk/Work/pydnameth/vedunova'
+files_names = ['GSE40279.xlsx', 'GSE87571.xlsx', 'EPIC.xlsx', 'GSE55763.xlsx']
 
 files_paths = [path + '\\' + file_name for file_name in files_names]
 

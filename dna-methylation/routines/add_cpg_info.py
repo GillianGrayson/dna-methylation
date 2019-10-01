@@ -1,15 +1,15 @@
 import pandas as pd
 from tqdm import tqdm
 
-cpg_file_path = 'C:/Users/User/YandexDisk/pydnameth/draft/v4/'
-cpg_file_name = 'Supp_variance_residuals.xlsx'
+cpg_file_path = 'D:/YandexDisk/Work/pydnameth/vedunova/'
+cpg_file_name = 'union_with_metrics.xlsx'
 
-data_file_path = 'C:/Users/User/YandexDisk/pydnameth/GSE87571/'
+data_file_path = 'D:/YandexDisk/Work/pydnameth/GSE87571/'
 data_file_name = 'annotations.txt'
 
 df = pd.read_excel(cpg_file_path + cpg_file_name)
 data_dict = {}
-data_dict['ID_REF'] = list(df.cpg)
+data_dict['ID_REF'] = list(df.item)
 #data_dict['ID_REF'] = list(df.item)
 data_dict['UCSC_REFGENE_NAME'] = []
 data_dict['MAPINFO'] = []
