@@ -6,6 +6,7 @@ def is_float(value):
         return False
 
 def load_subject_info(fn):
+    print('\n\n')
     f = open(fn)
     key_line = f.readline()
     keys = key_line.split('\t')
