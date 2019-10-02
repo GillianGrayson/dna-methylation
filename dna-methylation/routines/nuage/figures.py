@@ -3,7 +3,7 @@ import plotly
 import colorlover as cl
 import plotly.graph_objs as go
 
-def plot_pcoa(ord_result, common_subjects, metrics_key, metrics_dict):
+def plot_pcoa(ord_result, common_subjects, metrics_key, metrics_dict, prefix = 'otu_'):
 
     coord_matrix = ord_result.samples.values.T
     xs_all = coord_matrix[0]
@@ -56,6 +56,6 @@ def plot_pcoa(ord_result, common_subjects, metrics_key, metrics_dict):
 
     fig = go.Figure(data=traces, layout=layout)
 
-    plotly.offline.plot(fig, filename='figures/pcoa_' + metrics_key + '.html', auto_open=False, show_link=True)
-    plotly.io.write_image(fig, 'figures/pcoa_' + metrics_key + '.png')
-    plotly.io.write_image(fig, 'figures/pcoa_' + metrics_key + '.pdf')
+    plotly.offline.plot(fig, filename='../figures/' + prefix +  'pcoa_' + metrics_key + '.html', auto_open=False, show_link=True)
+    plotly.io.write_image(fig, '../figures/' + prefix +  'pcoa_' + metrics_key + '.png')
+    plotly.io.write_image(fig, '../figures/' + prefix +  'pcoa_' + metrics_key + '.pdf')

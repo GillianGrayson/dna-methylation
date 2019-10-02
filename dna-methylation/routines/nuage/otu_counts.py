@@ -1,6 +1,6 @@
 import numpy as np
 from tqdm import tqdm
-
+from sklearn import preprocessing
 
 class OTUCounts:
 
@@ -26,7 +26,8 @@ class OTUCounts:
         self.raw_T1 = raw_T1
 
 
-def load_otu_counts(fn):
+def load_otu_counts(fn, norm=0):
+    print('\n\n')
     f = open(fn)
     key_line = f.readline()
     keys = key_line.split('\t')
@@ -102,6 +103,21 @@ def load_otu_counts(fn):
             subject_row_dict_T1[subject] = curr_row_id_T1
             curr_row_id_T1 += 1
     f.close()
+
+    if norm == 1:
+        normalized_T0 = preprocessing.normalize(normalized_T0, axis=0, norm='max')
+        rarified_T0 = preprocessing.normalize(rarified_T0, axis=0, norm='max')
+        raw_T0 = preprocessing.normalize(raw_T0, axis=0, norm='max')
+        normalized_T1 = preprocessing.normalize(normalized_T1, axis=0, norm='max')
+        rarified_T1 = preprocessing.normalize(rarified_T1, axis=0, norm='max')
+        raw_T1 = preprocessing.normalize(raw_T1, axis=0, norm='max')
+    elif norm == 2:
+        normalized_T0 = preprocessing.scale(normalized_T0)
+        rarified_T0 = preprocessing.scale(rarified_T0)
+        raw_T0 = preprocessing.scale(raw_T0)
+        normalized_T1 = preprocessing.scale(normalized_T1)
+        rarified_T1 = preprocessing.scale(rarified_T1)
+        raw_T1 = preprocessing.scale(raw_T1)
 
     subjects = list(set(subjects))
     print('Number of subjects with otus: ' + str(len(subjects)))
