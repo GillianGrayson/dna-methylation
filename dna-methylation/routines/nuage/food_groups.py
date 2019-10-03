@@ -18,17 +18,20 @@ class FoodGroups:
 def load_food_groups(fn, norm=0):
     print('\n\n')
     f = open(fn)
-    f.readline()
     key_line = f.readline()
     keys = key_line.split('\t')
     keys[-1] = keys[-1].rstrip()
+    f.readline()
 
     food_groups_col_dict = {}
     for key_id in range(2, len(keys)):
-        food_groups_col_dict[keys[key_id]] = key_id - 2
+        if keys[key_id] in food_groups_col_dict:
+            food_groups_col_dict[keys[key_id] + str(key_id)] = key_id - 2
+        else:
+            food_groups_col_dict[keys[key_id]] = key_id - 2
     f.readline()
 
-    num_food_groups = len(food_groups_col_dict) + 2
+    num_food_groups = len(food_groups_col_dict)
 
     subj_id = 0
     time_id = 1
