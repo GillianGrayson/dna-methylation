@@ -5,7 +5,8 @@ from sklearn import preprocessing
 class OTUCounts:
 
     def __init__(self,
-                 otu_col_dict,
+                 otu_col_dict_T0,
+                 otu_col_dict_T1,
                  subject_row_dict_T0,
                  subject_row_dict_T1,
                  normalized_T0,
@@ -15,7 +16,8 @@ class OTUCounts:
                  raw_T0,
                  raw_T1,
                  ):
-        self.otu_col_dict = otu_col_dict
+        self.otu_col_dict_T0 = otu_col_dict_T0
+        self.otu_col_dict_T1 = otu_col_dict_T1
         self.subject_row_dict_T0 = subject_row_dict_T0
         self.subject_row_dict_T1 = subject_row_dict_T1
         self.normalized_T0 = normalized_T0
@@ -32,12 +34,9 @@ def load_otu_counts(fn, norm=0):
     key_line = f.readline()
     keys = key_line.split('\t')
     keys[-1] = keys[-1].rstrip()
+    keys = keys[3::]
 
-    otu_col_dict = {}
-    for key_id in range(3, len(keys)):
-        otu_col_dict[keys[key_id]] = key_id - 3
-
-    num_otus = len(otu_col_dict)
+    num_otus = len(keys)
 
     subj_id = 0
     time_id = 1
@@ -104,6 +103,44 @@ def load_otu_counts(fn, norm=0):
             curr_row_id_T1 += 1
     f.close()
 
+    normalized_T0_nz = np.count_nonzero(normalized_T0, axis=0)
+    normalized_T1_nz = np.count_nonzero(normalized_T1, axis=0)
+
+    otu_col_dict_T0 = {}
+    cols_to_del_T0 = []
+    curr_T0_id = 0
+
+    otu_col_dict_T1 = {}
+    cols_to_del_T1 = []
+    curr_T1_id = 0
+
+    for key_id in range(0, len(keys)):
+
+        missed_part_T0 = float(normalized_T0_nz[key_id]) / float(number_of_T0)
+        if missed_part_T0 < 0.1:
+            cols_to_del_T0.append(key_id)
+        else:
+            otu_col_dict_T0[keys[key_id]] = curr_T0_id
+            curr_T0_id += 1
+
+        missed_part_T1 = float(normalized_T1_nz[key_id]) / float(number_of_T1)
+        if missed_part_T1 < 0.1:
+            cols_to_del_T1.append(key_id)
+        else:
+            otu_col_dict_T1[keys[key_id]] = curr_T1_id
+            curr_T1_id += 1
+
+    print(f'Number of otu in T0: {len(otu_col_dict_T0)}')
+    print(f'Number of otu in T1: {len(otu_col_dict_T1)}')
+
+    normalized_T0 = np.delete(normalized_T0, cols_to_del_T0, axis=1)
+    rarified_T0 = np.delete(rarified_T0, cols_to_del_T0, axis=1)
+    raw_T0 = np.delete(raw_T0, cols_to_del_T0, axis=1)
+
+    normalized_T1 = np.delete(normalized_T1, cols_to_del_T1, axis=1)
+    rarified_T1 = np.delete(rarified_T1, cols_to_del_T1, axis=1)
+    raw_T1 = np.delete(raw_T1, cols_to_del_T1, axis=1)
+
     if norm == 1:
         normalized_T0 = preprocessing.normalize(normalized_T0, axis=0, norm='max')
         rarified_T0 = preprocessing.normalize(rarified_T0, axis=0, norm='max')
@@ -127,7 +164,8 @@ def load_otu_counts(fn, norm=0):
     print('Number of subjects with otus at T0 and T1: ' + str(len(common_subjects)))
 
     otu_counts = OTUCounts(
-        otu_col_dict,
+        otu_col_dict_T0,
+        otu_col_dict_T1,
         subject_row_dict_T0,
         subject_row_dict_T1,
         normalized_T0,
