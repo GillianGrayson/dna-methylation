@@ -60,7 +60,7 @@ def plot_scatter(x, y, title):
 
     fig = go.Figure(data=trace, layout=layout)
 
-    plotly.offline.plot(fig, filename=figure_file_path + 'scater_' + title + '.html', auto_open=False, show_link=True)
+    plotly.offline.plot(fig, filename=figure_file_path + 'scatter_' + title + '.html', auto_open=False, show_link=True)
     plotly.io.write_image(fig, figure_file_path + 'scatter_' + title + '.png')
     plotly.io.write_image(fig, figure_file_path + 'scatter_' + title + '.pdf')
 
@@ -138,10 +138,25 @@ def plot_hist(data, names, colors, suffix):
         orientation='h',
         marker_color=colors
     ))
+    fig.update_yaxes(
+        tickfont=dict(size=10)
+    )
+    fig.update_layout(width=700,
+                      height=1000)
 
     plotly.offline.plot(fig, filename=figure_file_path + suffix + '_hist.html', auto_open=False, show_link=True)
     plotly.io.write_image(fig, figure_file_path + suffix + '_hist.png')
     plotly.io.write_image(fig, figure_file_path + suffix + '_hist.pdf')
+
+def plot_box(data_1, name_1, data_2, name_2):
+    figure_file_path = 'D:/Aaron/Bio/NU-Age/Figures/'
+    fig = go.Figure()
+    fig.add_trace(go.Box(x=data_1, name=name_1))
+    fig.add_trace(go.Box(x=data_2, name=name_2))
+
+    plotly.offline.plot(fig, filename=figure_file_path + 'boxplot.html', auto_open=False, show_link=True)
+    plotly.io.write_image(fig, figure_file_path + 'boxplot.png')
+    plotly.io.write_image(fig, figure_file_path + 'boxplot.pdf')
 
 
 data_file_path = 'D:/Aaron/Bio/NU-Age/Data'
@@ -206,7 +221,7 @@ for sub_id, sub in tqdm(enumerate(common_subjects)):
 otu_t0_df = pd.DataFrame(otu_t0, common_subjects, list(otu_col_dict.keys()))
 otu_t1_df = pd.DataFrame(otu_t1, common_subjects, list(otu_col_dict.keys()))
 
-clf_t0 = RandomForestRegressor(n_estimators=5, min_samples_split=100)
+clf_t0 = RandomForestRegressor(n_estimators=500, min_samples_split=100)
 
 output_t0 = cross_validate(clf_t0, otu_t0_df, adherence_dict[adherence_key_t0], cv=2, scoring='neg_mean_absolute_error',
                            return_estimator=True)
@@ -263,7 +278,7 @@ for item in top_features_t0:
     f.write(item + '\n')
 f.close()
 
-clf_t1 = RandomForestRegressor(n_estimators=5, min_samples_split=100)
+clf_t1 = RandomForestRegressor(n_estimators=500, min_samples_split=100)
 
 output_t1 = cross_validate(clf_t1, otu_t1_df, adherence_dict[adherence_key_t1], cv=2, scoring='neg_mean_absolute_error',
                            return_estimator=True)
@@ -386,10 +401,10 @@ diet_negative_names = []
 diet_negative_imp = []
 for id in range(0, len(corr_coeffs)):
     curr_coeff = corr_coeffs[id]
-    if curr_coeff > 0:
+    if curr_coeff > 0.0:
         diet_positive_names.append(top_features_merged[id])
         diet_positive_imp.append(top_features_intersection_imp[id])
-    else:
+    elif curr_coeff < 0.0:
         diet_negative_names.append(top_features_merged[id])
         diet_negative_imp.append(top_features_intersection_imp[id])
 
@@ -410,4 +425,40 @@ for id in range(0, len(diet_negative_names)):
 plot_hist(diet_positive_imp, diet_positive_names, colors_positive, 'positive')
 plot_hist(diet_negative_imp, diet_negative_names, colors_negative, 'negative')
 
+diet_positive_otus_subject = []
+diet_positive_otus_control = []
+diet_negative_otus_subject = []
+diet_negative_otus_control = []
 
+for otu_id in range(0, len(top_features_merged)):
+    otu_gain_count_subject = 0
+    otu_loss_count_subject = 0
+    otu_gain_count_control = 0
+    otu_loss_count_control = 0
+    for person_id in range(0, len(common_subjects)):
+        if subject_info_dict['status'][person_id] == 'Subject':
+            curr_t0 = new_df_t0.iat[person_id, otu_id]
+            curr_t1 = new_df_t1.iat[person_id, otu_id]
+            if curr_t1 > curr_t0:
+                otu_gain_count_subject += 1
+            elif curr_t0 > curr_t1:
+                otu_loss_count_subject += 1
+        if subject_info_dict['status'][person_id] == 'Control':
+            curr_t0 = new_df_t0.iat[person_id, otu_id]
+            curr_t1 = new_df_t1.iat[person_id, otu_id]
+            if curr_t1 > curr_t0:
+                otu_gain_count_control += 1
+            elif curr_t0 > curr_t1:
+                otu_loss_count_control += 1
+
+    if top_features_merged[otu_id] in diet_positive_names:
+        diet_positive_otus_subject.append(otu_gain_count_subject / otu_loss_count_subject)
+        diet_positive_otus_control.append(otu_gain_count_control / otu_loss_count_control)
+
+    if top_features_merged[otu_id] in diet_negative_names:
+        diet_negative_otus_subject.append(otu_gain_count_subject / otu_loss_count_subject)
+        diet_negative_otus_control.append(otu_gain_count_control / otu_loss_count_control)
+
+diet_positive_otus = [np.log(diet_positive_otus_subject[id] / diet_positive_otus_control[id]) for id in range(0, len(diet_positive_otus_subject))]
+diet_negative_otus = [np.log(diet_negative_otus_subject[id] / diet_negative_otus_control[id]) for id in range(0, len(diet_negative_otus_subject))]
+plot_box(diet_positive_otus, 'DietPositive', diet_negative_otus, 'DietNegative')
