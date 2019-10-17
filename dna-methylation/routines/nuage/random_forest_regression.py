@@ -1,162 +1,12 @@
 from routines.nuage.otu_counts import load_otu_counts
 from routines.nuage.subjects import load_subject_info, T0_T1_subject_separation
+from routines.nuage.random_forest_plot import plot_box, plot_hist, plot_scatter, plot_heatmap, plot_random_forest
 from tqdm import tqdm
 import numpy as np
 import pandas as pd
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.model_selection import cross_validate, cross_val_predict
-import plotly
-import plotly.graph_objs as go
 from scipy.stats import spearmanr
-
-
-def plot_scatter(x, y, title):
-    figure_file_path = 'D:/Aaron/Bio/NU-Age/Figures/'
-    trace = go.Scatter(
-        x=x,
-        y=y,
-        mode='lines+markers',
-        marker=dict(
-            size=8,
-            line=dict(
-                width=0.5
-            ),
-            opacity=0.8
-        )
-    )
-    layout = go.Layout(
-        margin=dict(
-            l=0,
-            r=0,
-            b=0,
-            t=0
-        ),
-        title=go.layout.Title(
-            text=title,
-            xref="paper",
-            x=0
-        ),
-        xaxis=go.layout.XAxis(
-            title=go.layout.xaxis.Title(
-                text="Number of OTUs",
-                font=dict(
-                    family="Courier New, monospace",
-                    size=18,
-                )
-            ),
-            #range=[min(min(x), min(y)) - 5, max(max(x), max(y)) + 5]
-        ),
-        yaxis=go.layout.YAxis(
-            title=go.layout.yaxis.Title(
-                text="MAE",
-                font=dict(
-                    family="Courier New, monospace",
-                    size=18,
-                )
-            ),
-            #range=[min(min(x), min(y)) - 5, max(max(x), max(y)) + 5]
-        )
-    )
-
-    fig = go.Figure(data=trace, layout=layout)
-
-    plotly.offline.plot(fig, filename=figure_file_path + 'scatter_' + title + '.html', auto_open=False, show_link=True)
-    plotly.io.write_image(fig, figure_file_path + 'scatter_' + title + '.png')
-    plotly.io.write_image(fig, figure_file_path + 'scatter_' + title + '.pdf')
-
-def plot_random_forest(x, y, title):
-    figure_file_path = 'D:/Aaron/Bio/NU-Age/Figures/'
-    trace = go.Scatter(
-        x=x,
-        y=y,
-        mode='markers',
-        marker=dict(
-            size=8,
-            line=dict(
-                width=0.5
-            ),
-            opacity=0.8
-        )
-    )
-    layout = go.Layout(
-        margin=dict(
-            l=0,
-            r=0,
-            b=0,
-            t=0
-        ),
-        title=go.layout.Title(
-            text=title,
-            xref="paper",
-            x=0
-        ),
-        xaxis=go.layout.XAxis(
-            title=go.layout.xaxis.Title(
-                text="Actual adherence",
-                font=dict(
-                    family="Courier New, monospace",
-                    size=18,
-                )
-            ),
-            #range=[min(min(x), min(y)) - 5, max(max(x), max(y)) + 5]
-        ),
-        yaxis=go.layout.YAxis(
-            title=go.layout.yaxis.Title(
-                text="Predicted adherence",
-                font=dict(
-                    family="Courier New, monospace",
-                    size=18,
-                )
-            ),
-            #range=[min(min(x), min(y)) - 5, max(max(x), max(y)) + 5]
-        )
-    )
-
-    fig = go.Figure(data=trace, layout=layout)
-
-    plotly.offline.plot(fig, filename=figure_file_path + 'rf_' + title + '.html', auto_open=False, show_link=True)
-    plotly.io.write_image(fig, figure_file_path + 'rf_' + title + '.png')
-    plotly.io.write_image(fig, figure_file_path + 'rf_' + title + '.pdf')
-
-def plot_heatmap(data, names):
-    figure_file_path = 'D:/Aaron/Bio/NU-Age/Figures/'
-    trace = go.Heatmap(
-        z=[data],
-        x=names)
-
-    fig = go.Figure(data=trace)
-
-    plotly.offline.plot(fig, filename=figure_file_path + 'heatmap.html', auto_open=False, show_link=True)
-    plotly.io.write_image(fig, figure_file_path + 'heatmap.png')
-    plotly.io.write_image(fig, figure_file_path + 'heatmap.pdf')
-
-def plot_hist(data, names, colors, suffix):
-    figure_file_path = 'D:/Aaron/Bio/NU-Age/Figures/'
-    fig = go.Figure(go.Bar(
-        x=data,
-        y=names,
-        orientation='h',
-        marker_color=colors
-    ))
-    fig.update_yaxes(
-        tickfont=dict(size=10)
-    )
-    fig.update_layout(width=700,
-                      height=1000)
-
-    plotly.offline.plot(fig, filename=figure_file_path + suffix + '_hist.html', auto_open=False, show_link=True)
-    plotly.io.write_image(fig, figure_file_path + suffix + '_hist.png')
-    plotly.io.write_image(fig, figure_file_path + suffix + '_hist.pdf')
-
-def plot_box(data_1, name_1, data_2, name_2):
-    figure_file_path = 'D:/Aaron/Bio/NU-Age/Figures/'
-    fig = go.Figure()
-    fig.add_trace(go.Box(x=data_1, name=name_1))
-    fig.add_trace(go.Box(x=data_2, name=name_2))
-
-    plotly.offline.plot(fig, filename=figure_file_path + 'boxplot.html', auto_open=False, show_link=True)
-    plotly.io.write_image(fig, figure_file_path + 'boxplot.png')
-    plotly.io.write_image(fig, figure_file_path + 'boxplot.pdf')
 
 
 data_file_path = 'D:/Aaron/Bio/NU-Age/Data'
@@ -188,6 +38,7 @@ adherence_key = 'compliance160'
 adherence_key_t0 = 'adherence_t0'
 adherence_key_t1 = 'adherence_t1'
 adherence_dict = {adherence_key_t0: [], adherence_key_t1: []}
+adherence_diff_list = []
 
 common_subjects = list(set(subject_row_dict_T0.keys()).intersection(set(subject_row_dict_T1.keys())))
 subjects_wo_adherence = []
@@ -203,10 +54,23 @@ for code in common_subjects:
 
     adherence_dict[adherence_key_t0].append(curr_adherence_t0 * 100.0 / 160.0)
     adherence_dict[adherence_key_t1].append(curr_adherence_t1 * 100.0 / 160.0)
+    adherence_diff_list.append(abs(curr_adherence_t0 - curr_adherence_t1))
 
 if len(subjects_wo_adherence) > 0:
     for elem in subjects_wo_adherence:
         common_subjects.remove(elem)
+
+adherence_diff_tertiles = pd.qcut(adherence_diff_list, 3, labels=False)
+low_adherence_subjects = []
+medium_adherence_subjects = []
+high_adherence_subjects = []
+for i in range(0, len(common_subjects)):
+    if adherence_diff_tertiles[i] == 0:
+        low_adherence_subjects.append(common_subjects[i])
+    elif adherence_diff_tertiles[i] == 1:
+        medium_adherence_subjects.append(common_subjects[i])
+    elif adherence_diff_tertiles[i] == 2:
+        high_adherence_subjects.append(common_subjects[i])
 
 otu_t0 = np.zeros((len(common_subjects), len(common_otus)), dtype=np.float32)
 otu_t1 = np.zeros((len(common_subjects), len(common_otus)), dtype=np.float32)
@@ -227,7 +91,7 @@ output_t0 = cross_validate(clf_t0, otu_t0_df, adherence_dict[adherence_key_t0], 
                            return_estimator=True)
 output_t0_pred = cross_val_predict(clf_t0, otu_t0_df, adherence_dict[adherence_key_t0], cv=2)
 accuracy_t0 = np.mean(output_t0['test_score'])
-#plot_random_forest(adherence_dict[adherence_key_t0], output_t0_pred, 'T0')
+plot_random_forest(adherence_dict[adherence_key_t0], output_t0_pred, 'T0')
 
 features_dict_t0 = dict((key, []) for key in list(otu_col_dict.keys()))
 for idx, estimator in enumerate(output_t0['estimator']):
@@ -246,7 +110,7 @@ features_dict_t0 = {k: v for k, v in sorted(features_dict_t0.items(), reverse=Tr
 
 accuracy_list = []
 num_features_list = []
-for experiment_id in range(1, 1):
+for experiment_id in range(1, 101):
     if experiment_id % 10 == 0:
         print('T0 experiment #', str(experiment_id))
     features_list_len = 5 * experiment_id
@@ -261,7 +125,7 @@ for experiment_id in range(1, 1):
     accuracy_t0 = np.mean(output_t0['test_score'])
     accuracy_list.append(accuracy_t0)
     num_features_list.append(features_list_len)
-#plot_scatter(num_features_list, accuracy_list, 'T0')
+plot_scatter(num_features_list, accuracy_list, 'T0')
 
 num_features = 0
 top_features_t0 = []
@@ -284,7 +148,7 @@ output_t1 = cross_validate(clf_t1, otu_t1_df, adherence_dict[adherence_key_t1], 
                            return_estimator=True)
 output_t1_pred = cross_val_predict(clf_t1, otu_t1_df, adherence_dict[adherence_key_t1], cv=2)
 accuracy_t1 = np.mean(output_t1['test_score'])
-#plot_random_forest(adherence_dict[adherence_key_t1], output_t1_pred, 'T1')
+plot_random_forest(adherence_dict[adherence_key_t1], output_t1_pred, 'T1')
 
 features_dict_t1 = dict((key, []) for key in list(otu_col_dict.keys()))
 for idx, estimator in enumerate(output_t1['estimator']):
@@ -303,7 +167,7 @@ features_dict_t1 = {k: v for k, v in sorted(features_dict_t1.items(), reverse=Tr
 
 accuracy_list = []
 num_features_list = []
-for experiment_id in range(1, 1):
+for experiment_id in range(1, 101):
     if experiment_id % 10 == 0:
         print('T1 experiment #', str(experiment_id))
     features_list_len = 5 * experiment_id
@@ -318,7 +182,7 @@ for experiment_id in range(1, 1):
     accuracy_t1 = np.mean(output_t1['test_score'])
     accuracy_list.append(accuracy_t1)
     num_features_list.append(features_list_len)
-#plot_scatter(num_features_list, accuracy_list, 'T1')
+plot_scatter(num_features_list, accuracy_list, 'T1')
 
 num_features = 0
 top_features_t1 = []
@@ -375,7 +239,7 @@ for i in range(0, len(top_features_merged)):
 coeff_range = [min(corr_coeffs), max(corr_coeffs)]
 
 data, names = map(list, zip(*sorted(zip(corr_coeffs, top_features_merged), reverse=False)))
-#plot_heatmap(data, list(range(1, len(top_features_int))))
+plot_heatmap(data, list(range(1, len(top_features_merged))))
 
 name_list = []
 bact_list = []
@@ -461,4 +325,5 @@ for otu_id in range(0, len(top_features_merged)):
 
 diet_positive_otus = [np.log(diet_positive_otus_subject[id] / diet_positive_otus_control[id]) for id in range(0, len(diet_positive_otus_subject))]
 diet_negative_otus = [np.log(diet_negative_otus_subject[id] / diet_negative_otus_control[id]) for id in range(0, len(diet_negative_otus_subject))]
+
 plot_box(diet_positive_otus, 'DietPositive', diet_negative_otus, 'DietNegative')
