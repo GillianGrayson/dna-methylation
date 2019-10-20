@@ -5,7 +5,7 @@ import scipy.stats as ss
 from scipy.stats import shapiro, normaltest
 from statsmodels.stats.stattools import jarque_bera, omni_normtest, durbin_watson
 
-file_name = 'levine.xlsx'
+file_name = 'levine_down.xlsx'
 
 main_df = pd.read_excel(file_name)
 
