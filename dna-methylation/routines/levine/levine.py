@@ -4,10 +4,16 @@ import statsmodels.api as sm
 import scipy.stats as ss
 from scipy.stats import shapiro, normaltest
 from statsmodels.stats.stattools import jarque_bera, omni_normtest, durbin_watson
+import plotly.express as px
+import plotly
+import colorlover as cl
+import plotly.graph_objs as go
+import os.path
+
 
 file_name = 'levine_down.xlsx'
 
-main_df = pd.read_excel(file_name)
+main_df = pd.read_excel(file_name, dtype={'date': str})
 
 data_dict = {}
 data_dict['Albumin'] = list(main_df.Albumin)
@@ -20,6 +26,9 @@ data_dict['Red_cell_distribution_width'] = list(main_df.Red_cell_distribution_wi
 data_dict['Alkaline_phosphatase'] = list(main_df.Alkaline_phosphatase)
 data_dict['White_blood_cell_count'] = list(main_df.White_blood_cell_count)
 data_dict['Age'] = list(main_df.Age)
+
+data_dict['date'] = list(main_df.date)
+data_dict['Name'] = list(main_df.Name)
 
 coeff_dict = {}
 coeff_dict['Albumin'] = -0.0336
@@ -103,4 +112,40 @@ t_stat, p_val = ss.ttest_ind(phenotypic_age, data_dict['Age'], nan_policy='omit'
 p_val_left_sided = ss.t.cdf(t_stat, len(phenotypic_age) + len(data_dict['Age']) - 2)
 p_val_right_sided = ss.t.sf(t_stat, len(phenotypic_age) + len(data_dict['Age']) - 2)
 
-a = 1
+age_acc = phenotypic_age - data_dict['Age']
+
+xs = data_dict['date']
+ys = age_acc
+colors = []
+for name in data_dict['Name']:
+    if 'M' in name:
+        colors.append('mother')
+    elif 'S' in name:
+        colors.append('sister')
+    elif 'F' in name:
+        colors.append('father')
+    elif 'B' in name:
+        colors.append('brother')
+    else:
+        colors.append('subject')
+
+plot_dict = {'xs': xs, 'ys': ys, 'status': colors}
+df = pd.DataFrame(plot_dict)
+
+iris = px.data.iris()
+scatter = px.scatter(df, x="xs", y="ys", color="status", labels={'xs':'date', 'ys':'age acceleration'})
+
+layout = go.Layout(
+    margin=dict(
+        l=0,
+        r=0,
+        b=0,
+        t=0
+    )
+)
+
+fig = go.Figure(data=scatter, layout=layout)
+
+plotly.offline.plot(fig, filename='date.html', auto_open=False, show_link=True)
+plotly.io.write_image(fig, 'date.png')
+plotly.io.write_image(fig, 'date.pdf')
