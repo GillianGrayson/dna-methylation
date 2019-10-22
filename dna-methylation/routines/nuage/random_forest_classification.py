@@ -67,6 +67,80 @@ for person in list(subject_row_dict_T1.keys()):
 print('Number of Subjects at T1: ' + str(len(subjects_t1)))
 print('Number of Controls at T1: ' + str(len(controls_t1)))
 
+adherence_key = 'compliance160'
+adherence_key_t0_subject = 'adherence_t0_subject'
+adherence_key_t0_control = 'adherence_t0_control'
+adherence_key_t1_subject = 'adherence_t1_subject'
+adherence_key_t1_control = 'adherence_t1_control'
+adherence_dict = {adherence_key_t0_subject: [], adherence_key_t0_control: [],
+                  adherence_key_t1_subject: [], adherence_key_t1_control: []}
+adherence_diff_list_subject = []
+adherence_diff_list_control = []
+
+common_subjects = list(set(subject_row_dict_T0.keys()).intersection(set(subject_row_dict_T1.keys())))
+subjects = []
+controls = []
+subjects_wo_adherence = []
+for code in common_subjects:
+    index_t0 = T0_subject_dict['CODE'].index(code)
+    index_t1 = T1_subject_dict['CODE'].index(code)
+    curr_adherence_t0 = T0_subject_dict[adherence_key][index_t0]
+    curr_adherence_t1 = T1_subject_dict[adherence_key][index_t1]
+
+    if curr_adherence_t0 == '' or curr_adherence_t1 == '':
+        subjects_wo_adherence.append(code)
+        continue
+
+    if T0_subject_dict['status'][index_t0] == 'Subject':
+        subjects.append(code)
+        adherence_dict[adherence_key_t0_subject].append(curr_adherence_t0)
+        adherence_dict[adherence_key_t1_subject].append(curr_adherence_t1)
+        adherence_diff_list_subject.append(abs(curr_adherence_t0 - curr_adherence_t1))
+
+    if T0_subject_dict['status'][index_t0] == 'Control':
+        controls.append(code)
+        adherence_dict[adherence_key_t0_control].append(curr_adherence_t0)
+        adherence_dict[adherence_key_t1_control].append(curr_adherence_t1)
+        adherence_diff_list_control.append(abs(curr_adherence_t0 - curr_adherence_t1))
+
+if len(subjects_wo_adherence) > 0:
+    for elem in subjects_wo_adherence:
+        common_subjects.remove(elem)
+
+adherence_diff_tertiles_subject = pd.qcut(adherence_diff_list_subject, 3, labels=False)
+adherence_diff_tertiles_control = pd.qcut(adherence_diff_list_control, 3, labels=False)
+
+low_adherence_subject = []
+low_adherence_subject_diff = []
+low_adherence_control = []
+low_adherence_control_diff = []
+medium_adherence_subject = []
+medium_adherence_subject_diff = []
+medium_adherence_control = []
+medium_adherence_control_diff = []
+high_adherence_subject = []
+high_adherence_subject_diff = []
+high_adherence_control = []
+high_adherence_control_diff = []
+
+for index in range(0, len(subjects)):
+    if adherence_diff_tertiles_subject[index] == 0:
+        low_adherence_subject.append(subjects[index])
+        low_adherence_subject_diff.append(adherence_diff_list_subject[index])
+    elif adherence_diff_tertiles_subject[index] == 1:
+        medium_adherence_subject.append(subjects[index])
+        medium_adherence_subject_diff.append(adherence_diff_list_subject[index])
+    elif adherence_diff_tertiles_subject[index] == 2:
+        high_adherence_subject.append(subjects[index])
+
+for index in range(0, len(controls)):
+    if adherence_diff_tertiles_control[index] == 0:
+        low_adherence_control.append(controls[index])
+    elif adherence_diff_tertiles_control[index] == 1:
+        medium_adherence_control.append(controls[index])
+    elif adherence_diff_tertiles_control[index] == 2:
+        high_adherence_control.append(controls[index])
+
 otu_t0_subject = np.zeros((len(subjects_t0), len(list(otu_counts.otu_col_dict_T0.keys()))), dtype=np.float32)
 otu_t0_control = np.zeros((len(controls_t0), len(list(otu_counts.otu_col_dict_T0.keys()))), dtype=np.float32)
 otu_t1_subject = np.zeros((len(subjects_t1), len(list(otu_counts.otu_col_dict_T1.keys()))), dtype=np.float32)

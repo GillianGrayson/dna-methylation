@@ -8,7 +8,6 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.model_selection import cross_validate, cross_val_predict
 from scipy.stats import spearmanr
 
-
 data_file_path = 'D:/Aaron/Bio/NU-Age/Data'
 
 fn_subject_info = data_file_path + '/' + 'correct_subject_info.tsv'
@@ -91,7 +90,10 @@ output_t0 = cross_validate(clf_t0, otu_t0_df, adherence_dict[adherence_key_t0], 
                            return_estimator=True)
 output_t0_pred = cross_val_predict(clf_t0, otu_t0_df, adherence_dict[adherence_key_t0], cv=2)
 accuracy_t0 = np.mean(output_t0['test_score'])
-plot_random_forest(adherence_dict[adherence_key_t0], output_t0_pred, 'T0')
+is_equal_range = False
+plot_random_forest(adherence_dict[adherence_key_t0], output_t0_pred, 'T0', is_equal_range)
+is_equal_range = True
+plot_random_forest(adherence_dict[adherence_key_t0], output_t0_pred, 'T0', is_equal_range)
 
 features_dict_t0 = dict((key, []) for key in list(otu_col_dict.keys()))
 for idx, estimator in enumerate(output_t0['estimator']):
@@ -110,7 +112,7 @@ features_dict_t0 = {k: v for k, v in sorted(features_dict_t0.items(), reverse=Tr
 
 accuracy_list = []
 num_features_list = []
-for experiment_id in range(1, 101):
+for experiment_id in range(1, 1):
     if experiment_id % 10 == 0:
         print('T0 experiment #', str(experiment_id))
     features_list_len = 5 * experiment_id
@@ -148,7 +150,10 @@ output_t1 = cross_validate(clf_t1, otu_t1_df, adherence_dict[adherence_key_t1], 
                            return_estimator=True)
 output_t1_pred = cross_val_predict(clf_t1, otu_t1_df, adherence_dict[adherence_key_t1], cv=2)
 accuracy_t1 = np.mean(output_t1['test_score'])
-plot_random_forest(adherence_dict[adherence_key_t1], output_t1_pred, 'T1')
+is_equal_range = False
+plot_random_forest(adherence_dict[adherence_key_t1], output_t1_pred, 'T1', is_equal_range)
+is_equal_range = True
+plot_random_forest(adherence_dict[adherence_key_t1], output_t1_pred, 'T1', is_equal_range)
 
 features_dict_t1 = dict((key, []) for key in list(otu_col_dict.keys()))
 for idx, estimator in enumerate(output_t1['estimator']):
@@ -167,7 +172,7 @@ features_dict_t1 = {k: v for k, v in sorted(features_dict_t1.items(), reverse=Tr
 
 accuracy_list = []
 num_features_list = []
-for experiment_id in range(1, 101):
+for experiment_id in range(1, 1):
     if experiment_id % 10 == 0:
         print('T1 experiment #', str(experiment_id))
     features_list_len = 5 * experiment_id
@@ -193,7 +198,7 @@ for key in features_dict_t1.keys():
         top_features_imp_t1.append(features_dict_t1[key])
         num_features += 1
 
-f = open(data_file_path + '/t1_otus.txt','w')
+f = open(data_file_path + '/t1_otus.txt', 'w')
 f.write('MAE: ' + str(accuracy_t1) + '\n')
 for item in top_features_t1:
     f.write(item + '\n')
@@ -234,7 +239,7 @@ new_adherence = adherence_dict[adherence_key_t0] + adherence_dict[adherence_key_
 
 corr_coeffs = []
 for i in range(0, len(top_features_merged)):
-    corr_coeff, p_val = spearmanr(list(new_df.iloc[:,i]), new_adherence)
+    corr_coeff, p_val = spearmanr(list(new_df.iloc[:, i]), new_adherence)
     corr_coeffs.append(corr_coeff)
 coeff_range = [min(corr_coeffs), max(corr_coeffs)]
 
@@ -272,15 +277,17 @@ for id in range(0, len(corr_coeffs)):
         diet_negative_names.append(top_features_merged[id])
         diet_negative_imp.append(top_features_intersection_imp[id])
 
-diet_positive_imp, diet_positive_names = map(list, zip(*sorted(zip(diet_positive_imp, diet_positive_names), reverse=False)))
-colors_positive = ['lightslategray',] * len(diet_positive_names)
+diet_positive_imp, diet_positive_names = map(list,
+                                             zip(*sorted(zip(diet_positive_imp, diet_positive_names), reverse=False)))
+colors_positive = ['lightslategray', ] * len(diet_positive_names)
 for id in range(0, len(diet_positive_names)):
     otu_name_list = diet_positive_names[id].split('_')
     otu_name = otu_name_list[0] + '_' + otu_name_list[1]
     if otu_name in top_features_common_with_art:
         colors_positive[id] = 'crimson'
-diet_negative_imp, diet_negative_names = map(list, zip(*sorted(zip(diet_negative_imp, diet_negative_names), reverse=False)))
-colors_negative = ['lightslategray',] * len(diet_negative_names)
+diet_negative_imp, diet_negative_names = map(list,
+                                             zip(*sorted(zip(diet_negative_imp, diet_negative_names), reverse=False)))
+colors_negative = ['lightslategray', ] * len(diet_negative_names)
 for id in range(0, len(diet_negative_names)):
     otu_name_list = diet_negative_names[id].split('_')
     otu_name = otu_name_list[0] + '_' + otu_name_list[1]
@@ -300,14 +307,15 @@ for otu_id in range(0, len(top_features_merged)):
     otu_gain_count_control = 0
     otu_loss_count_control = 0
     for person_id in range(0, len(common_subjects)):
-        if subject_info_dict['status'][person_id] == 'Subject':
+        person_data_index = T0_subject_dict['CODE'].index(common_subjects[person_id])
+        if T0_subject_dict['status'][person_data_index] == 'Subject':
             curr_t0 = new_df_t0.iat[person_id, otu_id]
             curr_t1 = new_df_t1.iat[person_id, otu_id]
             if curr_t1 > curr_t0:
                 otu_gain_count_subject += 1
             elif curr_t0 > curr_t1:
                 otu_loss_count_subject += 1
-        if subject_info_dict['status'][person_id] == 'Control':
+        if T0_subject_dict['status'][person_data_index] == 'Control':
             curr_t0 = new_df_t0.iat[person_id, otu_id]
             curr_t1 = new_df_t1.iat[person_id, otu_id]
             if curr_t1 > curr_t0:
@@ -323,7 +331,9 @@ for otu_id in range(0, len(top_features_merged)):
         diet_negative_otus_subject.append(otu_gain_count_subject / otu_loss_count_subject)
         diet_negative_otus_control.append(otu_gain_count_control / otu_loss_count_control)
 
-diet_positive_otus = [np.log(diet_positive_otus_subject[id] / diet_positive_otus_control[id]) for id in range(0, len(diet_positive_otus_subject))]
-diet_negative_otus = [np.log(diet_negative_otus_subject[id] / diet_negative_otus_control[id]) for id in range(0, len(diet_negative_otus_subject))]
+diet_positive_otus = [np.log(diet_positive_otus_subject[id] / diet_positive_otus_control[id]) for id in
+                      range(0, len(diet_positive_otus_subject))]
+diet_negative_otus = [np.log(diet_negative_otus_subject[id] / diet_negative_otus_control[id]) for id in
+                      range(0, len(diet_negative_otus_subject))]
 
 plot_box(diet_positive_otus, 'DietPositive', diet_negative_otus, 'DietNegative')
