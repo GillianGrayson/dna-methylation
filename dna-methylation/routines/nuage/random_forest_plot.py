@@ -56,8 +56,14 @@ def plot_scatter(x, y, title):
     plotly.io.write_image(fig, figure_file_path + 'scatter_' + title + '.png')
     plotly.io.write_image(fig, figure_file_path + 'scatter_' + title + '.pdf')
 
-def plot_random_forest(x, y, title):
+def plot_random_forest(x, y, title, is_equal_range):
     figure_file_path = 'D:/Aaron/Bio/NU-Age/Figures/'
+    if is_equal_range:
+        xrange = [min(min(x), min(y)) - 5, max(max(x), max(y)) + 5]
+        yrange = [min(min(x), min(y)) - 5, max(max(x), max(y)) + 5]
+    else:
+        xrange = [min(x) - 1, max(x) + 1]
+        yrange = [min(y) - 1, max(y) + 1]
     trace = go.Scatter(
         x=x,
         y=y,
@@ -90,7 +96,7 @@ def plot_random_forest(x, y, title):
                     size=18,
                 )
             ),
-            #range=[min(min(x), min(y)) - 5, max(max(x), max(y)) + 5]
+            range=xrange
         ),
         yaxis=go.layout.YAxis(
             title=go.layout.yaxis.Title(
@@ -100,11 +106,14 @@ def plot_random_forest(x, y, title):
                     size=18,
                 )
             ),
-            #range=[min(min(x), min(y)) - 5, max(max(x), max(y)) + 5]
+            range=yrange
         )
     )
 
     fig = go.Figure(data=trace, layout=layout)
+
+    if is_equal_range:
+        title = title + '_eq'
 
     plotly.offline.plot(fig, filename=figure_file_path + 'rf_' + title + '.html', auto_open=False, show_link=True)
     plotly.io.write_image(fig, figure_file_path + 'rf_' + title + '.png')

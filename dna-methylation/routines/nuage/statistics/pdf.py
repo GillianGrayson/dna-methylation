@@ -29,20 +29,21 @@ common_subjects = list(set(subject_row_dict_T0.keys()).intersection(set(subject_
 subjects_wo_adherence = []
 
 for code in common_subjects:
-    index = T0_subject_dict['CODE'].index(code)
+    index_t0 = T0_subject_dict['CODE'].index(code)
+    index_t1 = T1_subject_dict['CODE'].index(code)
 
-    curr_adherence_t0 = T0_subject_dict[adherence_key][index]
-    curr_adherence_t1 = T1_subject_dict[adherence_key][index]
+    curr_adherence_t0 = T0_subject_dict[adherence_key][index_t0]
+    curr_adherence_t1 = T1_subject_dict[adherence_key][index_t1]
 
     if curr_adherence_t0 == '' or curr_adherence_t1 == '':
         subjects_wo_adherence.append(code)
         continue
 
-    if subject_info_dict['status'][index] == 'Subject':
+    if T0_subject_dict['status'][index_t0] == 'Subject':
         adherence_dict[adherence_key_t0_subject].append(curr_adherence_t0)
         adherence_dict[adherence_key_t1_subject].append(curr_adherence_t1)
 
-    if subject_info_dict['status'][index] == 'Control':
+    if T0_subject_dict['status'][index_t0] == 'Control':
         adherence_dict[adherence_key_t0_control].append(curr_adherence_t0)
         adherence_dict[adherence_key_t1_control].append(curr_adherence_t1)
 
