@@ -1,8 +1,9 @@
 import pydnameth as pdm
+from scripts.develop.routines import *
 
 data = pdm.Data(
     path='',
-    base='GSE87571_TEST'
+    base='GSE87571'
 )
 
 annotations = pdm.Annotations(
@@ -23,30 +24,17 @@ cells = pdm.Cells(
     name='cells_horvath_calculator',
     types='any'
 )
-data_params = {'cells': ['CD8T', 'CD4T', 'NK', 'Bcell', 'Gran']}
+
+target = get_target(data.base)
+observables_list = get_observables_list(data.base)
+data_params = get_data_params(data.base)
+data_params['cells'] = ['CD8T', 'CD4T', 'NK', 'Bcell', 'Gran']
 
 attributes = pdm.Attributes(
-    target='age',
+    target=target,
     observables=observables,
     cells=cells
 )
-
-if data.base == 'GSE55763':
-    observables_list = [
-        {'gender': 'F', 'is_duplicate': '0', 'age': (35, 100)},
-        {'gender': 'M', 'is_duplicate': '0', 'age': (35, 100)}
-    ]
-elif data.base == 'E-MTAB-7309' or data.base == 'E-MTAB-7309-FILTERED':
-    data_params['norm'] = 'quantile'
-    observables_list = [
-        {'sex': 'female'},
-        {'sex': 'male'}
-    ]
-else:
-    observables_list = [
-        {'gender': 'F'},
-        {'gender': 'M'}
-    ]
 
 pdm.residuals_common_table_aggregator_linreg(
     data=data,

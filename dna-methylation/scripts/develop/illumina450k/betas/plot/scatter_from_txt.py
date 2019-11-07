@@ -8,7 +8,7 @@ y_ranges = ['auto'] * len(items)
 
 data = pdm.Data(
     path='',
-    base='E-MTAB-7309'
+    base='GSE87571'
 )
 
 annotations = pdm.Annotations(
@@ -50,8 +50,8 @@ pdm.betas_plot_scatter(
         'items': items,
         'x_ranges': x_ranges,
         'y_ranges': y_ranges,
-        'line': 'yes',
-        'fit': 'none',
+        'line': 'no',
+        'fit': 'yes',
         'semi_window': 8,
         'box_b': 'Q5',
         'box_t': 'Q95',

@@ -7,7 +7,7 @@ def get_line_list(line):
         line_list[val_id] = line_list[val_id].replace('"', '').rstrip()
     return line_list
 
-fn_path = 'E:/YandexDisk/Work/pydnameth/GSE55763/'
+fn_path = 'E:/YandexDisk/Work/pydnameth/GSE55763/raw/'
 fn_txt = fn_path + 'betas_raw.txt'
 
 num_lines = 473865 - 41958
@@ -35,12 +35,15 @@ pvals_arr[row_id] = '\t'.join(pvals_cols)
 total_NA_cpgs = 0
 NA_indexes = np.zeros(num_cols)
 
+cpgs_wint_NA = []
+
 row_id += 1
 for line in tqdm(f, mininterval=60.0, desc='betas_dict creating'):
     line_list = get_line_list(line)
     betas_cols = [line_list[i] for i in betas_indexes]
 
     if 'NA' in betas_cols:
+        cpgs_wint_NA.append(line_list[0])
         total_NA_cpgs += 1
         NA_indexes_curr = [i for i, x in enumerate(betas_cols) if x == 'NA']
         for NA_index in NA_indexes_curr:
@@ -52,6 +55,8 @@ for line in tqdm(f, mininterval=60.0, desc='betas_dict creating'):
         row_id += 1
 
 f.close()
+
+np.savetxt(fn_path + 'cpgs_wint_NA.txt', cpgs_wint_NA, fmt='%s')
 
 print(f'total_NA_cpgs: {total_NA_cpgs}')
 print(f'num_rows: {row_id}')

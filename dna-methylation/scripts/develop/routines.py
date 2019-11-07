@@ -5,7 +5,7 @@ def get_data_params(data_base):
             'norm': 'quantile',
         }
     else:
-        data_params = None
+        data_params = {}
 
     return data_params
 
