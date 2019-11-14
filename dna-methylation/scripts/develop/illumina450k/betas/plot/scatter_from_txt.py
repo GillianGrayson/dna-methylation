@@ -50,12 +50,12 @@ pdm.betas_plot_scatter(
         'items': items,
         'x_ranges': x_ranges,
         'y_ranges': y_ranges,
-        'line': 'no',
-        'fit': 'yes',
+        'line': 'yes',
+        'fit': 'none',
         'semi_window': 8,
         'box_b': 'Q5',
         'box_t': 'Q95',
         'legend_size': 2,
-        'add': 'none'
+        'add': 'polygon'
     }
 )
