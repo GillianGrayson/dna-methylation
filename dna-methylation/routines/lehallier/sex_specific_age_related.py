@@ -1,5 +1,7 @@
 from routines.lehallier.infrastructure import get_lehallier_data_path, get_sex_specific_data_path, load_table_dict_xlsx
 from tqdm import tqdm
+import scipy.stats as stats
+import numpy as np
 
 def get_genes(fn):
     sex_specific_data_dict = load_table_dict_xlsx(fn)
@@ -40,6 +42,12 @@ for row_id in range(0, len(age_sex_data_dict['ID'])):
 
 fn = get_lehallier_data_path() + '/GSE87571/' + 'sex_specific_age_related.xlsx'
 ssar_genes_meth = get_genes(fn)
+print(f'Number of sex-specific age-related (ar) genes in our draft: {len(ssar_genes_meth)}')
+
+fn = get_lehallier_data_path() + '/GSE87571/' + 'genes.xlsx'
+all_genes_meth = get_genes(fn)
+print(f'Number of genes from methylation: {len(all_genes_meth)}')
+
 
 ar_genes_lehallier = []
 ss_genes_lehallier = []
@@ -63,3 +71,20 @@ ssar_intersection = set(ssar_genes_meth).intersection(set(ssar_genes_lehallier))
 print(f'Number of sex-specific age-related (ssar) genes in intersection: {len(ssar_intersection)}')
 print(ssar_intersection)
 
+x = len(ssar_intersection)
+n = len(ssar_genes_meth)
+m = len(set(ssar_genes_lehallier))
+N1 = len(set(id_gene.values()))
+N2 = len(all_genes_meth)
+
+contingency_table = [[x, m - x], [n - x, N2 - n - m + x]]
+print(contingency_table)
+
+a = np.sum(contingency_table, axis=0)
+b = np.sum(contingency_table, axis=1)
+if np.sum(a) == np.sum(b):
+    print('contingency_table is ok')
+
+oddsratio, pvalue = stats.fisher_exact(contingency_table)
+print(f'oddsratio: {oddsratio}')
+print(f'pvalue: {pvalue}')

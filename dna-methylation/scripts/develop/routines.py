@@ -17,6 +17,11 @@ def get_observables_list(data_base):
             {'gender': 'F', 'is_duplicate': '0', 'age': (35, 100)},
             {'gender': 'M', 'is_duplicate': '0', 'age': (35, 100)}
         ]
+    elif data_base == 'liver':
+        observables_list = [
+            {'gender': 'F'},
+            {'gender': 'M'}
+        ]
     elif data_base == 'GSE64244':
         observables_list = [
             {'disease_status': 'Turner_syndrome_45,X_(Maternal)'},
@@ -83,6 +88,8 @@ def get_observables_list(data_base):
 
 def get_target(data_base):
     if data_base == 'GSE55763':
+        target = 'age'
+    elif data_base == 'liver':
         target = 'age'
     elif data_base == 'GSE64244':
         target = 'age'
