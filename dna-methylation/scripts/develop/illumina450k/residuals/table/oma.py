@@ -26,6 +26,8 @@ observables_list = [
     {'gender': 'any'},
 ]
 data_params = get_data_params(data.base)
+data_params['cells'] = ['CD8T', 'CD4T', 'NK', 'Bcell', 'Gran']
+data_params['observables'] = ['age']
 
 
 for obs in observables_list:
@@ -41,8 +43,9 @@ for obs in observables_list:
         cells=cells
     )
 
-    pdm.betas_table_oma(
+    pdm.residuals_table_oma(
         data=data,
         annotations=annotations,
-        attributes=attributes
+        attributes=attributes,
+        data_params=data_params
     )
