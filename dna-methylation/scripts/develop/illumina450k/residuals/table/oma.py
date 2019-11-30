@@ -4,7 +4,7 @@ from scripts.develop.routines import *
 
 data = pdm.Data(
     path='',
-    base='GSE87571'
+    base='liver'
 )
 
 annotations = pdm.Annotations(
@@ -21,13 +21,13 @@ cells = pdm.Cells(
     types='any'
 )
 
-target = 'gender'
+target = 'age'
 observables_list = [
     {'gender': 'any'},
 ]
 data_params = get_data_params(data.base)
 data_params['cells'] = ['CD8T', 'CD4T', 'NK', 'Bcell', 'Gran']
-data_params['observables'] = ['age']
+data_params['observables'] = ['gender']
 
 
 for obs in observables_list:
