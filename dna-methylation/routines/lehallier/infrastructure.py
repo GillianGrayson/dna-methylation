@@ -27,23 +27,7 @@ def get_lehallier_data_path():
     else:
         raise ValueError("Unsupported host_name: " + host_name)
 
-    path += '/pydnameth/articles/inflammatory_clock'
-
-    return path
-
-def get_sex_specific_data_path():
-    host_name = socket.gethostname()
-
-    if host_name == 'MSI':
-        path = DataPath.local_1.value + '/Work'
-    elif host_name == 'DESKTOP-K9VO2TI':
-        path = DataPath.local_2.value + '/Work'
-    elif host_name == 'DESKTOP-4BEQ7MS':
-        path = DataPath.local_3.value
-    else:
-        raise ValueError("Unsupported host_name: " + host_name)
-
-    path += '/pydnameth/draft/tables/sex_specific/betas/v6'
+    path += '/pydnameth/human_plasma_proteome'
 
     return path
 

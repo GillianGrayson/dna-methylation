@@ -1,29 +1,28 @@
 import pydnameth as pdm
+from scripts.develop.routines import *
 
 data = pdm.Data(
     path='',
-    base='GSE87571'
+    base='liver'
 )
 
 annotations = pdm.Annotations(
     name='annotations',
+    type='450k',
     exclude='bad_cpgs',
-    cross_reactive='any',
-    snp='any',
-    chr='NS',
-    gene_region='any',
-    geo='any',
-    probe_class='any'
+    select_dict={
+        'CHR': ['-X', '-Y']
+    }
+)
+
+cells = pdm.Cells(
+    name='cells_horvath_calculator',
+    types='any'
 )
 
 observables = pdm.Observables(
     name='observables',
     types={}
-)
-
-cells = pdm.Cells(
-    name='cells',
-    types='any'
 )
 
 attributes = pdm.Attributes(
@@ -32,16 +31,8 @@ attributes = pdm.Attributes(
     cells=cells
 )
 
-if data.base == 'GSE55763':
-    observables_list = [
-        {'gender': 'F', 'is_duplicate': '0', 'age': (35, 100)},
-        {'gender': 'M', 'is_duplicate': '0', 'age': (35, 100)}
-    ]
-else:
-    observables_list = [
-        {'gender': 'F'},
-        {'gender': 'M'}
-    ]
+observables_list = get_observables_list(data.base)
+data_params = get_data_params(data.base)
 
 pdm.observables_plot_histogram(
     data=data,
