@@ -36,7 +36,7 @@ attributes = pdm.Attributes(
     cells=cells
 )
 
-pdm.residuals_common_table_aggregator_variance(
+pdm.residuals_table_aggregator_variance(
     data=data,
     annotations=annotations,
     attributes=attributes,

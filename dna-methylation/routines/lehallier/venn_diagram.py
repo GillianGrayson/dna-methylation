@@ -106,10 +106,10 @@ def plot_venn(lists, labels, path, suffix):
 
     ordered_keys = []
 
-    sizes = {}
+    intersections = {}
     checking = {}
     for id, label in enumerate(labels):
-        sizes[label] = len(set(lists[id]))
+        intersections[label] = set(lists[id])
         ordered_keys.append(label)
         checking[label] = 0
 
@@ -122,30 +122,30 @@ def plot_venn(lists, labels, path, suffix):
             curr_labels_raw = np.sort(curr_labels_raw)
             curr_labels = '_'.join(list(curr_labels_raw))
 
-            if curr_labels not in sizes:
+            if curr_labels not in intersections:
 
                 cur_intersection = set(lists[curr_ids[0]])
                 for id in curr_ids[1::]:
                     cur_intersection = cur_intersection.intersection(set(lists[id]))
-                sizes[curr_labels] = len(cur_intersection)
+                intersections[curr_labels] = cur_intersection
 
                 ordered_keys.append(curr_labels)
 
     ordered_keys = ordered_keys[::-1]
 
-    sizes_for_venn = copy.deepcopy(sizes)
+    intersections_for_venn = copy.deepcopy(intersections)
     for key in ordered_keys:
         curr_labels = set(key.split('_'))
         for key_var in ordered_keys:
             curr_labels_var = set(key_var.split('_'))
             if key_var != key:
                 if curr_labels.issubset(curr_labels_var):
-                    sizes_for_venn[key] -= sizes_for_venn[key_var]
+                    intersections_for_venn[key] -= intersections_for_venn[key_var]
 
-    for key in sizes_for_venn:
+    for key in intersections_for_venn:
         curr_labels = key.split('_')
         for label in curr_labels:
-            checking[label] += sizes_for_venn[key]
+            checking[label] += len(intersections_for_venn[key])
 
     for id, label in enumerate(labels):
         if checking[label] != len(set(lists[id])):
@@ -153,9 +153,12 @@ def plot_venn(lists, labels, path, suffix):
     print('Venn data ok')
 
     venn_labels = []
-    for key in sizes_for_venn:
-        curr_labels = key.split('_') + [str(sizes_for_venn[key])]
+    for key in intersections_for_venn:
+        curr_labels = key.split('_') + [str(len(intersections_for_venn[key]))]
         venn_labels.append('<br>'.join(curr_labels))
+
+        fn = path + '/' + suffix + '/' + key + '.txt'
+        np.savetxt(fn, list(intersections_for_venn[key]), fmt='%s')
 
     layout = get_layout_3()
     trace = get_trace_3(venn_labels)

@@ -32,25 +32,30 @@ attributes = pdm.Attributes(
     cells=cells
 )
 
-target_common = 'gender'
-data_params_common = get_data_params(data.base)
-data_params_common['cells'] = ['CD8T', 'CD4T', 'NK', 'Bcell', 'Gran']
-data_params_common['observables'] = ['age']
+target_list = ['gender', 'age']
 
-target_separated = 'age'
-data_params_separated = get_data_params(data.base)
-data_params_separated['cells'] = ['CD8T', 'CD4T', 'NK', 'Bcell', 'Gran']
-data_params_separated['observables'] = ['gender']
+data_params_list = []
 
-observables_list = get_observables_list(data.base)
+data_params = get_data_params(data.base)
+if data.base == 'liver':
+    data_params['observables'] = ['age']
+else:
+    data_params['cells'] = ['CD8T', 'CD4T', 'NK', 'Bcell', 'Gran']
+    data_params['observables'] = ['age']
+data_params_list.append(data_params)
+
+data_params = get_data_params(data.base)
+if data.base == 'liver':
+    data_params['observables'] = ['gender']
+else:
+    data_params['cells'] = ['CD8T', 'CD4T', 'NK', 'Bcell', 'Gran']
+    data_params['observables'] = ['gender']
+data_params_list.append(data_params)
 
 pdm.residuals_table_approach_3(
     data,
     annotations,
     attributes,
-    observables_list,
-    target_common,
-    target_separated,
-    data_params_common,
-    data_params_separated
+    target_list,
+    data_params_list,
 )
