@@ -26,7 +26,7 @@ observables = pdm.Observables(
 )
 
 cells = pdm.Cells(
-    name='cells',
+    name='cells_horvath_calculator',
     types='any'
 )
 

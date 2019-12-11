@@ -18,6 +18,8 @@ def get_genes(fn):
 
     return list(set(genes_list))
 
+suffix = '_bonferroni'
+
 
 fn = get_lehallier_data_path() + '/' + 'proteins_genes.xlsx'
 proteins_genes_data_dict = load_table_dict_xlsx(fn)
@@ -83,19 +85,18 @@ for gene in genes_duplicates:
         genes_duplicates_str['gene'].append(gene)
 save_table_dict_xlsx(get_lehallier_data_path() + '/' + 'duplicates_ss', genes_duplicates_str)
 
-fn = get_lehallier_data_path() + '/methylation/GSE87571/' + 'sex_specific.xlsx'
+fn = get_lehallier_data_path() + '/methylation/GSE87571/' + 'sex_specific' + suffix + '.xlsx'
 genes_GSE87571 = get_genes(fn)
 print(f'Number of sex-specific (SS) genes in GSE87571: {len(genes_GSE87571)}')
 
-fn = get_lehallier_data_path() + '/methylation/liver/' + 'sex_specific.xlsx'
+fn = get_lehallier_data_path() + '/methylation/liver/' + 'sex_specific' + suffix + '.xlsx'
 genes_liver = get_genes(fn)
 print(f'Number of sex-specific (SS) genes in liver: {len(genes_liver)}')
 
 lists = [ss_genes_lehallier, genes_GSE87571, genes_liver]
 labels = ['lehallier', 'GSE87571', 'liver']
-suffix = 'ss'
 
-plot_venn(lists, labels, get_lehallier_data_path() + '/methylation', suffix)
+plot_venn(lists, labels, get_lehallier_data_path() + '/methylation', 'ss' + suffix)
 
 
 
@@ -110,19 +111,18 @@ for gene in genes_duplicates:
         genes_duplicates_str['gene'].append(gene)
 save_table_dict_xlsx(get_lehallier_data_path() + '/' + 'duplicates_ar', genes_duplicates_str)
 
-fn = get_lehallier_data_path() + '/methylation/GSE87571/' + 'age_related.xlsx'
+fn = get_lehallier_data_path() + '/methylation/GSE87571/' + 'age_related' + suffix + '.xlsx'
 genes_GSE87571 = get_genes(fn)
 print(f'Number of age-related (AR) genes in GSE87571: {len(genes_GSE87571)}')
 
-fn = get_lehallier_data_path() + '/methylation/liver/' + 'age_related.xlsx'
+fn = get_lehallier_data_path() + '/methylation/liver/' + 'age_related' + suffix + '.xlsx'
 genes_liver = get_genes(fn)
 print(f'Number of age-related (AR) genes in liver: {len(genes_liver)}')
 
 lists = [ar_genes_lehallier, genes_GSE87571, genes_liver]
 labels = ['lehallier', 'GSE87571', 'liver']
-suffix = 'ar'
 
-plot_venn(lists, labels, get_lehallier_data_path() + '/methylation', suffix)
+plot_venn(lists, labels, get_lehallier_data_path() + '/methylation', 'ar' + suffix)
 
 
 print(f'Number of sex-specific age-related (ssae) genes in Lehallier, et. al.: {len(ssar_genes_lehallier)}')
@@ -136,19 +136,18 @@ for gene in genes_duplicates:
         genes_duplicates_str['gene'].append(gene)
 save_table_dict_xlsx(get_lehallier_data_path() + '/' + 'duplicates_ssar', genes_duplicates_str)
 
-fn = get_lehallier_data_path() + '/methylation/GSE87571/' + 'sex_specific_age_related.xlsx'
+fn = get_lehallier_data_path() + '/methylation/GSE87571/' + 'sex_specific_age_related' + suffix + '.xlsx'
 genes_GSE87571 = get_genes(fn)
 print(f'Number of sex-specific age-related (SSAR) genes in GSE87571: {len(genes_GSE87571)}')
 
-fn = get_lehallier_data_path() + '/methylation/liver/' + 'sex_specific_age_related.xlsx'
+fn = get_lehallier_data_path() + '/methylation/liver/' + 'sex_specific_age_related' + suffix + '.xlsx'
 genes_liver = get_genes(fn)
 print(f'Number of sex-specific age-related (SSAR) genes in liver: {len(genes_liver)}')
 
 lists = [ssar_genes_lehallier, genes_GSE87571, genes_liver]
 labels = ['lehallier', 'GSE87571', 'liver']
-suffix = 'ssar'
 
-plot_venn(lists, labels, get_lehallier_data_path() + '/methylation', suffix)
+plot_venn(lists, labels, get_lehallier_data_path() + '/methylation', 'ssar' + suffix)
 
 
 

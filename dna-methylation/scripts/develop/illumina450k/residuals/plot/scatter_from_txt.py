@@ -1,4 +1,5 @@
 import pydnameth as pdm
+from scripts.develop.routines import *
 
 f = open('cpgs.txt', 'r')
 items = f.read().splitlines()
@@ -8,18 +9,16 @@ y_ranges = ['auto'] * len(items)
 
 data = pdm.Data(
     path='',
-    base='GSE87571'
+    base='liver'
 )
 
 annotations = pdm.Annotations(
     name='annotations',
+    type='450k',
     exclude='bad_cpgs',
-    cross_reactive='any',
-    snp='any',
-    chr='NS',
-    gene_region='any',
-    geo='any',
-    probe_class='any'
+    select_dict={
+        'CHR': ['-X', '-Y']
+    }
 )
 
 observables = pdm.Observables(
@@ -27,36 +26,15 @@ observables = pdm.Observables(
     types={}
 )
 
+cells = pdm.Cells(
+    name='cells_horvath_calculator',
+    types='any'
+)
 
-if data.base == 'GSE55763':
-    observables_list = [
-        {'gender': 'F', 'is_duplicate': '0', 'age': (35, 100)},
-        {'gender': 'M', 'is_duplicate': '0', 'age': (35, 100)}
-    ]
+observables_list = get_observables_list(data.base)
 
-    data_params = {
-        'cells': ['CD8T', 'CD4T', 'NK', 'Bcell', 'Gran']
-    }
-
-    cells = pdm.Cells(
-        name='cells_horvath_calculator',
-        types='any'
-    )
-
-else:
-    observables_list = [
-        {'gender': 'F'},
-        {'gender': 'M'}
-    ]
-
-    data_params = {
-        'cells': ['CD8T', 'CD4T', 'NK', 'Bcell', 'Gran']
-    }
-
-    cells = pdm.Cells(
-        name='cells_horvath_calculator',
-        types='any'
-    )
+data_params = get_data_params(data.base)
+data_params['observables'] = ['gender']
 
 attributes = pdm.Attributes(
     target='age',
@@ -74,12 +52,12 @@ pdm.residuals_common_plot_scatter(
         'items': items,
         'x_ranges': x_ranges,
         'y_ranges': y_ranges,
-        'line': 'no',
-        'fit': 'yes',
+        'line': 'yes',
+        'fit': 'none',
         'semi_window': 8,
         'box_b': 'Q5',
         'box_t': 'Q95',
-        'legend_size': 1,
+        'legend_size': 2,
         'add': 'none'
     }
 )
