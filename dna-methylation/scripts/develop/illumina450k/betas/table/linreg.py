@@ -1,4 +1,5 @@
 import pydnameth as pdm
+from scripts.develop.routines import *
 
 data = pdm.Data(
     path='',
@@ -7,19 +8,19 @@ data = pdm.Data(
 
 annotations = pdm.Annotations(
     name='annotations',
+    type='450k',
     exclude='bad_cpgs',
-    cross_reactive='any',
-    snp='any',
-    chr='NS',
-    gene_region='any',
-    geo='any',
-    probe_class='any'
+    select_dict={
+        'CHR': ['-X', '-Y']
+    }
 )
 
 cells = pdm.Cells(
-    name='cells',
+    name='cells_horvath_calculator',
     types='any'
 )
+
+target = get_target(data.base)
 
 if data.base == 'GSE55763':
     observables_list = [
@@ -38,7 +39,7 @@ for obs in observables_list:
     )
 
     attributes = pdm.Attributes(
-        target='age',
+        target=target,
         observables=observables,
         cells=cells
     )
