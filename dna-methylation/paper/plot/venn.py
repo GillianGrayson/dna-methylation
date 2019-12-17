@@ -18,8 +18,8 @@ def get_trace_3(labels):
 
 def get_trace_4(labels):
     trace = go.Scatter(
-        x=[0.320, 1.625, 2.950, +1.625, 1.050, 2.200, 2.200, 1.050, 1.100, 1.625, 2.150, 1.625, 1.625],
-        y=[1.000, 2.300, 1.000, -0.300, 1.625, 1.625, 0.375, 0.375, 1.000, 1.530, 1.000, 0.470, 1.000],
+        x=[0.6, 0.7, 1.6, 2.85, 0.8, 1.9, 2.7, 1.45, 2.9, 2.15, 1.55, 2.73, 2.27, 2.2, 2.2],
+        y=[-0.1, 1.1, 2.0, 1.8, 0.6, -0.2, 0.0, 1.25, 0.9, 1.9, 0.55, 0.45, 0.02, 1.2, 0.5],
         text=labels,
         mode='text',
         textfont=dict(
@@ -108,13 +108,13 @@ def get_layout_4():
             'showticklabels': False,
             'showgrid': False,
             'zeroline': False,
-            'range': [0, 3.25]
+            'range': [-0.05, 3.3]
         },
         'yaxis': {
             'showticklabels': False,
             'showgrid': False,
             'zeroline': False,
-            'range': [-0.625, 2.625]
+            'range': [-0.55, 3.05]
         },
         'shapes': [
             {
@@ -123,9 +123,9 @@ def get_layout_4():
                 'yref': 'y',
                 'fillcolor': colors[0],
                 'x0': 0,
-                'y0': 0,
-                'x1': 2,
-                'y1': 2,
+                'y0': -0.5,
+                'x1': 3,
+                'y1': 1.0,
                 'type': 'circle',
                 'line': {
                     'color': 'black'
@@ -136,10 +136,10 @@ def get_layout_4():
                 'xref': 'x',
                 'yref': 'y',
                 'fillcolor': colors[1],
-                'x0': 1.25,
-                'y0': 0,
-                'x1': 3.25,
-                'y1': 2,
+                'x0': 0.2,
+                'y0': 0.1,
+                'x1': 3.2,
+                'y1': 1.6,
                 'type': 'circle',
                 'line': {
                     'color': 'black',
@@ -149,11 +149,11 @@ def get_layout_4():
                 'opacity': 0.5,
                 'xref': 'x',
                 'yref': 'y',
-                'fillcolor': colors[2],
-                'x0': 0.625,
-                'y0': -0.625,
-                'x1': 2.625,
-                'y1': 1.375,
+                'fillcolor': colors[3],
+                'x0': 1.15,
+                'y0': -0.45,
+                'x1': 2.65,
+                'y1': 2.55,
                 'type': 'circle',
                 'line': {
                     'color': 'black'
@@ -163,11 +163,11 @@ def get_layout_4():
                 'opacity': 0.5,
                 'xref': 'x',
                 'yref': 'y',
-                'fillcolor': colors[3],
-                'x0': 0.625,
-                'y0': 0.625,
-                'x1': 2.625,
-                'y1': 2.625,
+                'fillcolor': colors[2],
+                'x0': 1.75,
+                'y0': -0.25,
+                'x1': 3.25,
+                'y1': 2.75,
                 'type': 'circle',
                 'line': {
                     'color': 'black'
