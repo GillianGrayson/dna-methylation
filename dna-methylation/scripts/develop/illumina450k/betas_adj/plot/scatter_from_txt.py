@@ -9,7 +9,7 @@ y_ranges = ['auto'] * len(items)
 
 data = pdm.Data(
     path='',
-    base='liver'
+    base='GSE87571'
 )
 
 annotations = pdm.Annotations(
@@ -34,7 +34,8 @@ cells = pdm.Cells(
 observables_list = get_observables_list(data.base)
 
 data_params = get_data_params(data.base)
-data_params['observables'] = ['gender']
+#data_params['observables'] = ['gender']
+data_params['cells'] = ['CD8T', 'CD4T', 'NK', 'Bcell', 'Gran']
 
 attributes = pdm.Attributes(
     target='age',
