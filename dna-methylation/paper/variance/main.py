@@ -8,12 +8,13 @@ from paper.infrastructure.load.table import load_table_dict_xlsx
 from paper.infrastructure.load.annotations import load_annotations_dict
 from paper.infrastructure.load.papers import load_papers_dict
 from paper.infrastructure.save.table import save_table_dict_xlsx
-from paper.polygon.condition import check_condition
+from paper.variance.functions import get_R2s_figure
 from paper.plot.venn import get_layout_3, get_layout_4, get_trace_3, get_trace_4
 from paper.infrastructure.save.figure import save_figure
 
+R2_percentile_value = 75
 
-data_type = 'residuals_old'
+data_type = 'residuals'
 version = 'v8'
 datasets = ['GSE40279', 'GSE87571', 'EPIC', 'GSE55763']
 cpg_key = 'item'
@@ -27,6 +28,8 @@ path = get_data_path() + '/draft/tables/polygon/' + data_type + '/' + version
 
 data_dicts_passed = {}
 cpgs_dicts_passed = {}
+R2s = {}
+R2_percentiles = {}
 
 for dataset in datasets:
 
@@ -41,10 +44,18 @@ for dataset in datasets:
 
         num_cpgs = len(data_dict[cpg_key])
 
+        min_R2 = np.minimum(data_dict['best_R2_gender(F)'], data_dict['best_R2_gender(F)'])
+        data_dict['min_R2'] = min_R2
+        R2s[dataset] = min_R2
+
+        R2_percentile = np.percentile(min_R2, R2_percentile_value)
+        R2_percentiles[dataset] = R2_percentile
+
         for cpg_id in tqdm(range(0, num_cpgs), desc=f'{dataset} processing'):
-            is_passed = check_condition(data_dict[area_criteria_key][cpg_id],
-                                        data_dict[slope_criteria_key][cpg_id])
-            if is_passed:
+            if data_dict['min_R2'][cpg_id] > R2_percentile \
+                    and data_dict['number_of_clusters'][cpg_id] == 1 \
+                    and data_dict['percent_of_noise_points'][cpg_id] < 1.0:
+
                 for key in data_dict:
                     data_dict_passed[key].append(data_dict[key][cpg_id])
 
@@ -52,6 +63,20 @@ for dataset in datasets:
 
     data_dicts_passed[dataset] = data_dict_passed
     cpgs_dicts_passed[dataset] = data_dict_passed[cpg_key]
+
+if R2s:
+    save_table_dict_xlsx(f'{path}/R2s', R2s)
+    R2s_figure = get_R2s_figure(R2s, R2_percentiles)
+    save_figure(f'{path}/R2s', R2s_figure)
+
+cpgs_intersection = set(cpgs_dicts_passed[datasets[0]])
+for dataset in datasets[1::]:
+    cpgs_intersection = cpgs_intersection.intersection(cpgs_dicts_passed[dataset])
+
+
+
+
+
 
 datasets_ids = list(range(0, len(datasets)))
 keys_ordered = copy.deepcopy(datasets)
