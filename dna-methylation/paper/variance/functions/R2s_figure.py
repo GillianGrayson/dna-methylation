@@ -17,8 +17,6 @@ def get_R2s_figure(R2s, R2s_percentiles, num_bins=1000):
 
     for dataset in R2s:
 
-        print(f'{dataset} persentile: {R2s_percentiles[dataset]}')
-
         y = [0] * num_bins
         num_outliers = 0
         for curr_R2 in R2s[dataset]:

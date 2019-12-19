@@ -51,7 +51,7 @@ pdm.betas_plot_scatter(
         'x_ranges': x_ranges,
         'y_ranges': y_ranges,
         'line': 'yes',
-        'fit': 'none',
+        'fit': 'yes',
         'semi_window': 8,
         'box_b': 'Q5',
         'box_t': 'Q95',
