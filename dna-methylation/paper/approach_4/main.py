@@ -8,15 +8,19 @@ from paper.infrastructure.load.table import load_table_dict_xlsx
 from paper.infrastructure.load.annotations import load_annotations_dict
 from paper.infrastructure.load.papers import load_papers_dict
 from paper.infrastructure.save.table import save_table_dict_xlsx
-from paper.polygon.condition import check_condition
 from paper.plot.venn import get_layout_3, get_layout_4, get_trace_3, get_trace_4
 from paper.infrastructure.save.figure import save_figure
 
+pval_percentile_lim = 90
+pval_null_accepted = 0.5
 
 data_type = 'betas'
 datasets = ['GSE87571']
 hashes = ['c098dc79338657b0b9c35f55a8441e80']
-hashes_groups = [{'f': '25dcc690', 'm': '00f7ba4d'}]
+f_key = 'f'
+m_key = 'f'
+hashes_groups = [{f_key: '25dcc690', m_key: '00f7ba4d'}]
+cpg_key = 'item'
 pval_key = 'bp_lm_pvalue_fdr_bh'
 type_key = 'type'
 
@@ -29,13 +33,12 @@ f_var_dicts_passed = {}
 m_var_dicts_passed = {}
 f_m_var_dicts_passed = {}
 
-
-data_dicts_passed = {}
-cpgs_dicts_passed = {}
+pvals = {}
+pvals_percentiles = {}
 
 for ds_id, dataset in enumerate(datasets):
     curr_load_path = f'{get_data_path()}/{dataset}/{data_type}/table/aggregator/{hashes[ds_id]}'
-    curr_save_path = f'{save_path()}'
+    curr_save_path = f'{save_path}'
 
     if os.path.isfile(f'{curr_save_path}/{dataset}_f_var.xlsx') \
             and os.path.isfile(f'{curr_save_path}/{dataset}_m_var.xlsx') \
@@ -47,23 +50,52 @@ for ds_id, dataset in enumerate(datasets):
     else:
         data_dict = load_table_dict_xlsx(f'{curr_load_path}/default.xlsx')
 
-        data_dict_passed = {}
+        f_var_passed = {}
+        m_var_passed = {}
+        f_m_var_passed = {}
         for key in data_dict:
-            data_dict_passed[key] = []
+            f_var_passed[key] = []
+            m_var_passed[key] = []
+            f_m_var_passed[key] = []
 
         num_cpgs = len(data_dict[cpg_key])
 
+        pval_f = data_dict[-np.log10(f'{pval_key}_{hashes_groups[ds_id][f_key]}')]
+        pval_m = data_dict[-np.log10(f'{pval_key}_{hashes_groups[ds_id][m_key]}')]
+        pval_f_percentile = np.percentile(pval_f, pval_percentile_lim)
+        pval_m_percentile = np.percentile(pval_m, pval_percentile_lim)
+
+        pvals[dataset] = {f_key: pval_f, m_key: pval_m}
+        pvals_percentiles[dataset] = {f_key: pval_f_percentile, m_key: pval_m_percentile}
+
+        print(f'{dataset} persentile {f_key}: {np.power(10.0, -pval_f_percentile)}')
+        print(f'{dataset} persentile {m_key}: {np.power(10.0, -pval_m_percentile)}')
+
         for cpg_id in tqdm(range(0, num_cpgs), desc=f'{dataset} processing'):
-            is_passed = check_condition(data_dict[area_criteria_key][cpg_id],
-                                        data_dict[slope_criteria_key][cpg_id])
-            if is_passed:
+
+            if (data_dict[f'{pval_key}_{hashes_groups[ds_id][f_key]}'] < np.power(10.0, -pval_f_percentile)) \
+                    and (data_dict[f'{pval_key}_{hashes_groups[ds_id][m_key]}'] > pval_null_accepted):
                 for key in data_dict:
-                    data_dict_passed[key].append(data_dict[key][cpg_id])
+                    f_var_passed[key].append(data_dict[key][cpg_id])
 
-        save_table_dict_xlsx(f'{path}/{dataset}_passed', data_dict_passed)
+            if (data_dict[f'{pval_key}_{hashes_groups[ds_id][m_key]}'] < np.power(10.0, -pval_f_percentile)) \
+                    and (data_dict[f'{pval_key}_{hashes_groups[ds_id][f_key]}'] > pval_null_accepted):
+                for key in data_dict:
+                    m_var_passed[key].append(data_dict[key][cpg_id])
 
-    data_dicts_passed[dataset] = data_dict_passed
-    cpgs_dicts_passed[dataset] = data_dict_passed[cpg_key]
+            if (data_dict[f'{pval_key}_{hashes_groups[ds_id][f_key]}'] < np.power(10.0, -pval_f_percentile)) \
+                    and (data_dict[f'{pval_key}_{hashes_groups[ds_id][m_key]}'] < np.power(10.0, -pval_f_percentile)) \
+                    and (data_dict[f'{type_key}_{hashes_groups[ds_id][f_key]}'] != data_dict[f'{type_key}_{hashes_groups[ds_id][m_key]}']):
+                for key in data_dict:
+                    f_m_var_passed[key].append(data_dict[key][cpg_id])
+
+        save_table_dict_xlsx(f'{curr_save_path}/{dataset}_f_var', f_var_passed)
+        save_table_dict_xlsx(f'{curr_save_path}/{dataset}_m_var', f_var_passed)
+        save_table_dict_xlsx(f'{curr_save_path}/{dataset}_f_m_var', f_m_var_passed)
+
+    f_var_dicts_passed[dataset] = f_var_passed
+    m_var_dicts_passed[dataset] = m_var_passed
+    f_m_var_dicts_passed[dataset] = f_m_var_passed
 
 datasets_ids = list(range(0, len(datasets)))
 keys_ordered = copy.deepcopy(datasets)
