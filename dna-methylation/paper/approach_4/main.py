@@ -129,13 +129,15 @@ for way in ways:
     keys_ordered = copy.deepcopy(datasets)
     sets = {}
     checking = {}
+
+    if way == 'f_var':
+        target_dict = f_var_dicts_passed
+    elif way == 'm_var':
+        target_dict = m_var_dicts_passed
+    else:
+        target_dict = f_m_var_dicts_passed
+
     for dataset in datasets:
-        if way == 'f_var':
-            target_dict = f_var_dicts_passed
-        elif way == 'm_var':
-            target_dict = m_var_dicts_passed
-        else:
-            target_dict = f_m_var_dicts_passed
         sets[dataset] = set(target_dict[dataset][cpg_key])
         checking[dataset] = 0
 
