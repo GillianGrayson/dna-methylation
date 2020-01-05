@@ -10,7 +10,7 @@ from paper.infrastructure.load.papers import load_papers_dict
 from paper.infrastructure.save.table import save_table_dict_xlsx
 from paper.variance.functions.R2s_figure import get_R2s_figure
 from paper.plot.venn import get_layout_3, get_layout_4, get_trace_3, get_trace_4
-from paper.infrastructure.save.figure import save_figure
+from paper.routines.infrastructure.save.figure import save_figure
 import collections
 
 R2_percentile_value = 75
@@ -74,7 +74,7 @@ cpgs_intersection = set(cpgs_dicts_passed[datasets[0]])
 for dataset in datasets[1::]:
     cpgs_intersection = cpgs_intersection.intersection(cpgs_dicts_passed[dataset])
 
-common_dict = {'cpg': list(cpgs_intersection)}
+common_dict = {'i': list(cpgs_intersection)}
 for key in annotations_keys:
     common_dict[key] = []
 for key in target_keys:
@@ -92,7 +92,7 @@ save_path = f'{path}/intersection'
 if not os.path.exists(save_path):
     os.makedirs(save_path)
 
-for cpg in tqdm(common_dict['cpg'], desc=f'intersection processing'):
+for cpg in tqdm(common_dict['i'], desc=f'intersection processing'):
     for key in annotations_keys:
         common_dict[key].append(annotations_dict[key][cpg])
 

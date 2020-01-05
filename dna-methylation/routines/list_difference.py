@@ -24,12 +24,12 @@ diff_cpgs = list(diff_cpgs)
 
 # Table for intersection
 diff_dict = {}
-diff_dict['cpg'] = []
+diff_dict['i'] = []
 diff_dict['gene'] = []
 
 for f_id in range(0, len(diff_cpgs)):
     cpg = diff_cpgs[f_id]
-    diff_dict['cpg'].append(cpg)
+    diff_dict['i'].append(cpg)
     gene_id = cpg_dict[files_names[0][:-5]].index(cpg)
     gene = gene_dict[files_names[0][:-5]][gene_id]
     diff_dict['gene'].append(gene)

@@ -5,13 +5,26 @@ import numpy as np
 import collections
 
 
-def get_genes(fn):
+def get_genes_from_file(fn):
     sex_specific_data_dict = load_table_dict_xlsx(fn)
     sex_specific_genes_raw = sex_specific_data_dict['aux']
     print(f'number of cpgs: {len(sex_specific_genes_raw)}')
 
     genes_list = []
     for gene_raw in sex_specific_genes_raw:
+        if isinstance(gene_raw, str):
+            curr_genes = gene_raw.split(';')
+            genes_list += curr_genes
+
+    return list(set(genes_list))
+
+
+def get_genes(data_dict):
+    genes_raw = data_dict['aux']
+    print(f'number of cpgs: {len(genes_raw)}')
+
+    genes_list = []
+    for gene_raw in genes_raw:
         if isinstance(gene_raw, str):
             curr_genes = gene_raw.split(';')
             genes_list += curr_genes
@@ -86,11 +99,11 @@ for gene in genes_duplicates:
 save_table_dict_xlsx(get_lehallier_data_path() + '/' + 'duplicates_ss', genes_duplicates_str)
 
 fn = get_lehallier_data_path() + '/methylation/GSE87571/' + 'sex_specific' + suffix + '.xlsx'
-genes_GSE87571 = get_genes(fn)
+genes_GSE87571 = get_genes_from_file(fn)
 print(f'Number of sex-specific (SS) genes in GSE87571: {len(genes_GSE87571)}')
 
 fn = get_lehallier_data_path() + '/methylation/liver/' + 'sex_specific' + suffix + '.xlsx'
-genes_liver = get_genes(fn)
+genes_liver = get_genes_from_file(fn)
 print(f'Number of sex-specific (SS) genes in liver: {len(genes_liver)}')
 
 lists = [ss_genes_lehallier, genes_GSE87571, genes_liver]
@@ -112,11 +125,11 @@ for gene in genes_duplicates:
 save_table_dict_xlsx(get_lehallier_data_path() + '/' + 'duplicates_ar', genes_duplicates_str)
 
 fn = get_lehallier_data_path() + '/methylation/GSE87571/' + 'age_related' + suffix + '.xlsx'
-genes_GSE87571 = get_genes(fn)
+genes_GSE87571 = get_genes_from_file(fn)
 print(f'Number of age-related (AR) genes in GSE87571: {len(genes_GSE87571)}')
 
 fn = get_lehallier_data_path() + '/methylation/liver/' + 'age_related' + suffix + '.xlsx'
-genes_liver = get_genes(fn)
+genes_liver = get_genes_from_file(fn)
 print(f'Number of age-related (AR) genes in liver: {len(genes_liver)}')
 
 lists = [ar_genes_lehallier, genes_GSE87571, genes_liver]
@@ -137,11 +150,11 @@ for gene in genes_duplicates:
 save_table_dict_xlsx(get_lehallier_data_path() + '/' + 'duplicates_ssar', genes_duplicates_str)
 
 fn = get_lehallier_data_path() + '/methylation/GSE87571/' + 'sex_specific_age_related' + suffix + '.xlsx'
-genes_GSE87571 = get_genes(fn)
+genes_GSE87571 = get_genes_from_file(fn)
 print(f'Number of sex-specific age-related (SSAR) genes in GSE87571: {len(genes_GSE87571)}')
 
 fn = get_lehallier_data_path() + '/methylation/liver/' + 'sex_specific_age_related' + suffix + '.xlsx'
-genes_liver = get_genes(fn)
+genes_liver = get_genes_from_file(fn)
 print(f'Number of sex-specific age-related (SSAR) genes in liver: {len(genes_liver)}')
 
 lists = [ssar_genes_lehallier, genes_GSE87571, genes_liver]

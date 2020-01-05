@@ -9,7 +9,7 @@ data_file_names = ['GSE40279.xlsx', 'GSE87571.xlsx', 'EPIC.xlsx', 'GSE55763.xlsx
 
 df = pd.read_excel(cpg_file_path + cpg_file_name)
 data_dict = {}
-data_dict['cpg'] = list(df.cpg)
+data_dict['i'] = list(df.cpg)
 data_dict['gene'] = list(df.gene)
 
 for data_file_name in data_file_names:
@@ -32,7 +32,7 @@ for data_file_name in data_file_names:
     curr_r2_f = list(curr_data.best_R2_gender_F)
     curr_r2_m = list(curr_data.best_R2_gender_M)
     curr_r2_min = list(curr_data.r2_min)
-    for item in data_dict['cpg']:
+    for item in data_dict['i']:
         index = curr_cpgs.index(item)
         data_dict['increasing_fit_' + data_file_name[:-5]].append(curr_inc_fit[index])
         data_dict['increasing_fit_normed_' + data_file_name[:-5]].append(curr_inc_fit_normed[index])
@@ -45,7 +45,7 @@ data_dict['mean_inc_fit_4'] = []
 data_dict['mean_inc_fit_3'] = []
 data_dict['mean_inc_fit_normed_4'] = []
 data_dict['mean_inc_fit_normed_3'] = []
-for id in range(0, len(data_dict['cpg'])):
+for id in range(0, len(data_dict['i'])):
     vals_fit = []
     vals_fit_normed = []
     vals_real = []

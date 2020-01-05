@@ -1,7 +1,7 @@
 import plotly.graph_objs as go
 import colorlover as cl
 import numpy as np
-from paper.infrastructure.save.figure import save_figure
+from paper.routines.infrastructure.save.figure import save_figure
 
 def minus_log_pvals_figure(pvals, pvals_percentiles, save_path, num_bins=1000):
 

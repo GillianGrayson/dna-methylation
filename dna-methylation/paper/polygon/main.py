@@ -10,7 +10,7 @@ from paper.infrastructure.load.papers import load_papers_dict
 from paper.infrastructure.save.table import save_table_dict_xlsx
 from paper.polygon.condition import check_condition
 from paper.plot.venn import get_layout_3, get_layout_4, get_trace_3, get_trace_4
-from paper.infrastructure.save.figure import save_figure
+from paper.routines.infrastructure.save.figure import save_figure
 
 
 data_type = 'residuals_old'
@@ -107,10 +107,10 @@ if not os.path.exists(save_path):
 
 for set_key in sets:
     save_dict = {}
-    for metrics_key in ['cpg'] + annotations_keys + papers_keys:
+    for metrics_key in ['i'] + annotations_keys + papers_keys:
         save_dict[metrics_key] = []
     for cpg in sets[set_key]:
-        save_dict['cpg'].append(cpg)
+        save_dict['i'].append(cpg)
         for ann_key in annotations_keys:
             save_dict[ann_key].append(annotations_dict[ann_key][cpg])
         for paper_key in papers_keys:
@@ -128,10 +128,10 @@ venn_labels = []
 for set_key in sets_with_difference:
 
     save_dict = {}
-    for metrics_key in ['cpg'] + annotations_keys + papers_keys:
+    for metrics_key in ['i'] + annotations_keys + papers_keys:
         save_dict[metrics_key] = []
     for cpg in sets_with_difference[set_key]:
-        save_dict['cpg'].append(cpg)
+        save_dict['i'].append(cpg)
         for ann_key in annotations_keys:
             save_dict[ann_key].append(annotations_dict[ann_key][cpg])
         for paper_key in papers_keys:

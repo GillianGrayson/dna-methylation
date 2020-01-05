@@ -12,28 +12,28 @@ from paper.routines.infrastructure.save.table import save_table_dict_xlsx
 from paper.routines.plot.venn import get_layout_3, get_layout_4, get_trace_3, get_trace_4
 from paper.routines.infrastructure.save.figure import save_figure
 
-minus_log_pval_percentile_lim = 90
-pval_percentile_lim = 100 - minus_log_pval_percentile_lim
-pval_null_accepted = 0.5
 
-data_type = 'betas'
-datasets = ['GSE87571']
-hashes = ['c098dc79338657b0b9c35f55a8441e80']
-f_key = 'f'
-m_key = 'm'
-hashes_groups = [{f_key: '25dcc690', m_key: '00f7ba4d'}]
+minus_log_pval_percentile_lim = 95
+pval_percentile_lim = 100 - minus_log_pval_percentile_lim
+pval_lim = 0.05
+
+data_type = 'residuals'
+datasets = ['GSE87571', 'liver']
+hashes = ['865f1a1aee2c567b7b839ac910801baf', '81f11bc49cb451091c552dce079bb478']
+ss_key = 'ss'
+ar_key = 'ar'
+hashes_groups = [{ss_key: 'bb504d51', ar_key: '035a771b'}, {ss_key: 'ded0cd22', ar_key: 'b1f058b7'}]
 cpg_key = 'item'
-pval_key = 'bp_f_pvalue_fdr_bh'
-type_key = 'type'
+pval_key = 'p_value_fdr_bh'
 
 annotations_keys = ['CHR', 'MAPINFO', 'UCSC_REFGENE_NAME', 'UCSC_REFGENE_GROUP', 'RELATION_TO_UCSC_CPG_ISLAND']
 papers_keys = ['inoshita', 'singmann', 'yousefi']
 
-save_path = f'{get_data_path()}/approaches/approach_4'
+save_path = f'{get_data_path()}/approaches/approach_3'
 
-f_var_dicts_passed = {}
-m_var_dicts_passed = {}
-f_m_var_dicts_passed = {}
+ss_all_passed = {}
+ar_all_passed = {}
+ssar_all_passed = {}
 
 pvals = {}
 pvals_percentiles = {}
@@ -42,86 +42,86 @@ for ds_id, dataset in enumerate(datasets):
     curr_load_path = f'{get_data_path()}/{dataset}/{data_type}/table/aggregator/{hashes[ds_id]}'
     curr_save_path = f'{save_path}'
 
-    if os.path.isfile(f'{curr_save_path}/{dataset}_f_var.xlsx') \
-            and os.path.isfile(f'{curr_save_path}/{dataset}_m_var.xlsx') \
-            and os.path.isfile(f'{curr_save_path}/{dataset}_f_m_var.xlsx') \
+    if os.path.isfile(f'{curr_save_path}/{dataset}_ss.xlsx') \
+            and os.path.isfile(f'{curr_save_path}/{dataset}_ar.xlsx') \
+            and os.path.isfile(f'{curr_save_path}/{dataset}_ssar.xlsx') \
             and os.path.isfile(f'{curr_save_path}/{dataset}_pvals.xlsx') \
             and os.path.isfile(f'{curr_save_path}/{dataset}_pvals_percentiles.xlsx'):
 
-        f_var_passed = load_table_dict_xlsx(f'{curr_save_path}/{dataset}_f_var.xlsx')
-        m_var_passed = load_table_dict_xlsx(f'{curr_save_path}/{dataset}_m_var.xlsx')
-        f_m_var_passed = load_table_dict_xlsx(f'{curr_save_path}/{dataset}_f_m_var.xlsx')
-
+        ss_passed = load_table_dict_xlsx(f'{curr_save_path}/{dataset}_ss.xlsx')
+        ar_passed = load_table_dict_xlsx(f'{curr_save_path}/{dataset}_ar.xlsx')
+        ssar_passed = load_table_dict_xlsx(f'{curr_save_path}/{dataset}_ssar.xlsx')
         pvals_curr = load_table_dict_xlsx(f'{curr_save_path}/{dataset}_pvals.xlsx')
         pvals_percentiles_curr = load_table_dict_xlsx(f'{curr_save_path}/{dataset}_pvals_percentiles.xlsx')
+
     else:
         data_dict = load_table_dict_pkl(f'{curr_load_path}/default.pkl')
 
-        f_var_passed = {}
-        m_var_passed = {}
-        f_m_var_passed = {}
+        ss_passed = {}
+        ar_passed = {}
+        ssar_passed = {}
         for key in data_dict:
-            f_var_passed[key] = []
-            m_var_passed[key] = []
-            f_m_var_passed[key] = []
+            ss_passed[key] = []
+            ar_passed[key] = []
+            ssar_passed[key] = []
 
         num_cpgs = len(data_dict[cpg_key])
 
-        pval_f = data_dict[f'{pval_key}_{hashes_groups[ds_id][f_key]}']
-        pval_m = data_dict[f'{pval_key}_{hashes_groups[ds_id][m_key]}']
-        pval_f_percentile = np.percentile(pval_f, pval_percentile_lim)
-        pval_m_percentile = np.percentile(pval_m, pval_percentile_lim)
-        print(f'{dataset} persentile {f_key}: {pval_f_percentile}')
-        print(f'{dataset} persentile {m_key}: {pval_m_percentile}')
+        pval_ss = data_dict[f'{pval_key}_{hashes_groups[ds_id][ss_key]}']
+        pval_ar = data_dict[f'{pval_key}_{hashes_groups[ds_id][ar_key]}']
+        pval_ss_percentile = np.percentile(pval_ss, pval_percentile_lim)
+        pval_ar_percentile = np.percentile(pval_ar, pval_percentile_lim)
+        print(f'{dataset} persentile {ss_key}: {pval_ss_percentile}')
+        print(f'{dataset} persentile {ar_key}: {pval_ar_percentile}')
 
-        minus_log_pval_f = -np.log10(pval_f)
-        minus_log_pval_m = -np.log10(pval_m)
-        minus_log_pval_f_percentile = np.percentile(minus_log_pval_f, minus_log_pval_percentile_lim)
-        minus_log_pval_m_percentile = np.percentile(minus_log_pval_m, minus_log_pval_percentile_lim)
-        print(f'{dataset} persentile {f_key}: {np.power(10.0, -minus_log_pval_f_percentile)}')
-        print(f'{dataset} persentile {m_key}: {np.power(10.0, -minus_log_pval_m_percentile)}')
+        minus_log_pval_ss = -np.log10(pval_ss)
+        minus_log_pval_ar = -np.log10(pval_ar)
+        minus_log_pval_ss_percentile = np.percentile(minus_log_pval_ss, minus_log_pval_percentile_lim)
+        minus_log_pval_ar_percentile = np.percentile(minus_log_pval_ar, minus_log_pval_percentile_lim)
 
-        pvals_curr = {f_key: minus_log_pval_f, m_key: minus_log_pval_m}
-        pvals_percentiles_curr = {f_key: [minus_log_pval_f_percentile], m_key: [minus_log_pval_m_percentile]}
+        pvals_curr = {ss_key: minus_log_pval_ss, ar_key: minus_log_pval_ar}
+        pvals_percentiles_curr = {ss_key: [minus_log_pval_ss_percentile], ar_key: [minus_log_pval_ar_percentile]}
 
         pvals[dataset] = pvals_curr
         pvals_percentiles[dataset] = pvals_percentiles_curr
 
+        pval_lim_ss = min(pval_lim, np.power(10.0, -minus_log_pval_ss_percentile))
+        pval_lim_ar = min(pval_lim, np.power(10.0, -minus_log_pval_ar_percentile))
+        print(f'{dataset} pval lim {ss_key}: {pval_lim_ss}')
+        print(f'{dataset} pval lim {ar_key}: {pval_lim_ar}')
+
         for cpg_id in tqdm(range(0, num_cpgs), desc=f'{dataset} processing'):
 
-            if (data_dict[f'{pval_key}_{hashes_groups[ds_id][f_key]}'][cpg_id] < np.power(10.0, -minus_log_pval_f_percentile)) \
-                    and (data_dict[f'{pval_key}_{hashes_groups[ds_id][m_key]}'][cpg_id] > pval_null_accepted):
+            if (data_dict[f'{pval_key}_{hashes_groups[ds_id][ss_key]}'][cpg_id] < pval_lim_ss):
                 for key in data_dict:
-                    f_var_passed[key].append(data_dict[key][cpg_id])
+                    ss_passed[key].append(data_dict[key][cpg_id])
 
-            if (data_dict[f'{pval_key}_{hashes_groups[ds_id][m_key]}'][cpg_id] < np.power(10.0, -minus_log_pval_m_percentile)) \
-                    and (data_dict[f'{pval_key}_{hashes_groups[ds_id][f_key]}'][cpg_id] > pval_null_accepted):
+            if (data_dict[f'{pval_key}_{hashes_groups[ds_id][ar_key]}'][cpg_id] < pval_lim_ar):
                 for key in data_dict:
-                    m_var_passed[key].append(data_dict[key][cpg_id])
+                    ar_passed[key].append(data_dict[key][cpg_id])
 
-            if (data_dict[f'{pval_key}_{hashes_groups[ds_id][f_key]}'][cpg_id] < np.power(10.0, -minus_log_pval_f_percentile)) \
-                    and (data_dict[f'{pval_key}_{hashes_groups[ds_id][m_key]}'][cpg_id] < np.power(10.0, -minus_log_pval_m_percentile)) \
-                    and (data_dict[f'{type_key}_{hashes_groups[ds_id][f_key]}'][cpg_id] != data_dict[f'{type_key}_{hashes_groups[ds_id][m_key]}'][cpg_id]):
+            if (data_dict[f'{pval_key}_{hashes_groups[ds_id][ss_key]}'][cpg_id] < pval_lim_ss) \
+                    and (data_dict[f'{pval_key}_{hashes_groups[ds_id][ar_key]}'][cpg_id] < pval_lim_ar):
                 for key in data_dict:
-                    f_m_var_passed[key].append(data_dict[key][cpg_id])
+                    ssar_passed[key].append(data_dict[key][cpg_id])
 
-        save_table_dict_xlsx(f'{curr_save_path}/{dataset}_f_var', f_var_passed)
-        save_table_dict_xlsx(f'{curr_save_path}/{dataset}_m_var', m_var_passed)
-        save_table_dict_xlsx(f'{curr_save_path}/{dataset}_f_m_var', f_m_var_passed)
+        save_table_dict_xlsx(f'{curr_save_path}/{dataset}_ss', ss_passed)
+        save_table_dict_xlsx(f'{curr_save_path}/{dataset}_ar', ar_passed)
+        save_table_dict_xlsx(f'{curr_save_path}/{dataset}_ssar', ssar_passed)
 
         save_table_dict_xlsx(f'{curr_save_path}/{dataset}_pvals', pvals_curr)
         save_table_dict_xlsx(f'{curr_save_path}/{dataset}_pvals_percentiles', pvals_percentiles_curr)
 
-    f_var_dicts_passed[dataset] = f_var_passed
-    m_var_dicts_passed[dataset] = m_var_passed
-    f_m_var_dicts_passed[dataset] = f_m_var_passed
+    ss_all_passed[dataset] = ss_passed
+    ar_all_passed[dataset] = ar_passed
+    ssar_all_passed[dataset] = ssar_passed
 
     pvals[dataset] = pvals_curr
     pvals_percentiles[dataset] = pvals_percentiles_curr
 
 minus_log_pvals_figure(pvals, pvals_percentiles, save_path)
 
-ways = ['f_var', 'm_var', 'f_m_var']
+ways = ['ss', 'ar', 'ssar']
 
 for way in ways:
 
@@ -130,12 +130,12 @@ for way in ways:
     sets = {}
     checking = {}
 
-    if way == 'f_var':
-        target_dict = f_var_dicts_passed
-    elif way == 'm_var':
-        target_dict = m_var_dicts_passed
+    if way == 'ss':
+        target_dict = ss_all_passed
+    elif way == 'ar':
+        target_dict = ar_all_passed
     else:
-        target_dict = f_m_var_dicts_passed
+        target_dict = ssar_all_passed
 
     for dataset in datasets:
         sets[dataset] = set(target_dict[dataset][cpg_key])

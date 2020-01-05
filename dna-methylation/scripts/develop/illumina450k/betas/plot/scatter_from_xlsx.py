@@ -12,7 +12,7 @@ if os.path.isfile(fn):
         curr_dict = tmp_dict[key]
         table_dict[key] = list(curr_dict.values())
 
-items = table_dict['cpg']
+items = table_dict['i']
 x_ranges = [[5, 105]] * len(items)
 y_ranges = []
 for index in range(0, len(items)):

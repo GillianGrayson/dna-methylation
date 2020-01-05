@@ -1,4 +1,4 @@
-from paper.infrastructure.path import get_data_path
+from paper.routines.infrastructure.path import get_data_path
 
 
 def load_papers_dict():

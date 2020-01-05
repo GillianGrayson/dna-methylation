@@ -30,12 +30,12 @@ for L in range(0, len(stuff)+1):
 
             # Table for intersection
             i_dict = {}
-            i_dict['cpg'] = []
+            i_dict['i'] = []
             i_dict['gene'] = []
 
             for f_id in range(0, len(i_cpgs)):
                 cpg = i_cpgs[f_id]
-                i_dict['cpg'].append(cpg)
+                i_dict['i'].append(cpg)
                 gene_id = cpg_dict[files_names[0][:-5]].index(cpg)
                 gene = gene_dict[files_names[0][:-5]][gene_id]
                 i_dict['gene'].append(gene)
