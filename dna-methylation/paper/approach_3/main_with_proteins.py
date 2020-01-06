@@ -229,7 +229,7 @@ for way in ways:
             genes[dataset] = get_genes(target_dict[dataset])
             print(f'{dataset} {way} number of genes: {len(genes[dataset])}')
         else:
-            genes['Proteomic'] = ssar_genes_lehallier
+            genes['Proteomic'] = proteomic_genes
 
     datasets_ids = list(range(0, len(datasets)))
     keys_ordered = copy.deepcopy(datasets)
