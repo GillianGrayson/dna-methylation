@@ -1,32 +1,35 @@
 import pandas as pd
 
+file_common = 'E:/YandexDisk/pydnameth/draft/revision/v8/sex_specific_variance_residuals_GSE40279_GSE87571_EPIC_GSE55763.xlsx'
+file_new = 'E:/YandexDisk/pydnameth/variance/residuals/1_2_3_4_with_r2_with_added_info.xlsx'
 
-filenames = ['sex_specific_variance_residuals_GSE40279_GSE87571_EPIC_GSE55763.xlsx',
-             'sex_specific_variance_residuals_GSE87571.xlsx']
+df_common = pd.read_excel(file_common, header=1)
+df_new = pd.read_excel(file_new)
 
-path = 'D:/YandexDisk/pydnameth/draft/revision/v8'
-files_path = [path + '\\' + file_name for file_name in filenames]
-
-df_all = pd.read_excel(files_path[0], header=1)
-df_gse87571 = pd.read_excel(files_path[1], header=1)
-
-cpg_dict = {'all': list(df_all['ID_REF']), 'gse87571': list(df_gse87571['cpg'])}
-common_cpgs = list(set(cpg_dict['all']).intersection(cpg_dict['gse87571']))
+cpg_dict = {'common': list(df_common['ID_REF']), 'new': list(df_new['item'])}
+common_cpgs = list(set(cpg_dict['common']).intersection(cpg_dict['new']))
 
 for cpg in common_cpgs:
-    all_index = list(df_all['ID_REF']).index(cpg)
-    gse87571_index = list(df_gse87571['cpg']).index(cpg)
+    if cpg == 'cg26398921':
+        o=0
+    common_index = list(df_common['ID_REF']).index(cpg)
+    new_index = list(df_new['item']).index(cpg)
 
-    i_all = list(df_all['I in GSE87571'])[all_index]
-    i_gse87571 = list(df_gse87571['increasing_fit'])[gse87571_index]
+    datasets = ['GSE40279', 'GSE87571', 'EPIC', 'GSE55763']
 
-    if i_all > i_gse87571:
-        df_gse87571 = df_gse87571.replace({'increasing_fit': i_gse87571}, i_all)
-    elif i_all < i_gse87571 and i_all > 2:
-        df_gse87571 = df_gse87571.replace({'increasing_fit': i_gse87571}, i_all)
-    elif i_all < 2:
-        df_gse87571 = df_gse87571.drop([gse87571_index])
+    for dataset in datasets:
+        i_common = list(df_common['I in ' + dataset])[common_index]
+        i_new = list(df_new['increasing_fit_' + dataset])[new_index]
 
-writer = pd.ExcelWriter(path + '\\' +'sex_specific_variance_residulas_GSE87571_corrected.xlsx', engine='xlsxwriter')
-df_gse87571.to_excel(writer, index=False)
+        if i_common > i_new:
+            df_new = df_new.replace({'increasing_fit_' + dataset: i_new}, i_common)
+        elif i_common < i_new and i_common > 2:
+            df_new = df_new.replace({'increasing_fit_' + dataset: i_new}, i_common)
+        elif i_common < 2:
+            df_new.drop([new_index])
+            break
+
+writer = pd.ExcelWriter('E:/YandexDisk/pydnameth/variance/residuals/1_2_3_4_with_r2_with_added_info_corrected.xlsx',
+                        engine='xlsxwriter')
+df_new.to_excel(writer, index=False)
 writer.save()
