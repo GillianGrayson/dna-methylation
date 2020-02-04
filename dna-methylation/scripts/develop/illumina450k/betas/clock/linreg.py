@@ -2,34 +2,30 @@ import pydnameth as pdm
 
 data = pdm.Data(
     path='',
-    base='GSE87571'
+    base='EPIC'
 )
 
 annotations = pdm.Annotations(
     name='annotations',
+    type='450k',
     exclude='bad_cpgs',
-    cross_reactive='any',
-    snp='any',
-    chr='NS',
-    gene_region='any',
-    geo='any',
-    probe_class='any'
+    select_dict={
+        'CHR': ['-X', '-Y']
+    }
 )
 
 cells = pdm.Cells(
-    name='cells',
+    name='cells_horvath_calculator',
     types='any'
 )
 
 if data.base == 'GSE55763':
     observables_list = [
-        {'gender': 'F', 'is_duplicate': '0'},
-        {'gender': 'M', 'is_duplicate': '0'}
+        {'gender': 'any', 'is_duplicate': '0', 'age': (35, 100)},
     ]
 else:
     observables_list = [
-        {'gender': 'F'},
-        {'gender': 'M'}
+        {'gender': 'any'},
     ]
 
 for obs in observables_list:
@@ -45,10 +41,11 @@ for obs in observables_list:
         cells=cells
     )
 
-    pdm.betas_clock_linreg_dev(
+    pdm.betas_clock_special(
         data=data,
         annotations=annotations,
         attributes=attributes,
+        file='GSE87571.xlsx',
         method_params={
             'type': 'all',
             'part': 0.25,
