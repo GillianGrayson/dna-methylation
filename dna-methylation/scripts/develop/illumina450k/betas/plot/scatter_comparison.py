@@ -79,8 +79,8 @@ pdm.betas_plot_scatter_comparison(
     rows_dict=rows_dict,
     cols_dict=cols_dict,
     method_params={
-        'line': 'yes',
-        'fit': 'none',
+        'line': 'no',
+        'fit': 'yes',
         'semi_window': 8,
         'box_b': 'Q5',
         'box_t': 'Q95',
