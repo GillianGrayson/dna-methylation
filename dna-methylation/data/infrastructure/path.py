@@ -3,9 +3,9 @@ import socket
 
 
 class DataPath(Enum):
-    local_1 = 'D:/YandexDisk/Work/pydnameth'
-    local_2 = 'E:/YandexDisk/Work/pydnameth'
-    local_3 = 'C:/Users/User/YandexDisk/pydnameth'
+    local_1 = 'D:/YandexDisk/Work/pydnameth/script_datasets'
+    local_2 = 'E:/YandexDisk/Work/pydnameth/script_datasets'
+    local_3 = 'C:/Users/User/YandexDisk/pydnameth/script_datasets'
 
 
 def get_data_path():

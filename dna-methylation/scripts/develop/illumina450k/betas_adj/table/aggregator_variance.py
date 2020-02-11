@@ -3,7 +3,7 @@ from scripts.develop.routines import *
 
 data = pdm.Data(
     path='',
-    base='GSE87571'
+    base='GSE55763'
 )
 
 annotations = pdm.Annotations(

@@ -1,0 +1,46 @@
+import pydnameth as pdm
+from scripts.develop.routines import *
+
+
+bases = ['control', 'centenarian', 'down', 'offspring']
+
+for base in bases:
+    data = pdm.Data(
+        path='E:/YandexDisk/Work/pydnameth/epityper/FIGN',
+        base=base
+    )
+
+    annotations = pdm.Annotations(
+        name='annotations',
+        type='epityper',
+        exclude='none',
+        select_dict={}
+    )
+
+    observables = pdm.Observables(
+        name='observables',
+        types={}
+    )
+
+    cells = pdm.Cells(
+        name='cells',
+        types='any'
+    )
+
+    target = get_target(data.base)
+    observables_list = get_observables_list(data.base)
+    data_params = get_data_params(data.base)
+
+    attributes = pdm.Attributes(
+        target=target,
+        observables=observables,
+        cells=cells
+    )
+
+    pdm.betas_table_aggregator_linreg(
+        data=data,
+        annotations=annotations,
+        attributes=attributes,
+        observables_list=observables_list,
+        data_params=data_params
+    )
