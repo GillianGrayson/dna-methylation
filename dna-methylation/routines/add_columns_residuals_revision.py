@@ -5,6 +5,39 @@ path = 'D:/YandexDisk/pydnameth/draft/revision/v13/'
 
 datasets = ['GSE40279', 'GSE87571', 'EPIC', 'GSE55763']
 
+for dataset in datasets:
+    file_info = path_info + 'increasing_type_residuals_' + dataset + '.xlsx'
+    df_info = pd.read_excel(file_info, header=0).to_dict('list')
+
+    file_base = path + 'sex_specific_variance_residuals_' + dataset + '_uncorrected.xlsx'
+    df_base = pd.read_excel(file_base, header=0)
+    cpg_list = df_base['ID_REF'].to_list()
+
+    increasing_type_f = []
+    increasing_type_m = []
+    for item in cpg_list:
+        index = df_info['item'].index(item)
+        increasing_type_f.append(df_info['increasing_type_F'][index])
+        increasing_type_m.append(df_info['increasing_type_M'][index])
+
+    df_base.insert(7, 'VARIANCE CHANGING TYPE IN F', increasing_type_f)
+    df_base.insert(8, 'VARIANCE CHANGING TYPE IN M', increasing_type_m)
+
+    df_base.rename(columns={'increasing_fit_id_' + dataset: 'VARIANCE CHANGES MORE IN'}, inplace=True)
+    df_base.rename(columns={'increasing_fit_' + dataset: 'I IN ' + dataset}, inplace=True)
+
+    df_base.rename(columns={'inoshita': 'IS FOUND IN INOSHITA, 2015'}, inplace=True)
+    df_base.rename(columns={'singmann': 'IS FOUND IN SINGMANN, 2015'}, inplace=True)
+    df_base.rename(columns={'yousefi': 'IS FOUND IN YOUSEFI, 2015'}, inplace=True)
+
+    file_result = path + 'sex_specific_variance_residuals_' + dataset + '.xlsx'
+
+    writer = pd.ExcelWriter(file_result, engine='xlsxwriter')
+    df_base.to_excel(writer, index=False, startrow=1)
+    worksheet = writer.sheets['Sheet1']
+    worksheet.write(0, 0, 'Sex-associated differentially variable probes calculated on residuals from the ' + dataset)
+    writer.save()
+
 df_info = {'GSE40279': {},
            'GSE87571': {},
            'EPIC': {},
@@ -13,7 +46,7 @@ for dataset in datasets:
     file_info = path_info + 'increasing_type_residuals_' + dataset + '.xlsx'
     df_info[dataset] = pd.read_excel(file_info, header=0).to_dict('list')
 
-file_base = path + 'sex_specific_variance_residuals_' + '_'.join(datasets) + '_raw.xlsx'
+file_base = path + 'sex_specific_variance_residuals_' + '_'.join(datasets) + '_uncorrected.xlsx'
 df_base = pd.read_excel(file_base, header=0)
 cpg_list = df_base['ID_REF'].to_list()
 
