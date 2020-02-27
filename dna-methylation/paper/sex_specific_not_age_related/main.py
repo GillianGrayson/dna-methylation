@@ -12,16 +12,26 @@ from paper.polygon.condition import check_condition
 from paper.routines.plot.venn import get_layout_3, get_layout_4, get_trace_3, get_trace_4
 from paper.routines.infrastructure.save.figure import save_figure
 
-
-data_type = 'residuals_old'
-version = 'v8'
+data_type = 'betas'
 datasets = ['GSE40279', 'GSE87571', 'EPIC', 'GSE55763']
+hashes = ['c098dc79338657b0b9c35f55a8441e80', '8c357499960c0612f784ca7ed3fedb2c', '23298d48a2fbeb252cfdcb90cfa004a3', '67553bd9c9801d1eeeba0dc2776db156']
+f_key = 'f'
+m_key = 'm'
+hashes_groups = [
+    {f_key: '1a32cac9', m_key: 'e7e8865b'},
+    {f_key: 'd408c03f', m_key: 'd2caefd8'},
+    {f_key: 'cc983be8', m_key: '7a4743d7'},
+    {f_key: '00fdab7d', m_key: '08294794'},
+]
+
 cpg_key = 'item'
 area_criteria_key = 'area_intersection'
 slope_criteria_key = 'max_abs_slope'
 
 annotations_keys = ['CHR', 'MAPINFO', 'UCSC_REFGENE_NAME', 'UCSC_REFGENE_GROUP', 'RELATION_TO_UCSC_CPG_ISLAND']
 papers_keys = ['inoshita', 'singmann', 'yousefi']
+
+save_path = f'{get_data_path()}/approaches/sex_specific_not_age_related'
 
 path = get_data_path() + '/draft/tables/polygon/' + data_type + '/' + version
 

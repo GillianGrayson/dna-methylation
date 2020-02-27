@@ -46,7 +46,7 @@ for obs in observables_list:
         cells=cells
     )
 
-    pdm.resid_old_table_linreg(
+    pdm.residuals_table_linreg(
         data=data,
         annotations=annotations,
         attributes=attributes,
