@@ -4,7 +4,7 @@ import copy
 from tqdm import tqdm
 import os
 from paper.routines.infrastructure.path import get_data_path
-from paper.routines.infrastructure.load.table import load_table_dict_xlsx
+from paper.routines.infrastructure.load.table import load_table_dict_xlsx, load_table_dict_pkl
 from paper.routines.infrastructure.load.annotations import load_annotations_dict
 from paper.routines.infrastructure.load.papers import load_papers_dict
 from paper.routines.infrastructure.save.table import save_table_dict_xlsx
@@ -15,25 +15,89 @@ from paper.routines.infrastructure.save.figure import save_figure
 data_type = 'betas'
 datasets = ['GSE40279', 'GSE87571', 'EPIC', 'GSE55763']
 hashes = ['c098dc79338657b0b9c35f55a8441e80', '8c357499960c0612f784ca7ed3fedb2c', '23298d48a2fbeb252cfdcb90cfa004a3', '67553bd9c9801d1eeeba0dc2776db156']
+area_key = 'area_intersection'
+slope_key = 'slope'
 f_key = 'f'
 m_key = 'm'
 hashes_groups = [
-    {f_key: '1a32cac9', m_key: 'e7e8865b'},
-    {f_key: 'd408c03f', m_key: 'd2caefd8'},
-    {f_key: 'cc983be8', m_key: '7a4743d7'},
-    {f_key: '00fdab7d', m_key: '08294794'},
+    {f_key: '', m_key: '', area_key: ''},
+    {f_key: '31efe635', m_key: '3dd80109', area_key: 'c5e6999a'},
+    {f_key: '', m_key: '', area_key: ''},
+    {f_key: '', m_key: '', area_key: ''},
 ]
 
 cpg_key = 'item'
 area_criteria_key = 'area_intersection'
-slope_criteria_key = 'max_abs_slope'
+slope_criteria_key = 'slope'
 
 annotations_keys = ['CHR', 'MAPINFO', 'UCSC_REFGENE_NAME', 'UCSC_REFGENE_GROUP', 'RELATION_TO_UCSC_CPG_ISLAND']
 papers_keys = ['inoshita', 'singmann', 'yousefi']
 
-save_path = f'{get_data_path()}/approaches/sex_specific_not_age_related'
+save_path = f'{get_data_path()}/approaches/sex_specific_not_age_related/{data_type}'
 
-path = get_data_path() + '/draft/tables/polygon/' + data_type + '/' + version
+data_dicts_passed = {}
+
+for ds_id, dataset in enumerate(datasets):
+
+    curr_load_path = f'{get_data_path()}/{dataset}/{data_type}/table/aggregator/{hashes[ds_id]}'
+    curr_save_path = f'{save_path}'
+
+    if os.path.isfile(f'{curr_save_path}/{dataset}.xlsx'):
+        data_dict_passed = load_table_dict_xlsx(f'{curr_save_path}/{dataset}.xlsx')
+        data_dicts_passed[dataset] = data_dict_passed
+    else:
+        data_dict = load_table_dict_pkl(f'{curr_load_path}/default.pkl')
+
+        passed_rows = {}
+        passed_rows[cpg_key] = []
+        passed_rows[area_key] = []
+        passed_rows[f'{slope_key}_{f_key}'] = []
+        passed_rows[f'{slope_key}_{m_key}'] = []
+
+        num_cpgs = len(data_dict[cpg_key])
+
+        area_rows = data_dict[f'{area_key}_{hashes_groups[ds_id][area_key]}']
+        slope_f_rows = data_dict[f'{slope_key}_{hashes_groups[ds_id][f_key]}']
+        slope_m_rows = data_dict[f'{slope_key}_{hashes_groups[ds_id][m_key]}']
+
+
+        for cpg_id in tqdm(range(0, num_cpgs), desc=f'{dataset} processing'):
+
+            if (data_dict[f'{pval_key}_{hashes_groups[ds_id][f_key]}'][cpg_id] < np.power(10.0, -minus_log_pval_f_percentile)) \
+                    and (data_dict[f'{pval_key}_{hashes_groups[ds_id][m_key]}'][cpg_id] > pval_null_accepted):
+                for key in data_dict:
+                    f_var_passed[key].append(data_dict[key][cpg_id])
+
+            if (data_dict[f'{pval_key}_{hashes_groups[ds_id][m_key]}'][cpg_id] < np.power(10.0, -minus_log_pval_m_percentile)) \
+                    and (data_dict[f'{pval_key}_{hashes_groups[ds_id][f_key]}'][cpg_id] > pval_null_accepted):
+                for key in data_dict:
+                    m_var_passed[key].append(data_dict[key][cpg_id])
+
+            if (data_dict[f'{pval_key}_{hashes_groups[ds_id][f_key]}'][cpg_id] < np.power(10.0, -minus_log_pval_f_percentile)) \
+                    and (data_dict[f'{pval_key}_{hashes_groups[ds_id][m_key]}'][cpg_id] < np.power(10.0, -minus_log_pval_m_percentile)) \
+                    and (data_dict[f'{type_key}_{hashes_groups[ds_id][f_key]}'][cpg_id] != data_dict[f'{type_key}_{hashes_groups[ds_id][m_key]}'][cpg_id]):
+                for key in data_dict:
+                    f_m_var_passed[key].append(data_dict[key][cpg_id])
+
+        save_table_dict_xlsx(f'{curr_save_path}/{dataset}_f_var', f_var_passed)
+        save_table_dict_xlsx(f'{curr_save_path}/{dataset}_m_var', m_var_passed)
+        save_table_dict_xlsx(f'{curr_save_path}/{dataset}_f_m_var', f_m_var_passed)
+
+        save_table_dict_xlsx(f'{curr_save_path}/{dataset}_pvals', pvals_curr)
+        save_table_dict_xlsx(f'{curr_save_path}/{dataset}_pvals_percentiles', pvals_percentiles_curr)
+
+    f_var_dicts_passed[dataset] = f_var_passed
+    m_var_dicts_passed[dataset] = m_var_passed
+    f_m_var_dicts_passed[dataset] = f_m_var_passed
+
+    pvals[dataset] = pvals_curr
+    pvals_percentiles[dataset] = pvals_percentiles_curr
+
+
+
+
+
+
 
 data_dicts_passed = {}
 cpgs_dicts_passed = {}
