@@ -17,6 +17,7 @@ datasets = [Dataset(type, name) for name in names]
 
 keys_save = [
     'item',
+    'aux',
     'area_intersection',
     'max_abs_slope',
     'slope_f',
@@ -27,6 +28,7 @@ keys_load = {}
 for dataset in datasets:
     keys_load[dataset.name] = [
         'item',
+        'aux',
         f'area_intersection_{get_polygon_hash(dataset)}',
         f'max_abs_slope_{get_polygon_hash(dataset)}',
         f'slope_{get_linreg_female_hash(dataset)}',
