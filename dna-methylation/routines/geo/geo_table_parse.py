@@ -1,7 +1,7 @@
 import pandas as pd
 
 geo_file_path = 'E:/YandexDisk/pydnameth/script_datasets/GPL13534/'
-geo_file_name = 'GPL13534_gsm_table.xlsx'
+geo_file_name = 'GPL13534_gsm_table_03_03_20.xlsx'
 
 file = geo_file_path + geo_file_name
 table_header = pd.read_excel(file, header=None).iat[0, 0]
@@ -12,9 +12,9 @@ characteristics = list(df_geo['characteristics_ch1'])
 protocol = list(df_geo['extract_protocol_ch1'])
 
 bad_words = ['tumor', 'Tumor', 'fetal', 'Fetal', 'metastasis', 'Metastasis', 'glioma', 'Glioma', 'glioblastoma',
-             'Glioblastoma', 'age (in years): -', 'gestational', 'Gestational', 'injury', 'Injury']
+             'Glioblastoma', 'age (in years): -', 'gestational', 'Gestational', 'injury', 'Injury', 'cancer', 'Cancer']
 good_words = ['brain', 'Brain', 'neuron', 'Neuron', 'cortex', 'Cortex', 'cerebellum', 'Cerebellum', 'hippocampus',
-              'Hippocampus', 'lobe', 'Lobe', 'DLPFC', 'glia', 'Glia', 'gyrus', 'Gyrus']
+              'Hippocampus', 'lobe', 'Lobe', 'DLPFC', 'glia', 'Glia', 'gyrus', 'Gyrus', 'astrocyte', 'Astrocyte']
 
 source_name_good_indexes = []
 source_name_bad_indexes = []
@@ -52,8 +52,19 @@ indexes = list(set(source_name_good_indexes + characteristics_good_indexes))
 indexes.sort()
 df_brain = df_geo.loc[indexes, :]
 
-file_result = geo_file_path + 'brain.xlsx'
+file_result = geo_file_path + 'brain_03_03_20.xlsx'
 writer = pd.ExcelWriter(file_result, engine='xlsxwriter')
 df_brain.to_excel(writer, index=False, startrow=0)
 worksheet = writer.sheets['Sheet1']
 writer.save()
+
+datasets_codes = list(df_brain['series_id'])
+datasets = []
+for item in datasets_codes:
+    codes = item.split(',')
+    datasets.extend(codes)
+datasets = list(set(datasets))
+
+with open(geo_file_path + 'brain_03_03_20_gse.txt', 'w') as f:
+    for item in datasets:
+        f.write("%s\n" % item)
