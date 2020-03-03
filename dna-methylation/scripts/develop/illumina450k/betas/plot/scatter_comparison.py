@@ -3,6 +3,8 @@ import pandas as pd
 import os.path
 from scripts.develop.routines import *
 
+max_rows = 8
+
 fn = 'scatter_comparison_rows.xlsx'
 rows_dict = {}
 if os.path.isfile(fn):
@@ -70,21 +72,29 @@ for data_base in data_bases:
     observables_list.append(obs)
     data_params_list.append(data_params)
 
-pdm.betas_plot_scatter_comparison(
-    data_list=data_list,
-    annotations_list=annotations_list,
-    attributes_list=attributes_list,
-    observables_list=observables_list,
-    data_params_list=data_params_list,
-    rows_dict=rows_dict,
-    cols_dict=cols_dict,
-    method_params={
-        'line': 'no',
-        'fit': 'yes',
-        'semi_window': 8,
-        'box_b': 'Q5',
-        'box_t': 'Q95',
-        'legend_size': 1,
-        'add': 'none'
-    }
-)
+for run_id in range(0, len(rows_dict['items']), max_rows):
+    s_id = run_id
+    f_id = min(s_id + max_rows, len(rows_dict['items']))
+
+    curr_dict = {}
+    for key in rows_dict:
+        curr_dict[key] = rows_dict[key][s_id:f_id]
+
+    pdm.betas_plot_scatter_comparison(
+        data_list=data_list,
+        annotations_list=annotations_list,
+        attributes_list=attributes_list,
+        observables_list=observables_list,
+        data_params_list=data_params_list,
+        rows_dict=curr_dict,
+        cols_dict=cols_dict,
+        method_params={
+            'line': 'no',
+            'fit': 'none',
+            'semi_window': 8,
+            'box_b': 'Q5',
+            'box_t': 'Q95',
+            'legend_size': 1,
+            'add': 'none'
+        }
+    )

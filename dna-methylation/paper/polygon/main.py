@@ -3,13 +3,13 @@ import numpy as np
 import copy
 from tqdm import tqdm
 import os
-from paper.infrastructure.path import get_data_path
-from paper.infrastructure.load.table import load_table_dict_xlsx
-from paper.infrastructure.load.annotations import load_annotations_dict
-from paper.infrastructure.load.papers import load_papers_dict
-from paper.infrastructure.save.table import save_table_dict_xlsx
+from paper.routines.infrastructure.path import get_data_path
+from paper.routines.infrastructure.load.table import load_table_dict_xlsx
+from paper.routines.infrastructure.load.annotations import load_annotations_dict
+from paper.routines.infrastructure.load.papers import load_papers_dict
+from paper.routines.infrastructure.save.table import save_table_dict_xlsx
 from paper.polygon.condition import check_condition
-from paper.plot.venn import get_layout_3, get_layout_4, get_trace_3, get_trace_4
+from paper.routines.plot.venn import get_layout_3, get_layout_4, get_trace_3, get_trace_4
 from paper.routines.infrastructure.save.figure import save_figure
 
 
