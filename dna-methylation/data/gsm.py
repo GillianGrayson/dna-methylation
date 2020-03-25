@@ -7,6 +7,7 @@ import os
 from tqdm import tqdm
 import re
 import numpy as np
+from distutils.dir_util import copy_tree
 
 
 def split_words(text):
@@ -42,6 +43,11 @@ gsms = gsm_raw_dict[gsm_key]
 fn = f'{get_data_path()}/GPL{GPL}/bad_words.txt'
 f = open(fn)
 bad_words = set(f.read().splitlines())
+f.close()
+
+fn = f'{get_data_path()}/GPL{GPL}/target_chs.txt'
+f = open(fn)
+target_chs = set(f.read().splitlines())
 f.close()
 
 # data_dict_passed
@@ -92,27 +98,39 @@ gse_passed_dict = {}
 
 for gse in tqdm(gses):
 
-    path = f'{get_data_path()}/GPL{GPL}/{gse}'
-    make_dir(path)
+    path_all = f'{get_data_path()}/GPL{GPL}/all/{gse}'
+    path_passed = f'{get_data_path()}/GPL{GPL}/passed/{gse}'
+    make_dir(path_all)
+
+    #if os.path.isfile(f'{path_all}/observables.xlsx'):
+    #    continue
 
     gsms = gse_gsms_dict[gse]
-    gsms_passed = [True] * len(gsms)
+    gsms_exist = []
 
     # Init characteristics dicts
     chs_keys = set()
     for gsm_id, gsm in enumerate(gsms):
-        while True:
-            try:
-                gsm_data = GEOparse.get_GEO(geo=gsm, destdir=f'{path}/gsms', include_data=False, how="")
-            except ValueError:
-                continue
-            except ConnectionError:
-                continue
-            break
+        try:
+            while True:
+                try:
+                    gsm_data = GEOparse.get_GEO(geo=gsm, destdir=f'{path_all}/gsms', include_data=False, how="")
+                except ValueError:
+                    continue
+                except ConnectionError:
+                    continue
+                break
+        except GEOparse.GEOparse.NoEntriesException:
+            os.remove(f'{path_all}/gsms/{gsm}.txt')
+            continue
+        gsms_exist.append(gsm)
         chs_raw = gsm_data.metadata[characteristics_key]
         for ch in chs_raw:
             ch_split = ch.split(': ')
             chs_keys.update([ch_split[0]])
+
+    gsms = gsms_exist
+    gsms_passed = [True] * len(gsms)
 
     chs = {}
     chs['geo_accession'] = []
@@ -122,43 +140,63 @@ for gse in tqdm(gses):
 
     for gsm_id, gsm in enumerate(gsms):
 
-        gsm_data = GEOparse.get_GEO(geo=gsm, destdir=f'{path}/gsms', include_data=False, how="")
+        gsm_data = GEOparse.get_GEO(geo=gsm, destdir=f'{path_all}/gsms', include_data=False, how="")
 
         gsm_is_passed = True
 
         chs['geo_accession'].append(gsm_data.metadata['geo_accession'][0])
 
         sources = gsm_data.metadata[source_key]
-        if isinstance(sources, str):
-            sources_words = set(only_words(split_words(sources.lower())))
-            source_unique_words.update(sources_words)
-            if len(bad_words.intersection(sources_words)) > 0:
-                gsm_is_passed = False
+        for source in sources:
+            if isinstance(source, str):
+                sources_words = set(only_words(split_words(source.lower())))
+                source_unique_words.update(sources_words)
+                #if len(bad_words.intersection(sources_words)) > 0:
+                #    gsm_is_passed = False
 
         chs_raw = gsm_data.metadata[characteristics_key]
         exist_chs = []
         for ch in chs_raw:
             ch_split = ch.split(': ')
-            exist_chs.append(ch_split[0])
-            ch_value = ': '.join(ch_split[1::])
-            chs[ch_split[0]].append(ch_value)
-            separate_words = set(only_words(split_words(ch_value.lower())))
-            ch_unique_words.update(separate_words)
-            if len(bad_words.intersection(separate_words)) > 0:
-                gsm_is_passed = False
+            if ch_split[0] not in exist_chs:
+                exist_chs.append(ch_split[0])
+                ch_value = ': '.join(ch_split[1::])
+                chs[ch_split[0]].append(ch_value)
+                separate_words = set(only_words(split_words(ch_value.lower())))
+                ch_unique_words.update(separate_words)
+                #if len(bad_words.intersection(separate_words)) > 0:
+                #    gsm_is_passed = False
         missed_chs = list(chs_keys.difference(exist_chs))
         for ch in missed_chs:
             chs[ch].append('NA')
 
         gsms_passed[gsm_id] = gsm_is_passed
 
-    save_table_dict_xlsx(f'{path}/observables.xlsx', chs)
+    save_table_dict_xlsx(f'{path_all}/observables.xlsx', chs)
+
+    chs_keys_set = set()
+    for ch_key in chs_keys:
+        separate_words = set(only_words(split_words(ch_key.lower())))
+        chs_keys_set.update(separate_words)
 
     gse_gsms_passed_dict[gse] = gsms_passed
     if len(gsms_passed) == gsms_passed.count(False):
         gse_passed_dict[gse] = False
     else:
-        gse_passed_dict[gse] = True
+        all_here = True
+        for target_ch in target_chs:
+            curr_tar_chs = target_ch.split(' ')
+            if len(chs_keys_set.intersection(set(curr_tar_chs))) == 0:
+                all_here = False
+                break
+        if all_here:
+            gse_passed_dict[gse] = True
+        else:
+            gse_passed_dict[gse] = False
+
+    if gse_passed_dict[gse]:
+        make_dir(path_passed)
+        copy_tree(path_all, path_passed)
 
 all_unique_words = list(source_unique_words.union(ch_unique_words))
 with open(f'{get_data_path()}/GPL{GPL}/unique_words.txt', 'w') as f:
