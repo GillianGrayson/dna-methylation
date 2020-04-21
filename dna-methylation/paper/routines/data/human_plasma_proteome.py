@@ -6,7 +6,7 @@ import collections
 from paper.routines.infrastructure.save.table import save_table_dict_xlsx
 from paper.routines.routines import get_genes
 from paper.routines.data.data_dicts import get_sets
-from paper.routines.plot.venn import get_layout_3, get_layout_4, get_trace_3, get_trace_4
+from paper.routines.plot.venn import get_layout_2, get_layout_3, get_layout_4, get_trace_2, get_trace_3, get_trace_4
 from paper.routines.infrastructure.save.figure import save_figure
 import os
 
@@ -148,6 +148,9 @@ def process_human_plasma_proteome(target_dict, proteomic_genes, save_path):
     elif len(genes) == 3:
         layout = get_layout_3()
         trace = get_trace_3(venn_labels)
+    elif len(genes) == 2:
+        layout = get_layout_2()
+        trace = get_trace_2(venn_labels)
     else:
         raise ValueError(f'Venn diagram is not supported')
 
