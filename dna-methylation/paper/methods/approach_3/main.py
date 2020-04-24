@@ -8,10 +8,10 @@ pval_perc = 5
 pval_lim = 0.05
 pval_prefix = 'p_value_fdr_bh'
 
-main_key = 'GSE40279_GSE87571'
+main_key = 'GSE40279_GSE87571_liver'
 
 type = 'residuals'
-names = ['GSE40279', 'GSE87571']
+names = ['GSE40279', 'GSE87571', 'liver']
 datasets = [Dataset(type, name) for name in names]
 
 keys_save = [

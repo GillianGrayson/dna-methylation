@@ -18,7 +18,8 @@ def get_approach_3_hash(dataset):
             'GSE40279': 'd7d1e0acca27c1974c16942a917320ac',
             'GSE87571': 'c859f04f18c43296cb61b3151ab53adc',
             'EPIC': '7adee9f94aa1dee9e79cc1dbfe940ae6',
-            'GSE55763': '1350b1840f9c4bd1cf72023195a29fde'
+            'GSE55763': '1350b1840f9c4bd1cf72023195a29fde',
+            'liver': '81f11bc49cb451091c552dce079bb478'
         }
     else:
         raise ValueError(f'{dataset.type} is not supported')
@@ -74,7 +75,8 @@ def get_ss_hash(dataset):
             'GSE40279': 'd794817d',
             'GSE87571': 'c4a8606d',
             'EPIC': 'c2355c6e',
-            'GSE55763': 'f3a53c1a'
+            'GSE55763': 'f3a53c1a',
+            'liver': 'ded0cd22'
         }
     else:
         raise ValueError(f'{dataset.type} is not supported')
@@ -88,7 +90,8 @@ def get_ar_hash(dataset):
             'GSE40279': '5c6afd44',
             'GSE87571': '6af05523',
             'EPIC': '018fad6b',
-            'GSE55763': 'c7e956c1'
+            'GSE55763': 'c7e956c1',
+            'liver': 'b1f058b7'
         }
     else:
         raise ValueError(f'{dataset.type} is not supported')
