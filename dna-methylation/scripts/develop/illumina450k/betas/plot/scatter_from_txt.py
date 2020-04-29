@@ -8,7 +8,7 @@ y_ranges = ['auto'] * len(items)
 
 data = pdm.Data(
     path='',
-    base='GSE87571'
+    base='liver'
 )
 
 annotations = pdm.Annotations(
@@ -51,7 +51,7 @@ pdm.betas_plot_scatter(
         'x_ranges': x_ranges,
         'y_ranges': y_ranges,
         'line': 'yes',
-        'fit': 'yes',
+        'fit': 'none',
         'semi_window': 8,
         'box_b': 'Q5',
         'box_t': 'Q95',

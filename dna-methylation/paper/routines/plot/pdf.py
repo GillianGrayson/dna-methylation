@@ -1,6 +1,8 @@
 import numpy as np
 
 def get_pdf_x_and_y(data, num_bins=1000, x_left=None, x_right=None):
+    data = np.asarray(data)
+    data = data[~np.isnan(data)]
 
     if x_left is not None:
         min_x = x_left

@@ -8,7 +8,17 @@ from paper.routines.routines import get_genes
 from paper.routines.data.data_dicts import get_sets
 from paper.routines.plot.venn import get_layout_2, get_layout_3, get_layout_4, get_trace_2, get_trace_3, get_trace_4
 from paper.routines.infrastructure.save.figure import save_figure
+from paper.routines.plot.pdf import get_pdf_x_and_y
 import os
+import copy
+from collections import defaultdict
+from tqdm import tqdm
+from paper.routines.plot.pdf import get_pdf_x_and_y
+from paper.routines.plot.layout import get_layout
+import plotly.graph_objs as go
+import colorlover as cl
+import plotly
+import numpy as np
 
 
 def get_human_plasma_proteome_dicts(save_path):
@@ -179,3 +189,32 @@ def process_human_plasma_proteome(target_dict, proteomic_genes, save_path):
             print(gene)
 
     save_table_dict_xlsx(f'{curr_save_path}/{intsc_key}_expression', result_dict)
+
+    target_keys = ['Whole.Blood', 'Liver']
+    plot_data = []
+    for t_id, tissue in enumerate(target_keys):
+        if len(result_dict[tissue]) > 0:
+            xs, ys = get_pdf_x_and_y(result_dict[tissue], num_bins=25)
+            color = cl.scales['8']['qual']['Set1'][t_id]
+            coordinates = color[4:-1].split(',')
+            color_border = 'rgba(' + ','.join(coordinates) + ',' + str(0.8) + ')'
+            scatter = go.Scatter(
+                x=xs,
+                y=ys,
+                name=tissue,
+                mode='lines',
+                line=dict(
+                    width=4,
+                    color=color_border
+                ),
+                showlegend=True
+            )
+            plot_data.append(scatter)
+    layout = get_layout('GTEX_median_tissue', 'Probability density function')
+    fn = f'{curr_save_path}/tissues'
+    figure = go.Figure(data=plot_data, layout=layout)
+    plotly.offline.plot(figure, filename=f'{fn}.html', auto_open=False, show_link=True)
+    plotly.io.write_image(figure, f'{fn}.png')
+    plotly.io.write_image(figure, f'{fn}.pdf')
+
+
