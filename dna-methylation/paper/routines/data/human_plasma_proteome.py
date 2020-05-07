@@ -113,6 +113,12 @@ def get_human_plasma_proteome_dicts(save_path):
 
 def process_human_plasma_proteome(target_dict, proteomic_genes, save_path):
 
+    fn_exp = 'E:/YandexDisk/Work/pydnameth/human_plasma_proteome/GTEx.xlsx'
+    exp_dict = load_table_dict_xlsx(fn_exp)
+    for tissue in exp_dict:
+        if tissue not in ['Name', 'Description']:
+            exp_dict[tissue] = np.log2(np.asarray(exp_dict[tissue]) + 1e-4)
+
     aux_key = 'aux'
     for key in target_dict[list(target_dict.keys())[0]]:
         if 'aux_' in key:
@@ -137,6 +143,7 @@ def process_human_plasma_proteome(target_dict, proteomic_genes, save_path):
         for i in sets[set_key]:
             save_dict['gene'].append(i)
         save_table_dict_xlsx(f'{curr_save_path}/{set_key}', save_dict)
+        gtex_processing(exp_dict, sets[set_key], set_key, curr_save_path)
 
     curr_save_path = f'{save_path}/intersection_with_difference'
     if not os.path.exists(curr_save_path):
@@ -171,30 +178,25 @@ def process_human_plasma_proteome(target_dict, proteomic_genes, save_path):
 
     save_figure(f'{save_path}/venn', fig)
 
-    intsc_key = '_'.join(sorted(list(genes.keys())))
-    intsc_genes = sets_with_difference[intsc_key]
 
-    fn_exp = 'E:/YandexDisk/Work/pydnameth/human_plasma_proteome/GTEX_median_tissue_Lehallier_895_order_liver_log.xlsx'
-    exp_dict = load_table_dict_xlsx(fn_exp)
+def gtex_processing(exp_dict, genes, main_key, save_path):
 
     gene_id_dict = dict(zip(exp_dict['Description'], list(range(0, len(exp_dict['Description'])))))
 
-    result_dict = {key:[] for key in exp_dict}
-    for gene in intsc_genes:
+    result_dict = {key: [] for key in exp_dict}
+    for gene in genes:
         if gene in gene_id_dict:
             row_id = gene_id_dict[gene]
             for key in result_dict:
                 result_dict[key].append(exp_dict[key][row_id])
-        else:
-            print(gene)
 
-    save_table_dict_xlsx(f'{curr_save_path}/{intsc_key}_expression', result_dict)
+    save_table_dict_xlsx(f'{save_path}/{main_key}_expression', result_dict)
 
-    target_keys = ['Whole.Blood', 'Liver']
+    target_keys = ['Whole Blood', 'Liver']
     plot_data = []
     for t_id, tissue in enumerate(target_keys):
         if len(result_dict[tissue]) > 0:
-            xs, ys = get_pdf_x_and_y(result_dict[tissue], num_bins=25)
+            xs, ys = get_pdf_x_and_y(result_dict[tissue], num_bins=50)
             color = cl.scales['8']['qual']['Set1'][t_id]
             coordinates = color[4:-1].split(',')
             color_border = 'rgba(' + ','.join(coordinates) + ',' + str(0.8) + ')'
@@ -210,11 +212,12 @@ def process_human_plasma_proteome(target_dict, proteomic_genes, save_path):
                 showlegend=True
             )
             plot_data.append(scatter)
-    layout = get_layout('GTEX_median_tissue', 'Probability density function')
-    fn = f'{curr_save_path}/tissues'
+    layout = get_layout('$log_{2}GTEX$', 'Probability density function')
+    fn = f'{save_path}/{main_key}'
     figure = go.Figure(data=plot_data, layout=layout)
     plotly.offline.plot(figure, filename=f'{fn}.html', auto_open=False, show_link=True)
     plotly.io.write_image(figure, f'{fn}.png')
     plotly.io.write_image(figure, f'{fn}.pdf')
+
 
 

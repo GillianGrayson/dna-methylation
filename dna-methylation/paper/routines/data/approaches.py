@@ -15,10 +15,10 @@ def get_approach_1_hash(dataset):
 def get_approach_3_hash(dataset):
     if dataset.type == 'residuals':
         hash = {
-            'GSE40279': 'd7d1e0acca27c1974c16942a917320ac',
-            'GSE87571': 'c859f04f18c43296cb61b3151ab53adc',
-            'EPIC': '7adee9f94aa1dee9e79cc1dbfe940ae6',
-            'GSE55763': '1350b1840f9c4bd1cf72023195a29fde',
+            'GSE40279': 'bf0b9f92e948a257329262816ce3d202',
+            'GSE87571': '7c468ca8212428806c727d3e2a836662',
+            'EPIC': 'a64c0b99b7e097c668e8300e29ad693f',
+            'GSE55763': '01f9edb1330453690b493c5a17624c6c',
             'liver': '81f11bc49cb451091c552dce079bb478'
         }
     else:
@@ -72,10 +72,10 @@ def get_polygon_hash(dataset):
 def get_ss_hash(dataset):
     if dataset.type == 'residuals':
         hash = {
-            'GSE40279': 'd794817d',
-            'GSE87571': 'c4a8606d',
-            'EPIC': 'c2355c6e',
-            'GSE55763': 'f3a53c1a',
+            'GSE40279': 'f6796cdb',
+            'GSE87571': '960bd640',
+            'EPIC': '1a502535',
+            'GSE55763': 'fb0b2483',
             'liver': 'ded0cd22'
         }
     else:

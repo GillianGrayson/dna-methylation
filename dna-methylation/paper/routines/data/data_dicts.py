@@ -155,12 +155,12 @@ def process_intersections(data_dicts, save_path):
     for key, save_dict in save_dicts.items():
         save_table_dict_xlsx(f'{curr_save_path}/{key}', save_dict)
 
-    save_dicts = get_cpg_save_dicts(sets_with_difference, data_dicts, cpg_dicts)
+    save_dicts_with_diff = get_cpg_save_dicts(sets_with_difference, data_dicts, cpg_dicts)
     curr_save_path = f'{save_path}/intersection_with_difference'
     if not os.path.exists(curr_save_path):
         os.makedirs(curr_save_path)
     venn_labels = []
-    for key, save_dict in save_dicts.items():
+    for key, save_dict in save_dicts_with_diff.items():
         save_table_dict_xlsx(f'{curr_save_path}/{key}', save_dict)
         curr_labels = key.split('_') + [str(len(sets_with_difference[key]))]
         venn_labels.append('<br>'.join(curr_labels))
@@ -184,4 +184,4 @@ def process_intersections(data_dicts, save_path):
 
     save_figure(f'{save_path}/venn', fig)
 
-    return save_dicts
+    return save_dicts, save_dicts_with_diff
