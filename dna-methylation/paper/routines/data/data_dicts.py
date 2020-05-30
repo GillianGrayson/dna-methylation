@@ -140,22 +140,22 @@ def get_cpg_save_dicts(sets, data_dicts, cpg_dicts, key='item'):
     return save_dicts
 
 
-def process_intersections(data_dicts, save_path):
-    cpg_dicts = get_cpg_dicts(data_dicts)
+def process_intersections(data_dicts, save_path, item_key='item'):
+    cpg_dicts = get_cpg_dicts(data_dicts, item_key)
 
     for dataset, data_dict in data_dicts.items():
         save_table_dict_xlsx(f'{save_path}/{dataset}', data_dict)
 
-    sets, sets_with_difference = get_sets(data_dicts)
+    sets, sets_with_difference = get_sets(data_dicts, item_key)
 
-    save_dicts = get_cpg_save_dicts(sets, data_dicts, cpg_dicts)
+    save_dicts = get_cpg_save_dicts(sets, data_dicts, cpg_dicts, item_key)
     curr_save_path = f'{save_path}/intersection'
     if not os.path.exists(curr_save_path):
         os.makedirs(curr_save_path)
     for key, save_dict in save_dicts.items():
         save_table_dict_xlsx(f'{curr_save_path}/{key}', save_dict)
 
-    save_dicts_with_diff = get_cpg_save_dicts(sets_with_difference, data_dicts, cpg_dicts)
+    save_dicts_with_diff = get_cpg_save_dicts(sets_with_difference, data_dicts, cpg_dicts, item_key)
     curr_save_path = f'{save_path}/intersection_with_difference'
     if not os.path.exists(curr_save_path):
         os.makedirs(curr_save_path)

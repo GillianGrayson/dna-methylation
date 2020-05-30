@@ -27,6 +27,28 @@ def get_approach_3_hash(dataset):
     return hash[dataset.name]
 
 
+def get_approach_4_hash(dataset):
+    if dataset.type == 'betas':
+        hash = {
+            'GSE40279': 'bc82f74dd244bca21ed33d708bd61b85',
+            'GSE87571': 'c098dc79338657b0b9c35f55a8441e80',
+            'EPIC': '753bc3a13dfb1e22841bb140a3236dad',
+            'GSE55763': '635cc3bbde1154509bd4c5a564c7f37d',
+
+        }
+    elif dataset.type == 'residuals':
+        hash = {
+            'GSE40279': '4d1b7f192ea49142732bb2b1374c8ff7',
+            'GSE87571': 'fde5819ae46149e63fbea22a9d973f30',
+            'EPIC': 'b004131b7d5a5657c26ff68dd22d35da',
+            'GSE55763': 'dab3ec0ec397a78a3436c88a4cad6552',
+
+        }
+    else:
+        raise ValueError(f'{dataset.type} is not supported')
+
+    return hash[dataset.name]
+
 def get_linreg_female_hash(dataset):
     if dataset.type == 'betas':
         hash = {
@@ -92,6 +114,46 @@ def get_ar_hash(dataset):
             'EPIC': '018fad6b',
             'GSE55763': 'c7e956c1',
             'liver': 'b1f058b7'
+        }
+    else:
+        raise ValueError(f'{dataset.type} is not supported')
+
+    return hash[dataset.name]
+
+def get_hs_f_hash(dataset):
+    if dataset.type == 'betas':
+        hash = {
+            'GSE40279': '2a12fab5',
+            'GSE87571': '25dcc690',
+            'EPIC': '8344b456',
+            'GSE55763': 'a11d5a4c'
+        }
+    elif dataset.type == 'residuals':
+        hash = {
+            'GSE40279': '457bdead',
+            'GSE87571': 'eb866188',
+            'EPIC': '97c90927',
+            'GSE55763': 'c566b57e'
+        }
+    else:
+        raise ValueError(f'{dataset.type} is not supported')
+
+    return hash[dataset.name]
+
+def get_hs_m_hash(dataset):
+    if dataset.type == 'betas':
+        hash = {
+            'GSE40279': '69dc0516',
+            'GSE87571': '00f7ba4d',
+            'EPIC': '23556bb7',
+            'GSE55763': '96e527d6'
+        }
+    elif dataset.type == 'residuals':
+        hash = {
+            'GSE40279': 'c0e359de',
+            'GSE87571': 'df920bdb',
+            'EPIC': '82704c0a',
+            'GSE55763': 'e05b4633'
         }
     else:
         raise ValueError(f'{dataset.type} is not supported')

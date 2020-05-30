@@ -1,14 +1,10 @@
 import pydnameth as pdm
 from scripts.develop.routines import *
 
-f = open('cpgs.txt', 'r')
-items = f.read().splitlines()
-x_ranges = ['auto'] * len(items)
-y_ranges = ['auto'] * len(items)
 
 data = pdm.Data(
     path='',
-    base='GSE87571'
+    base='EPIC'
 )
 
 annotations = pdm.Annotations(
@@ -33,6 +29,7 @@ cells = pdm.Cells(
 target = get_target(data.base)
 observables_list = get_observables_list(data.base)
 data_params = get_data_params(data.base)
+data_params['cells'] = ['Bcell', 'CD4T', 'CD8T', 'Gran', 'NK']
 
 attributes = pdm.Attributes(
     target=target,
@@ -40,22 +37,10 @@ attributes = pdm.Attributes(
     cells=cells
 )
 
-pdm.betas_plot_scatter(
+pdm.residuals_table_approach_4(
     data=data,
     annotations=annotations,
     attributes=attributes,
     observables_list=observables_list,
-    data_params=data_params,
-    method_params={
-        'items': items,
-        'x_ranges': x_ranges,
-        'y_ranges': y_ranges,
-        'line': 'yes',
-        'fit': 'yes',
-        'semi_window': 20,
-        'box_b': 'Q5',
-        'box_t': 'Q95',
-        'legend_size': 2,
-        'add': 'none'
-    }
+    data_params=data_params
 )
