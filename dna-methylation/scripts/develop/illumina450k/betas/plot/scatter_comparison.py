@@ -3,7 +3,7 @@ import pandas as pd
 import os.path
 from scripts.develop.routines import *
 
-max_rows = 4
+max_rows = 10
 
 fn = 'scatter_comparison_rows.xlsx'
 rows_dict = {}

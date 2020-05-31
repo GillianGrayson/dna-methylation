@@ -1,7 +1,7 @@
 from paper.routines.infrastructure.load.table import load_table_dict_xlsx
 from paper.routines.infrastructure.save.table import save_table_dict_xlsx
 from paper.routines.infrastructure.load.annotations import load_annotations_dict
-from paper.methods.fisher.routines import perform_fisher
+from paper.methods.fisher.routines import perform_fisher, odds_ratio_plot
 from collections import defaultdict
 import numpy as np
 import os
@@ -20,6 +20,12 @@ target_probe_key = 'MarkerName'
 annotations_dict = load_annotations_dict()
 
 target_variables = ['RELATION_TO_UCSC_CPG_ISLAND', 'CHR', 'UCSC_REFGENE_GROUP']
+orders = {
+    'RELATION_TO_UCSC_CPG_ISLAND': ['S_Shelf', 'S_Shore', 'Island', 'N_Shore', 'N_Shelf', 'NA'],
+    'CHR': ['CHR_' + str(i) for i in range(1, 23)],
+    'UCSC_REFGENE_GROUP': ['TSS1500', 'TSS200', '5\'UTR', '1stExon', 'Body', '3\'UTR']
+}
+
 
 for var in target_variables:
 
@@ -43,17 +49,36 @@ for var in target_variables:
                 count_target[opt] = 1
     target_num = np.sum(list(count_target.values()))
 
+    count_global_mod = {}
+    count_target_mod = {}
     odds_ratios = {}
     p_values = {}
-    res_table_dict = defaultdict(list)
     for opt in count_target:
-        odds_ratio, p_value = perform_fisher(count_target[opt], count_global[opt], target_num, global_num)
+
+        if var == 'CHR':
+            if opt != '':
+                count_global_mod[f'CHR_{str(opt)}'] = count_global[opt]
+                count_target_mod[f'CHR_{str(opt)}'] = count_target[opt]
+                opt = f'CHR_{str(opt)}'
+        else:
+            if opt != '':
+                count_global_mod[opt] = count_global[opt]
+                count_target_mod[opt] = count_target[opt]
+
+        if opt == '':
+            count_global_mod['NA'] = count_global[opt]
+            count_target_mod['NA'] = count_target[opt]
+            opt = 'NA'
+
+        odds_ratio, p_value = perform_fisher(count_target_mod[opt], count_global_mod[opt], target_num, global_num)
         odds_ratios[opt] = odds_ratio
         p_values[opt] = p_value
 
+    res_table_dict = defaultdict(list)
+    for opt in orders[var]:
         res_table_dict[var].append(opt)
-        res_table_dict['number of probes'].append(count_target[opt])
-        res_table_dict['total number of probes'].append(count_global[opt])
+        res_table_dict['number of probes'].append(count_target_mod[opt])
+        res_table_dict['total number of probes'].append(count_global_mod[opt])
         res_table_dict['p-value'].append(p_values[opt])
         res_table_dict['odds ratio'].append(odds_ratios[opt])
 
@@ -61,5 +86,7 @@ for var in target_variables:
         os.makedirs(save_path)
     save_table_dict_xlsx(f'{save_path}/{var}', res_table_dict)
 
-aa = 1
+    x_data = res_table_dict[var]
+    y_data = list(map(float, res_table_dict['odds ratio']))
 
+    odds_ratio_plot(x_data, y_data, f'{save_path}/{var}')
