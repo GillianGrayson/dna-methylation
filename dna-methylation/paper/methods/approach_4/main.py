@@ -2,8 +2,11 @@ from paper.routines.data.data_dicts import *
 from paper.routines.data.approaches import *
 from paper.methods.approach_4.filter import filter_data_dicts
 from paper.routines.data.human_plasma_proteome import *
+from paper.methods.approach_4.metal import get_metal_dicts, process_metal
 
-pval_perc = 10
+metal = True
+
+pval_perc = 5
 pval_null_lim = 0.05
 
 type = 'residuals'
@@ -41,8 +44,26 @@ if not os.path.exists(f'{save_path}/fm'):
     os.makedirs(f'{save_path}/fm')
 
 data_dicts = get_data_dicts(datasets, 'aggregator', keys_load, keys_save, get_approach_4_hash)
-ss_data_dicts, ar_data_dicts, ssar_data_dicts = filter_data_dicts(data_dicts, pval_perc, pval_null_lim, save_path)
 
-f_result_dicts, f_result_dicts_with_diff = process_intersections(ss_data_dicts, f'{save_path}/f')
-m_result_dicts, m_result_dicts_with_diff = process_intersections(ar_data_dicts, f'{save_path}/m')
-fm_result_dicts, fm_result_dicts_with_diff = process_intersections(ssar_data_dicts, f'{save_path}/fm')
+if metal == True:
+    path = f'{save_path}/metal'
+    metal_dicts = get_metal_dicts(path)
+    if not os.path.exists(path):
+        os.makedirs(path)
+    f_metal_dict, m_metal_dict, fm_metal_dict = process_metal(data_dicts, metal_dicts, pval_perc, pval_null_lim, save_path)
+
+    add_chars_to_dict(f_metal_dict)
+    save_table_dict_xlsx(f'{path}/f', f_metal_dict)
+    add_chars_to_dict(m_metal_dict)
+    save_table_dict_xlsx(f'{path}/m', m_metal_dict)
+    add_chars_to_dict(fm_metal_dict)
+    save_table_dict_xlsx(f'{path}/fm', fm_metal_dict)
+
+f_data_dicts, m_data_dicts, fm_data_dicts = filter_data_dicts(data_dicts, pval_perc, pval_null_lim, save_path)
+
+f_result_dicts, f_result_dicts_with_diff = process_intersections(f_data_dicts, f'{save_path}/f')
+m_result_dicts, m_result_dicts_with_diff = process_intersections(m_data_dicts, f'{save_path}/m')
+fm_result_dicts, fm_result_dicts_with_diff = process_intersections(fm_data_dicts, f'{save_path}/fm')
+
+
+
