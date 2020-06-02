@@ -21,7 +21,7 @@ def metal_process(metal_type, pval_perc, path):
     )
     data_dict['p_value_fdr_bf'] = pvals_corr
 
-    pvals = np.array(data_dict['p_value_fdr_bf'])
+    pvals = np.array(data_dict['p_value_fdr_bh'])
     pvals_percentile = np.percentile(pvals, pval_perc)
     print(f'{metal_type} percentile: {pvals_percentile}')
     print(f'{metal_type} less 0.05: {np.count_nonzero(pvals_corr < 0.05)}')

@@ -6,7 +6,7 @@ def get_metal_dicts(path):
 
     metal_dicts = {}
 
-    metal_type = 'metal_f'
+    metal_type = 'q_f'
     fn = path + f'/{metal_type}.xlsx'
     metal_dicts[metal_type] = load_table_dict_xlsx(fn)
 
@@ -17,7 +17,7 @@ def get_metal_dicts(path):
     )
     metal_dicts[metal_type]['p_value_fdr_bh'] = pvals_corr
 
-    metal_type = 'metal_m'
+    metal_type = 'q_m'
     fn = path + f'/{metal_type}.xlsx'
     metal_dicts[metal_type] = load_table_dict_xlsx(fn)
 
@@ -42,8 +42,8 @@ def process_metal(data_dicts, metal_dicts, pval_perc, pval_null_lim, save_path):
     m_metal_dict = copy.deepcopy(f_metal_dict)
     fm_metal_dict = copy.deepcopy(f_metal_dict)
 
-    f_pvals = metal_dicts['metal_f']['p_value_fdr_bh']
-    m_pvals = metal_dicts['metal_m']['p_value_fdr_bh']
+    f_pvals = metal_dicts['q_f']['p_value_fdr_bh']
+    m_pvals = metal_dicts['q_m']['p_value_fdr_bh']
 
     f_pvals_percentiles = np.percentile(f_pvals, [pval_perc, 100 - pval_perc])
     print(f'f percentile {pval_perc}: {f_pvals_percentiles[0]}')
@@ -53,7 +53,7 @@ def process_metal(data_dicts, metal_dicts, pval_perc, pval_null_lim, save_path):
     print(f'm percentile {pval_perc}: {m_pvals_percentiles[0]}')
     print(f'm percentile {100 - pval_perc}: {m_pvals_percentiles[1]}')
 
-    probes = metal_dicts['metal_f']['MarkerName']
+    probes = metal_dicts['q_f']['MarkerName']
 
     f_directions_dict = {}
     m_directions_dict = {}

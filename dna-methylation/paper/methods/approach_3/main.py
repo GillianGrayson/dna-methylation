@@ -92,9 +92,9 @@ if metal == True:
     path = f'{save_path}/metal'
 
     data_dicts = {}
-    metal_type = 'ss_qval'
+    metal_type = 'q_ss'
     data_dicts['ss'] = metal_process(metal_type, pval_perc_ss_metal, path)
-    metal_type = 'ar_qval'
+    metal_type = 'q_ar'
     data_dicts['ar'] = metal_process(metal_type, pval_perc_ar_metal, path)
 
     if not os.path.exists(f'{path}/ssar'):
