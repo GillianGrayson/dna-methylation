@@ -16,6 +16,17 @@ def load_table_dict_xlsx(fn):
         raise IOError(f'No such file: {fn}')
 
 
+def load_table_dict_by_key_xlsx(fn, main_key):
+    table_dict = load_table_dict_xlsx(fn)
+    table_dict_by_key = {key:{} for key in table_dict}
+
+    for item_id, item in enumerate(table_dict[main_key]):
+        for key in table_dict:
+            table_dict_by_key[key][item] = table_dict[key][item_id]
+
+    return table_dict_by_key
+
+
 def load_table_dict_pkl(fn):
     if os.path.isfile(fn):
         f = open(fn, 'rb')
@@ -24,3 +35,4 @@ def load_table_dict_pkl(fn):
         return table_dict
     else:
         raise IOError(f'No such file: {fn}')
+
