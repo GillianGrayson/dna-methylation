@@ -2,31 +2,51 @@ from paper.routines.data.human_plasma_proteome import *
 from statsmodels.stats.multitest import multipletests
 
 
-def get_metal_dicts(path):
+def metal_preprocess(path, datasets, targets, suffix):
+
+    cpgs_set = set()
+
+    for dataset in datasets:
+        fn = path + f'/{dataset}.xlsx'
+        data_dict = load_table_dict_xlsx(fn)
+        if len(cpgs_set) != 0:
+            cpgs_set.intersection_update(set(data_dict['item']))
+        else:
+            cpgs_set = set(data_dict['item'])
+        target = data_dict['item']
+        print(f'{dataset} num cpgs: {len(target)}')
+
+    cpgs_dict = dict.fromkeys(cpgs_set)
+
+    print(f'num_common cpgs: {len(cpgs_dict)}')
+
+    for target in targets:
+        fn = path + f'/{target}.xlsx'
+        data_dict = load_table_dict_xlsx(fn)
+        new_dict = {key: [] for key in data_dict}
+        for cpg_id, cpg in enumerate(data_dict['MarkerName']):
+            if cpg in cpgs_dict:
+                for key in data_dict:
+                    new_dict[key].append(data_dict[key][cpg_id])
+        fn = path + f'/{target}_{suffix}'
+        save_table_dict_xlsx(fn, new_dict)
+
+
+def get_metal_dicts(path, types):
 
     metal_dicts = {}
 
-    metal_type = 'q_f'
-    fn = path + f'/{metal_type}.xlsx'
-    metal_dicts[metal_type] = load_table_dict_xlsx(fn)
+    for metal_type in types:
 
-    reject, pvals_corr, alphacSidak, alphacBonf = multipletests(
-        metal_dicts[metal_type]['P-value'],
-        0.05,
-        method='fdr_bh'
-    )
-    metal_dicts[metal_type]['p_value_fdr_bh'] = pvals_corr
+        fn = path + f'/{metal_type}.xlsx'
+        metal_dicts[metal_type] = load_table_dict_xlsx(fn)
 
-    metal_type = 'q_m'
-    fn = path + f'/{metal_type}.xlsx'
-    metal_dicts[metal_type] = load_table_dict_xlsx(fn)
-
-    reject, pvals_corr, alphacSidak, alphacBonf = multipletests(
-        metal_dicts[metal_type]['P-value'],
-        0.05,
-        method='fdr_bh'
-    )
-    metal_dicts[metal_type]['p_value_fdr_bh'] = pvals_corr
+        reject, pvals_corr, alphacSidak, alphacBonf = multipletests(
+            metal_dicts[metal_type]['P-value'],
+            0.05,
+            method='fdr_bh'
+        )
+        metal_dicts[metal_type]['p_value_fdr_bh'] = pvals_corr
 
     return metal_dicts
 
@@ -42,8 +62,8 @@ def process_metal(data_dicts, metal_dicts, pval_perc, pval_null_lim, save_path):
     m_metal_dict = copy.deepcopy(f_metal_dict)
     fm_metal_dict = copy.deepcopy(f_metal_dict)
 
-    f_pvals = metal_dicts['q_f']['p_value_fdr_bh']
-    m_pvals = metal_dicts['q_m']['p_value_fdr_bh']
+    f_pvals = metal_dicts['q_f_common']['p_value_fdr_bh']
+    m_pvals = metal_dicts['q_m_common']['p_value_fdr_bh']
 
     f_pvals_percentiles = np.percentile(f_pvals, [pval_perc, 100 - pval_perc])
     print(f'f percentile {pval_perc}: {f_pvals_percentiles[0]}')
@@ -53,7 +73,7 @@ def process_metal(data_dicts, metal_dicts, pval_perc, pval_null_lim, save_path):
     print(f'm percentile {pval_perc}: {m_pvals_percentiles[0]}')
     print(f'm percentile {100 - pval_perc}: {m_pvals_percentiles[1]}')
 
-    probes = metal_dicts['q_f']['MarkerName']
+    probes = metal_dicts['q_f_common']['MarkerName']
 
     f_directions_dict = {}
     m_directions_dict = {}
@@ -88,7 +108,7 @@ def process_metal(data_dicts, metal_dicts, pval_perc, pval_null_lim, save_path):
 
         if len(f_directions) == len(data_dicts.keys()) and len(set(f_directions)) == 1:
             f_is_same_direction = True
-        if len(f_directions) == len(data_dicts.keys()) and len(set(m_directions)) == 1:
+        if len(m_directions) == len(data_dicts.keys()) and len(set(m_directions)) == 1:
             m_is_same_direction = True
 
         if f_is_same_direction:

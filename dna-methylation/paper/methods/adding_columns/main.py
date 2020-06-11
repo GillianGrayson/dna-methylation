@@ -6,11 +6,11 @@ dataset = 'GSE55763'
 source_fn = f'E:/YandexDisk/Work/pydnameth/approaches/ancova/{dataset}.xlsx'
 source_keys = ['x:category_pval']
 
-target_fn = 'E:/YandexDisk/Work/pydnameth/draft/fixes/materials_and_methods/supplementary_file_1_tmp.xlsx'
+target_fn = 'E:/YandexDisk/Work/pydnameth/draft/fixes/materials_and_methods/common/supplementary_file_1_tmp.xlsx'
 target_main_key = 'CpG'
 target_keys = [f'interaction p-value ({dataset})']
 
-save_fn = 'E:/YandexDisk/Work/pydnameth/draft/fixes/materials_and_methods/supplementary_file_1_tmp'
+save_fn = 'E:/YandexDisk/Work/pydnameth/draft/fixes/materials_and_methods/common/supplementary_file_1_tmp'
 
 source_dict = load_table_dict_by_key_xlsx(source_fn, 'item')
 target_dict = load_table_dict_xlsx(target_fn)

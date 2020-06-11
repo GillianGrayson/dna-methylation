@@ -78,7 +78,7 @@ for run_id in range(0, len(rows_dict['items']), max_rows):
 
     curr_dict = {}
     for key in rows_dict:
-        curr_dict[key] = rows_dict[key][s_id:f_id]
+        curr_dict[key] = rows_dict[key][s_id:f_id][::-1]
 
     pdm.betas_plot_scatter_comparison(
         data_list=data_list,

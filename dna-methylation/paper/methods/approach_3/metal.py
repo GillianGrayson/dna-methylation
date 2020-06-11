@@ -2,6 +2,36 @@ from paper.routines.data.human_plasma_proteome import *
 from statsmodels.stats.multitest import multipletests
 
 
+def metal_preprocess(path, datasets, targets, suffix):
+
+    cpgs_set = set()
+
+    for dataset in datasets:
+        fn = path + f'/{dataset}.xlsx'
+        data_dict = load_table_dict_xlsx(fn)
+        if len(cpgs_set) != 0:
+            cpgs_set.intersection_update(set(data_dict['item']))
+        else:
+            cpgs_set = set(data_dict['item'])
+        target = data_dict['item']
+        print(f'{dataset} num cpgs: {len(target)}')
+
+    cpgs_dict = dict.fromkeys(cpgs_set)
+
+    print(f'num_common cpgs: {len(cpgs_dict)}')
+
+    for target in targets:
+        fn = path + f'/{target}.xlsx'
+        data_dict = load_table_dict_xlsx(fn)
+        new_dict = {key: [] for key in data_dict}
+        for cpg_id, cpg in enumerate(data_dict['MarkerName']):
+            if cpg in cpgs_dict:
+                for key in data_dict:
+                    new_dict[key].append(data_dict[key][cpg_id])
+        fn = path + f'/{target}_{suffix}'
+        save_table_dict_xlsx(fn, new_dict)
+
+
 def metal_process(metal_type, pval_perc, path):
 
     fn = path + f'/{metal_type}.xlsx'

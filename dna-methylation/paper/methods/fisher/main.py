@@ -9,11 +9,11 @@ import os
 
 save_path = 'E:/YandexDisk/Work/pydnameth/approaches/approach_4/residuals/fisher'
 
-global_fn = 'E:/YandexDisk/Work/pydnameth/approaches/approach_4/residuals/metal/q_f.xlsx'
+global_fn = 'E:/YandexDisk/Work/pydnameth/approaches/approach_4/residuals/metal/q_f_common.xlsx'
 global_dict = load_table_dict_xlsx(global_fn)
 global_probe_key = 'MarkerName'
 
-target_fn = "E:/YandexDisk/Work/pydnameth/draft/fixes/materials_and_methods/supplementary_file_2_and_3.xlsx"
+target_fn = "E:/YandexDisk/Work/pydnameth/draft/fixes/materials_and_methods/common/supplementary_file_2_3.xlsx"
 target_dict = load_table_dict_xlsx(target_fn)
 target_probe_key = 'CpG'
 
