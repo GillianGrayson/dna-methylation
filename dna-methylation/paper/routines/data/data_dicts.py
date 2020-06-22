@@ -140,11 +140,11 @@ def get_cpg_dataset_save_dicts(sets, data_dicts, cpg_dicts, key='item'):
     return save_dicts
 
 
-def process_intersections(data_dicts, save_path, item_key='item'):
+def process_intersections(data_dicts, save_path, item_key='item', is_rewrite=True):
     cpg_dicts = get_cpg_dicts(data_dicts, item_key)
 
     for dataset, data_dict in data_dicts.items():
-        save_table_dict_xlsx(f'{save_path}/{dataset}', data_dict)
+        save_table_dict_xlsx(f'{save_path}/{dataset}', data_dict, is_rewrite)
 
     sets, sets_with_difference = get_sets(data_dicts, item_key)
 
@@ -153,7 +153,7 @@ def process_intersections(data_dicts, save_path, item_key='item'):
     if not os.path.exists(curr_save_path):
         os.makedirs(curr_save_path)
     for key, save_dict in save_dicts.items():
-        save_table_dict_xlsx(f'{curr_save_path}/{key}', save_dict)
+        save_table_dict_xlsx(f'{curr_save_path}/{key}', save_dict, is_rewrite)
 
     save_dicts_with_diff = get_cpg_dataset_save_dicts(sets_with_difference, data_dicts, cpg_dicts, item_key)
     curr_save_path = f'{save_path}/intersection_with_difference'
@@ -161,7 +161,7 @@ def process_intersections(data_dicts, save_path, item_key='item'):
         os.makedirs(curr_save_path)
     venn_labels = []
     for key, save_dict in save_dicts_with_diff.items():
-        save_table_dict_xlsx(f'{curr_save_path}/{key}', save_dict)
+        save_table_dict_xlsx(f'{curr_save_path}/{key}', save_dict, is_rewrite)
         curr_labels = key.split('_') + [str(len(sets_with_difference[key]))]
         venn_labels.append('<br>'.join(curr_labels))
 

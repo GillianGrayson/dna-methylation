@@ -1,14 +1,16 @@
+from paper.routines.infrastructure.load.table import *
 from paper.routines.data.human_plasma_proteome import *
 from statsmodels.stats.multitest import multipletests
+import numpy as np
 
 
-def metal_preprocess(path, datasets, targets, suffix):
+def metal_preprocess(path, datasets, targets, suffix, is_rewrite=True):
 
     cpgs_set = set()
 
     for dataset in datasets:
-        fn = path + f'/{dataset}.xlsx'
-        data_dict = load_table_dict_xlsx(fn)
+        fn = path + f'/{dataset}'
+        data_dict = load_table_dict(fn)
         if len(cpgs_set) != 0:
             cpgs_set.intersection_update(set(data_dict['item']))
         else:
@@ -21,21 +23,21 @@ def metal_preprocess(path, datasets, targets, suffix):
     print(f'num_common cpgs: {len(cpgs_dict)}')
 
     for target in targets:
-        fn = path + f'/{target}.xlsx'
-        data_dict = load_table_dict_xlsx(fn)
+        fn = path + f'/{target}'
+        data_dict = load_table_dict(fn)
         new_dict = {key: [] for key in data_dict}
         for cpg_id, cpg in enumerate(data_dict['MarkerName']):
             if cpg in cpgs_dict:
                 for key in data_dict:
                     new_dict[key].append(data_dict[key][cpg_id])
         fn = path + f'/{target}_{suffix}'
-        save_table_dict_xlsx(fn, new_dict)
+        save_table_dict_xlsx(fn, new_dict, is_rewrite)
 
 
 def metal_process(metal_type, pval_perc, path):
 
-    fn = path + f'/{metal_type}.xlsx'
-    data_dict = load_table_dict_xlsx(fn)
+    fn = path + f'/{metal_type}'
+    data_dict = load_table_dict(fn)
 
     reject, pvals_corr, alphacSidak, alphacBonf = multipletests(
         data_dict['P-value'],

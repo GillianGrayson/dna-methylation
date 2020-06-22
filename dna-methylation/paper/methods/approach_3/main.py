@@ -5,6 +5,9 @@ from paper.methods.approach_3.metal import *
 
 proteomic = False
 metal = True
+metal_proteomic = True
+
+is_rewrite = False
 
 pval_perc_ss = 10
 pval_perc_ar = 10
@@ -81,20 +84,20 @@ if not os.path.exists(f'{save_path}/ssar'):
     os.makedirs(f'{save_path}/ssar')
 
 path = f'{save_path}/metal'
-metal_preprocess(path, ['GSE40279', 'GSE87571', 'EPIC', 'GSE55763'], ['q_ss', 'q_ar'], 'common')
+metal_preprocess(path, ['GSE40279', 'GSE87571', 'EPIC', 'GSE55763'], ['q_ss', 'q_ar'], 'common', is_rewrite=is_rewrite)
 
 data_dicts = get_data_dicts(datasets, 'aggregator', keys_load, keys_save, get_approach_3_hash)
 add_best_pvalue(data_dicts, f'{pval_prefix}_ar')
 ss_data_dicts, ar_data_dicts, ssar_data_dicts = filter_data_dicts(data_dicts, pval_prefix, pval_perc_ss, pval_perc_ar, pval_lim, save_path)
 
-ss_result_dicts, ss_result_dicts_with_diff = process_intersections(ss_data_dicts, f'{save_path}/ss')
-ar_result_dicts, ar_result_dicts_with_diff = process_intersections(ar_data_dicts, f'{save_path}/ar')
-ssar_result_dicts, ssar_result_dicts_with_diff = process_intersections(ssar_data_dicts, f'{save_path}/ssar')
+ss_result_dicts, ss_result_dicts_with_diff = process_intersections(ss_data_dicts, f'{save_path}/ss', is_rewrite=is_rewrite)
+ar_result_dicts, ar_result_dicts_with_diff = process_intersections(ar_data_dicts, f'{save_path}/ar', is_rewrite=is_rewrite)
+ssar_result_dicts, ssar_result_dicts_with_diff = process_intersections(ssar_data_dicts, f'{save_path}/ssar', is_rewrite=is_rewrite)
 
 if metal == True:
     path = f'{save_path}/metal'
 
-    metal_preprocess(path, ['GSE40279', 'GSE87571', 'EPIC', 'GSE55763'], ['q_ss', 'q_ar'], 'common')
+    metal_preprocess(path, ['GSE40279', 'GSE87571', 'EPIC', 'GSE55763'], ['q_ss', 'q_ar'], 'common', is_rewrite=is_rewrite)
 
     data_dicts = {}
     metal_type = 'q_ss_common'
@@ -104,15 +107,26 @@ if metal == True:
 
     if not os.path.exists(f'{path}/ssar'):
         os.makedirs(f'{path}/ssar')
-    result_dicts, result_dicts_with_diff = process_intersections(data_dicts, f'{path}/ssar', 'MarkerName')
+    metal_result_dicts, metal_result_dicts_with_diff = process_intersections(data_dicts, f'{path}/ssar', 'MarkerName', is_rewrite=is_rewrite)
 
     mix_dicts = {}
-    mix_dicts['METAL'] = {'item': result_dicts_with_diff['ar_ss']['MarkerName']}
+    mix_dicts['METAL'] = {'item': metal_result_dicts_with_diff['ar_ss']['MarkerName']}
     mix_dicts['Basic'] = {'item': ssar_result_dicts_with_diff['EPIC_GSE40279_GSE55763_GSE87571']['item']}
-
     if not os.path.exists(f'{path}/ssar_metal'):
         os.makedirs(f'{path}/ssar_metal')
-    result_dicts, result_dicts_with_diff = process_intersections(mix_dicts, f'{path}/ssar_metal')
+    result_dicts, result_dicts_with_diff = process_intersections(mix_dicts, f'{path}/ssar_metal', is_rewrite=is_rewrite)
+
+    if metal_proteomic == True:
+
+        if not os.path.exists(f'{save_path}/metal/proteome'):
+            os.makedirs(f'{save_path}/metal/proteome')
+        ss_genes_lehallier, ar_genes_lehallier, ssar_genes_lehallier = get_human_plasma_proteome_dicts(f'{save_path}/metal/proteome')
+
+        if not os.path.exists(f'{save_path}/metal/proteome/ssar'):
+            os.makedirs(f'{save_path}/metal/proteome/ssar')
+        target_dict = {'Methylation': metal_result_dicts_with_diff['ar_ss']}
+        process_human_plasma_proteome(target_dict, ssar_genes_lehallier, f'{save_path}/metal/proteome/ssar', aux_key='UCSC_REFGENE_NAME')
+
 
 if proteomic == True:
 

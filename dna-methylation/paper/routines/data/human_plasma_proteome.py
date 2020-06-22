@@ -1,6 +1,5 @@
 from paper.routines.infrastructure.path import get_data_path
 from paper.routines.infrastructure.load.table import load_table_dict_xlsx
-from tqdm import tqdm
 import numpy as np
 import collections
 from paper.routines.infrastructure.save.table import save_table_dict_xlsx
@@ -8,17 +7,16 @@ from paper.routines.routines import get_genes
 from paper.routines.data.data_dicts import get_sets
 from paper.routines.plot.venn import get_layout_2, get_layout_3, get_layout_4, get_trace_2, get_trace_3, get_trace_4
 from paper.routines.infrastructure.save.figure import save_figure
-from paper.routines.plot.pdf import get_pdf_x_and_y
+import plotly.io as pio
 import os
-import copy
-from collections import defaultdict
 from tqdm import tqdm
 from paper.routines.plot.pdf import get_pdf_x_and_y
 from paper.routines.plot.layout import get_layout
 import plotly.graph_objs as go
 import colorlover as cl
 import plotly
-import numpy as np
+from paper.routines.infrastructure.load.table import load_table_dict
+import plotly.express as px
 
 
 def get_human_plasma_proteome_dicts(save_path):
@@ -100,7 +98,7 @@ def get_human_plasma_proteome_dicts(save_path):
 
     print(f'Number of ssar genes in Lehallier, et. al.: {len(ssar_genes_lehallier)}')
     print(f'Number of UNIQUE ssar genes in Lehallier, et. al.: {len(set(ssar_genes_lehallier))}')
-    genes_duplicates = [item for item, count in collections.Counter(ar_genes_lehallier).items() if count > 1]
+    genes_duplicates = [item for item, count in collections.Counter(ssar_genes_lehallier).items() if count > 1]
     genes_duplicates_str = {'id': [], 'gene': []}
     for gene in genes_duplicates:
         ids = gene_id[gene]
@@ -111,15 +109,14 @@ def get_human_plasma_proteome_dicts(save_path):
 
     return ss_genes_lehallier, ar_genes_lehallier, ssar_genes_lehallier
 
-def process_human_plasma_proteome(target_dict, proteomic_genes, save_path):
+def process_human_plasma_proteome(target_dict, proteomic_genes, save_path, aux_key='aux'):
 
-    fn_exp = 'E:/YandexDisk/Work/pydnameth/human_plasma_proteome/GTEx.xlsx'
-    exp_dict = load_table_dict_xlsx(fn_exp)
+    fn_exp = 'E:/YandexDisk/Work/pydnameth/human_plasma_proteome/GTEx'
+    exp_dict = load_table_dict(fn_exp)
     for tissue in exp_dict:
         if tissue not in ['Name', 'Description']:
-            exp_dict[tissue] = np.log2(np.asarray(exp_dict[tissue]) + 1e-4)
+            exp_dict[tissue] = np.log10(np.asarray(exp_dict[tissue]) + 1e-4)
 
-    aux_key = 'aux'
     for key in target_dict[list(target_dict.keys())[0]]:
         if 'aux_' in key:
             aux_key = key
@@ -216,8 +213,118 @@ def gtex_processing(exp_dict, genes, main_key, save_path):
     fn = f'{save_path}/{main_key}'
     figure = go.Figure(data=plot_data, layout=layout)
     plotly.offline.plot(figure, filename=f'{fn}.html', auto_open=False, show_link=True)
-    plotly.io.write_image(figure, f'{fn}.png')
-    plotly.io.write_image(figure, f'{fn}.pdf')
+    pio.write_image(figure, f'{fn}.png')
+    pio.write_image(figure, f'{fn}.pdf')
 
+    traces = []
+    base_order = []
 
+    color_scales = [px.colors.sequential.Reds[0:-2], px.colors.sequential.Blues[0:-2]]
+    for t_id, tissue in enumerate(target_keys):
+        if len(result_dict[tissue]) > 0:
+            target_genes = result_dict['Description']
+            target_exp = result_dict[tissue]
+            if t_id == 0:
+                base_order = np.argsort(target_exp)[::-1]
+            genes_sorted = list(np.array(target_genes)[base_order])
+            exp_sorted = list(np.array(target_exp)[base_order])
 
+            traces.append(
+                go.Bar(
+                    orientation='h',
+                    name=tissue,
+                    y=genes_sorted,
+                    x=[x + 4 for x in exp_sorted],
+                    base=-4,
+                    marker=dict(
+                        color=[x + 4 for x in exp_sorted],
+                        colorscale=color_scales[t_id],
+                        colorbar=dict(
+                            showticklabels=False,
+                            len=1,
+                            x=1 + 0.1 * t_id,
+                            title=dict(
+                                text=tissue.replace(' ', '<br>'),
+                                font=dict(
+                                    size=12,
+                                    color=color_scales[t_id][-1]
+                                ),
+                                side='right'
+                            ),
+                        ),
+                        showscale=True
+                    )
+                )
+            )
+
+    layout = go.Layout(
+        plot_bgcolor='rgba(233,233,233,0)',
+        barmode='overlay',
+        showlegend=False,
+        autosize=False,
+        margin=go.layout.Margin(
+            l=10,
+            r=10,
+            b=10,
+            t=10,
+            pad=0
+        ),
+        height=15 * (len(base_order) + 1),
+        width=1000,
+        xaxis=dict(
+            gridcolor='rgb(100, 100, 100)',
+            #gridwidth=0.01,
+            mirror=True,
+            linecolor='black',
+            title='$log_{10}GTEX$',
+            autorange=False,
+            range=[-4, 5],
+            showgrid=False,
+            showline=True,
+            titlefont=dict(
+                family='Arial',
+                size=30,
+                color='black'
+            ),
+            showticklabels=True,
+            tickangle=0,
+            tickfont=dict(
+                family='Arial',
+                size=15,
+                color='black'
+            ),
+            exponentformat='e',
+            showexponent='all',
+        ),
+        yaxis=dict(
+            gridcolor='rgb(100, 100, 100)',
+            mirror=True,
+            linecolor='black',
+            autorange=True,
+            showgrid=False,
+            showline=True,
+            tickangle=0,
+            titlefont=dict(
+                family='Arial',
+                size=10,
+                color='black'
+            ),
+            showticklabels=True,
+            tickfont=dict(
+                family='Arial',
+                size=10,
+                color='black'
+            ),
+            exponentformat='e',
+            showexponent='all',
+        ),
+    )
+
+    traces = traces[::-1]
+
+    fn = f'{save_path}/{main_key}_combo'
+    fig = go.Figure(data=traces, layout=layout)
+    fig.update_layout(barmode='stack')
+    plotly.offline.plot(fig, filename=fn + '.html', auto_open=False, show_link=True)
+    pio.write_image(fig, fn + '.png')
+    pio.write_image(fig, fn + '.pdf')

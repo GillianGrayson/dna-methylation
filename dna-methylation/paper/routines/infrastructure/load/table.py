@@ -1,6 +1,16 @@
 import os.path
 import pickle
 import pandas as pd
+from paper.routines.infrastructure.save.table import save_table_dict_pkl
+
+
+def load_table_dict(fn):
+    if os.path.isfile(fn + '.pkl'):
+        table_dict = load_table_dict_pkl(fn + '.pkl')
+    else:
+        table_dict = load_table_dict_xlsx(fn + '.xlsx')
+        save_table_dict_pkl(fn, table_dict)
+    return table_dict
 
 
 def load_table_dict_xlsx(fn):
