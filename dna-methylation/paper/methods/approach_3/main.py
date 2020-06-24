@@ -5,9 +5,9 @@ from paper.methods.approach_3.metal import *
 
 proteomic = False
 metal = True
-metal_proteomic = True
+metal_proteomic = False
 
-is_rewrite = False
+is_rewrite = True
 
 pval_perc_ss = 10
 pval_perc_ar = 10
@@ -84,7 +84,7 @@ if not os.path.exists(f'{save_path}/ssar'):
     os.makedirs(f'{save_path}/ssar')
 
 path = f'{save_path}/metal'
-metal_preprocess(path, ['GSE40279', 'GSE87571', 'EPIC', 'GSE55763'], ['q_ss', 'q_ar'], 'common', is_rewrite=is_rewrite)
+metal_preprocess(path, ['GSE40279', 'GSE87571', 'EPIC', 'GSE55763'], ['direction_q_ss', 'direction_q_ar'], 'common', is_rewrite=is_rewrite)
 
 data_dicts = get_data_dicts(datasets, 'aggregator', keys_load, keys_save, get_approach_3_hash)
 add_best_pvalue(data_dicts, f'{pval_prefix}_ar')
@@ -95,14 +95,14 @@ ar_result_dicts, ar_result_dicts_with_diff = process_intersections(ar_data_dicts
 ssar_result_dicts, ssar_result_dicts_with_diff = process_intersections(ssar_data_dicts, f'{save_path}/ssar', is_rewrite=is_rewrite)
 
 if metal == True:
-    path = f'{save_path}/metal'
 
-    metal_preprocess(path, ['GSE40279', 'GSE87571', 'EPIC', 'GSE55763'], ['q_ss', 'q_ar'], 'common', is_rewrite=is_rewrite)
+    path = f'{save_path}/metal'
+    metal_preprocess(path, ['GSE40279', 'GSE87571', 'EPIC', 'GSE55763'], ['direction_q_ss', 'direction_q_ar'], 'common', is_rewrite=is_rewrite)
 
     data_dicts = {}
-    metal_type = 'q_ss_common'
+    metal_type = 'direction_q_ss_common'
     data_dicts['ss'] = metal_process(metal_type, pval_perc_ss_metal, path)
-    metal_type = 'q_ar_common'
+    metal_type = 'direction_q_ar_common'
     data_dicts['ar'] = metal_process(metal_type, pval_perc_ar_metal, path)
 
     if not os.path.exists(f'{path}/ssar'):
