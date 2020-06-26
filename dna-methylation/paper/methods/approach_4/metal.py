@@ -1,5 +1,6 @@
 from paper.routines.data.human_plasma_proteome import *
 from statsmodels.stats.multitest import multipletests
+import copy
 
 
 def metal_preprocess(path, datasets, targets, suffix):
@@ -53,7 +54,7 @@ def get_metal_dicts(path, types):
 
 def process_metal(data_dicts, metal_dicts, pval_perc, pval_null_lim, save_path):
 
-    target_keys = ['item', 'p_value_f', 'p_value_m']
+    target_keys = ['item', 'p_value_f', 'p_value_m', 'dir_f', 'dir_m']
     for dataset in data_dicts:
         target_keys.append(f'type_f_{dataset}')
         target_keys.append(f'type_m_{dataset}')
@@ -62,8 +63,10 @@ def process_metal(data_dicts, metal_dicts, pval_perc, pval_null_lim, save_path):
     m_metal_dict = copy.deepcopy(f_metal_dict)
     fm_metal_dict = copy.deepcopy(f_metal_dict)
 
-    f_pvals = metal_dicts['q_f_common']['p_value_fdr_bh']
-    m_pvals = metal_dicts['q_m_common']['p_value_fdr_bh']
+    f_pvals = metal_dicts['direction_q_f_common']['p_value_fdr_bh']
+    m_pvals = metal_dicts['direction_q_m_common']['p_value_fdr_bh']
+    f_dirs = metal_dicts['direction_q_f_common']['Direction']
+    m_dirs = metal_dicts['direction_q_m_common']['Direction']
 
     f_pvals_percentiles = np.percentile(f_pvals, [pval_perc, 100 - pval_perc])
     print(f'f percentile {pval_perc}: {f_pvals_percentiles[0]}')
@@ -73,7 +76,7 @@ def process_metal(data_dicts, metal_dicts, pval_perc, pval_null_lim, save_path):
     print(f'm percentile {pval_perc}: {m_pvals_percentiles[0]}')
     print(f'm percentile {100 - pval_perc}: {m_pvals_percentiles[1]}')
 
-    probes = metal_dicts['q_f_common']['MarkerName']
+    probes = metal_dicts['direction_q_f_common']['MarkerName']
 
     f_directions_dict = {}
     m_directions_dict = {}
@@ -95,6 +98,8 @@ def process_metal(data_dicts, metal_dicts, pval_perc, pval_null_lim, save_path):
         probe = probes[probe_id]
         pval_f = f_pvals[probe_id]
         pval_m = m_pvals[probe_id]
+        dir_f = f_dirs[probe_id]
+        dir_m = m_dirs[probe_id]
 
         f_is_same_direction = False
         m_is_same_direction = False
@@ -117,6 +122,8 @@ def process_metal(data_dicts, metal_dicts, pval_perc, pval_null_lim, save_path):
                 f_metal_dict['item'].append(probe)
                 f_metal_dict['p_value_f'].append(pval_f)
                 f_metal_dict['p_value_m'].append(pval_m)
+                f_metal_dict['dir_f'].append(dir_f)
+                f_metal_dict['dir_m'].append(dir_m)
                 for dataset in data_dicts:
                     f_metal_dict[f'type_f_{dataset}'].append(f_directions_dict[dataset][probe])
                     f_metal_dict[f'type_m_{dataset}'].append(m_directions_dict[dataset][probe])
@@ -127,6 +134,8 @@ def process_metal(data_dicts, metal_dicts, pval_perc, pval_null_lim, save_path):
                 m_metal_dict['item'].append(probe)
                 m_metal_dict['p_value_f'].append(pval_f)
                 m_metal_dict['p_value_m'].append(pval_m)
+                m_metal_dict['dir_f'].append(dir_f)
+                m_metal_dict['dir_m'].append(dir_m)
                 for dataset in data_dicts:
                     m_metal_dict[f'type_f_{dataset}'].append(f_directions_dict[dataset][probe])
                     m_metal_dict[f'type_m_{dataset}'].append(m_directions_dict[dataset][probe])
@@ -140,6 +149,8 @@ def process_metal(data_dicts, metal_dicts, pval_perc, pval_null_lim, save_path):
                 fm_metal_dict['item'].append(probe)
                 fm_metal_dict['p_value_f'].append(pval_f)
                 fm_metal_dict['p_value_m'].append(pval_m)
+                fm_metal_dict['dir_f'].append(dir_f)
+                fm_metal_dict['dir_m'].append(dir_m)
                 for dataset in data_dicts:
                     fm_metal_dict[f'type_f_{dataset}'].append(f_directions_dict[dataset][probe])
                     fm_metal_dict[f'type_m_{dataset}'].append(m_directions_dict[dataset][probe])

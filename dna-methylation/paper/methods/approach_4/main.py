@@ -48,9 +48,9 @@ data_dicts = get_data_dicts(datasets, 'aggregator', keys_load, keys_save, get_ap
 if metal == True:
     path = f'{save_path}/metal'
 
-    metal_preprocess(path, ['GSE40279', 'GSE87571', 'EPIC', 'GSE55763'], ['q_f', 'q_m'], 'common')
+    metal_preprocess(path, ['GSE40279', 'GSE87571', 'EPIC', 'GSE55763'], ['direction_q_f', 'direction_q_m'], 'common')
 
-    metal_dicts = get_metal_dicts(path, ['q_f_common', 'q_m_common'])
+    metal_dicts = get_metal_dicts(path, ['direction_q_f_common', 'direction_q_m_common'])
     if not os.path.exists(path):
         os.makedirs(path)
     f_metal_dict, m_metal_dict, fm_metal_dict = process_metal(data_dicts, metal_dicts, pval_perc, pval_null_lim, save_path)

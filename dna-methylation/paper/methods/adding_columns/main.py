@@ -1,25 +1,25 @@
 from paper.routines.infrastructure.load.table import load_table_dict_by_key_xlsx, load_table_dict_xlsx
 from paper.routines.infrastructure.save.table import save_table_dict_xlsx
 
-# dataset = 'GSE55763'
-#
-# source_fn = f'E:/YandexDisk/Work/pydnameth/approaches/ancova/{dataset}.xlsx'
-# source_keys = ['x:category_pval']
+dataset = 'GSE55763'
 
+source_fn = f'E:/YandexDisk/Work/pydnameth/approaches/ancova/Treatment/{dataset}.xlsx'
+source_keys = ['x:category_pval', 'x:category']
+
+target_fn = 'E:/YandexDisk/Work/pydnameth/draft/fixes/materials_and_methods/update_3_direction_for_ar_and_ss/supplementary_file_1_tmp.xlsx'
+target_main_key = 'CpG'
+target_keys = [f'interaction p-value ({dataset})', f'interaction coeff ({dataset})']
+
+# source_fn = f'E:/YandexDisk/Work/pydnameth/approaches/ancova/p_bh_ancova.xlsx'
+# source_keys = ['P-value']
+#
 # target_fn = 'E:/YandexDisk/Work/pydnameth/draft/fixes/materials_and_methods/common/supplementary_file_1_tmp.xlsx'
 # target_main_key = 'CpG'
-# target_keys = [f'interaction p-value ({dataset})']
+# target_keys = [f'METAL interaction p-value']
 
-source_fn = f'E:/YandexDisk/Work/pydnameth/approaches/ancova/p_bh_ancova.xlsx'
-source_keys = ['P-value']
+save_fn = 'E:/YandexDisk/Work/pydnameth/draft/fixes/materials_and_methods/update_3_direction_for_ar_and_ss/supplementary_file_1_tmp'
 
-target_fn = 'E:/YandexDisk/Work/pydnameth/draft/fixes/materials_and_methods/common/supplementary_file_1_tmp.xlsx'
-target_main_key = 'CpG'
-target_keys = [f'METAL interaction p-value']
-
-save_fn = 'E:/YandexDisk/Work/pydnameth/draft/fixes/materials_and_methods/common/supplementary_file_1_tmp'
-
-source_dict = load_table_dict_by_key_xlsx(source_fn, 'MarkerName')
+source_dict = load_table_dict_by_key_xlsx(source_fn, 'item')
 target_dict = load_table_dict_xlsx(target_fn)
 
 for key in target_keys:

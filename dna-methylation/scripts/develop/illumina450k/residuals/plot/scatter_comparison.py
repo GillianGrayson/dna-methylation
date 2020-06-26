@@ -62,10 +62,10 @@ for data_base in data_bases:
     obs = get_observables_list(data.base)
     data_params = get_data_params(data.base)
     data_params['cells'] = ['Bcell', 'CD4T', 'CD8T', 'Gran', 'NK']
-    data_params['observables'] = ['age']
+    data_params['observables'] = ['gender']
 
     attributes = pdm.Attributes(
-        target='gender',
+        target='age',
         observables=observables,
         cells=cells
     )
@@ -91,22 +91,22 @@ for run_id in range(0, len(rows_dict['items']), max_rows):
         data_params_list=data_params_list,
         rows_dict=curr_dict,
         cols_dict=cols_dict,
-        # method_params={
-        #     'line': 'no',
-        #     'fit': 'yes',
-        #     'semi_window': 4,
-        #     'box_b': 'Q1',
-        #     'box_t': 'Q99',
-        #     'legend_size': 1,
-        #     'add': 'none'
-        # }
-        method_params = {
+        method_params={
             'line': 'no',
-            'fit': 'no',
+            'fit': 'yes',
             'semi_window': 4,
             'box_b': 'Q1',
             'box_t': 'Q99',
             'legend_size': 1,
             'add': 'none'
         }
+        # method_params = {
+        #     'line': 'no',
+        #     'fit': 'no',
+        #     'semi_window': 4,
+        #     'box_b': 'Q1',
+        #     'box_t': 'Q99',
+        #     'legend_size': 1,
+        #     'add': 'none'
+        # }
     )
