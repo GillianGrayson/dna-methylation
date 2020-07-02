@@ -53,10 +53,12 @@ def metal_process(metal_type, pval_perc, path):
     )
     data_dict['p_value_fdr_bf'] = pvals_corr
 
-    pvals = np.array(data_dict['p_value_fdr_bh'])
-    pvals_percentile = np.percentile(pvals, pval_perc)
+    pvals = np.array(data_dict['p_value_fdr_bf'])
+    directions = data_dict['Direction']
+    #pvals_percentile = np.percentile(pvals, pval_perc)
+    pvals_percentile = 0.01
     print(f'{metal_type} percentile: {pvals_percentile}')
-    print(f'{metal_type} less 0.05: {np.count_nonzero(pvals_corr < 0.05)}')
+    print(f'{metal_type} less 0.01: {np.count_nonzero(pvals_corr < 0.01)}')
     print(f'{metal_type} less 0.001: {np.count_nonzero(pvals_corr < 0.001)}')
 
     pvals_mod = -np.log10(pvals[np.nonzero(pvals)])
@@ -112,8 +114,11 @@ def metal_process(metal_type, pval_perc, path):
 
         pval = pvals[cpg_id]
 
+        direction = directions[cpg_id]
+
         if pval < pvals_percentile:
-            for key in data_dict:
-                data_dict_filtered[key].append(data_dict[key][cpg_id])
+            if '?' in direction or len(set(list(direction))) == 1:
+                for key in data_dict:
+                    data_dict_filtered[key].append(data_dict[key][cpg_id])
 
     return data_dict_filtered

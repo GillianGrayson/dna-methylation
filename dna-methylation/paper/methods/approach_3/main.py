@@ -83,9 +83,6 @@ if not os.path.exists(f'{save_path}/ar'):
 if not os.path.exists(f'{save_path}/ssar'):
     os.makedirs(f'{save_path}/ssar')
 
-path = f'{save_path}/metal'
-metal_preprocess(path, ['GSE40279', 'GSE87571', 'EPIC', 'GSE55763'], ['direction_q_ss', 'direction_q_ar'], 'common', is_rewrite=is_rewrite)
-
 data_dicts = get_data_dicts(datasets, 'aggregator', keys_load, keys_save, get_approach_3_hash)
 add_best_pvalue(data_dicts, f'{pval_prefix}_ar')
 ss_data_dicts, ar_data_dicts, ssar_data_dicts = filter_data_dicts(data_dicts, pval_prefix, pval_perc_ss, pval_perc_ar, pval_lim, save_path)
@@ -97,12 +94,12 @@ ssar_result_dicts, ssar_result_dicts_with_diff = process_intersections(ssar_data
 if metal == True:
 
     path = f'{save_path}/metal'
-    metal_preprocess(path, ['GSE40279', 'GSE87571', 'EPIC', 'GSE55763'], ['direction_q_ss', 'direction_q_ar'], 'common', is_rewrite=is_rewrite)
+    #metal_preprocess(path, ['GSE40279', 'GSE87571', 'EPIC', 'GSE55763'], ['direction_q_ss', 'direction_q_ar'], 'common', is_rewrite=is_rewrite)
 
     data_dicts = {}
-    metal_type = 'direction_q_ss_common'
+    metal_type = 'direction_q_ss_common_ver_4'
     data_dicts['ss'] = metal_process(metal_type, pval_perc_ss_metal, path)
-    metal_type = 'direction_q_ar_common'
+    metal_type = 'direction_q_ar_common_ver_4'
     data_dicts['ar'] = metal_process(metal_type, pval_perc_ar_metal, path)
 
     if not os.path.exists(f'{path}/ssar'):
