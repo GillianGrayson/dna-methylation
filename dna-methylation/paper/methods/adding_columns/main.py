@@ -34,14 +34,14 @@ for dataset in datasets:
 
     print(dataset)
 
-    source_fn = f'E:/YandexDisk/Work/pydnameth/approaches/approach_3/residuals/metal/{dataset}.xlsx'
-    source_keys = ['corr_coeff_ar']
+    source_fn = f'E:/YandexDisk/Work/pydnameth/approaches/ancova/Treatment/{dataset}.xlsx'
+    source_keys = ['x:category_pval', 'x:category']
 
-    target_fn = 'E:/YandexDisk/Work/pydnameth/approaches/approach_3/residuals/metal/direction_q_ss_common_ver_4.xlsx'
+    target_fn = 'E:/YandexDisk/Work/pydnameth/draft/fixes/materials_and_methods/update_4_bonferroni/ssDMPs_ext.xlsx'
     target_main_key = 'MarkerName'
-    target_keys = [f'corr_coeff_ar_{dataset}']
+    target_keys = [f'interaction p-value ({dataset})', f'interaction coeff ({dataset})']
 
-    save_fn = 'E:/YandexDisk/Work/pydnameth/approaches/approach_3/residuals/metal/direction_q_ss_common_ver_4'
+    save_fn = 'E:/YandexDisk/Work/pydnameth/draft/fixes/materials_and_methods/update_4_bonferroni/ssDMPs_ext'
 
     source_dict = load_table_dict_by_key_xlsx(source_fn, 'item')
     target_dict = load_table_dict_xlsx(target_fn)
