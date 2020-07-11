@@ -63,12 +63,13 @@ def process_metal(data_dicts, metal_dicts, pval_perc, pval_null_lim, save_path):
     f_metal_dict = {key:[] for key in target_keys}
     m_metal_dict = copy.deepcopy(f_metal_dict)
     fm_metal_dict = copy.deepcopy(f_metal_dict)
+    global_dict = copy.deepcopy(f_metal_dict)
 
-    f_pvals = metal_dicts['direction_q_f_common']['p_value_fdr']
-    m_pvals = metal_dicts['direction_q_m_common']['p_value_fdr']
+    f_pvals = metal_dicts['direction_p_f_common']['p_value_fdr']
+    m_pvals = metal_dicts['direction_p_m_common']['p_value_fdr']
 
-    f_dirs = metal_dicts['direction_q_f_common']['Direction']
-    m_dirs = metal_dicts['direction_q_m_common']['Direction']
+    f_dirs = metal_dicts['direction_p_f_common']['Direction']
+    m_dirs = metal_dicts['direction_p_m_common']['Direction']
 
     f_pvals_percentiles = np.percentile(f_pvals, [pval_perc, 100 - pval_perc])
     f_pvals_percentiles[0] = 0.01
@@ -80,7 +81,7 @@ def process_metal(data_dicts, metal_dicts, pval_perc, pval_null_lim, save_path):
     print(f'm percentile {pval_perc}: {m_pvals_percentiles[0]}')
     print(f'm percentile {100 - pval_perc}: {m_pvals_percentiles[1]}')
 
-    probes = metal_dicts['direction_q_f_common']['MarkerName']
+    probes = metal_dicts['direction_p_f_common']['MarkerName']
 
     f_directions_dict = {}
     m_directions_dict = {}
@@ -159,4 +160,13 @@ def process_metal(data_dicts, metal_dicts, pval_perc, pval_null_lim, save_path):
                     fm_metal_dict[f'type_f_{dataset}'].append(f_directions_dict[dataset][probe])
                     fm_metal_dict[f'type_m_{dataset}'].append(m_directions_dict[dataset][probe])
 
-    return f_metal_dict, m_metal_dict, fm_metal_dict
+        global_dict['item'].append(probe)
+        global_dict['p_value_f'].append(pval_f)
+        global_dict['p_value_m'].append(pval_m)
+        global_dict['dir_f'].append(dir_f)
+        global_dict['dir_m'].append(dir_m)
+        for dataset in data_dicts:
+            global_dict[f'type_f_{dataset}'].append(f_directions_dict[dataset][probe])
+            global_dict[f'type_m_{dataset}'].append(m_directions_dict[dataset][probe])
+
+    return f_metal_dict, m_metal_dict, fm_metal_dict, global_dict

@@ -94,12 +94,12 @@ ssar_result_dicts, ssar_result_dicts_with_diff = process_intersections(ssar_data
 if metal == True:
 
     path = f'{save_path}/metal'
-    #metal_preprocess(path, ['GSE40279', 'GSE87571', 'EPIC', 'GSE55763'], ['direction_q_ss', 'direction_q_ar'], 'common', is_rewrite=is_rewrite)
+    metal_preprocess(path, ['GSE40279', 'GSE87571', 'EPIC', 'GSE55763'], ['direction_p_ss', 'direction_p_ar'], 'common_ver_5', is_rewrite=is_rewrite)
 
     data_dicts = {}
-    metal_type = 'direction_q_ss_common_ver_4'
+    metal_type = 'direction_p_ss_common_ver_5'
     data_dicts['ss'] = metal_process(metal_type, pval_perc_ss_metal, path)
-    metal_type = 'direction_q_ar_common_ver_4'
+    metal_type = 'direction_p_ar_common_ver_5'
     data_dicts['ar'] = metal_process(metal_type, pval_perc_ar_metal, path)
 
     if not os.path.exists(f'{path}/ssar'):

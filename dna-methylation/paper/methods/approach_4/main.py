@@ -48,12 +48,12 @@ data_dicts = get_data_dicts(datasets, 'aggregator', keys_load, keys_save, get_ap
 if metal == True:
     path = f'{save_path}/metal'
 
-    metal_preprocess(path, ['GSE40279', 'GSE87571', 'EPIC', 'GSE55763'], ['direction_q_f', 'direction_q_m'], 'common')
+    metal_preprocess(path, ['GSE40279', 'GSE87571', 'EPIC', 'GSE55763'], ['direction_p_f', 'direction_p_m'], 'common')
 
-    metal_dicts = get_metal_dicts(path, ['direction_q_f_common', 'direction_q_m_common'])
+    metal_dicts = get_metal_dicts(path, ['direction_p_f_common', 'direction_p_m_common'])
     if not os.path.exists(path):
         os.makedirs(path)
-    f_metal_dict, m_metal_dict, fm_metal_dict = process_metal(data_dicts, metal_dicts, pval_perc, pval_null_lim, save_path)
+    f_metal_dict, m_metal_dict, fm_metal_dict, global_dict = process_metal(data_dicts, metal_dicts, pval_perc, pval_null_lim, save_path)
 
     add_chars_to_dict(f_metal_dict)
     save_table_dict_xlsx(f'{path}/f', f_metal_dict)
@@ -61,6 +61,8 @@ if metal == True:
     save_table_dict_xlsx(f'{path}/m', m_metal_dict)
     add_chars_to_dict(fm_metal_dict)
     save_table_dict_xlsx(f'{path}/fm', fm_metal_dict)
+    add_chars_to_dict(global_dict)
+    save_table_dict_xlsx(f'{path}/global_dict', global_dict)
 
 f_data_dicts, m_data_dicts, fm_data_dicts = filter_data_dicts(data_dicts, pval_perc, pval_null_lim, save_path)
 

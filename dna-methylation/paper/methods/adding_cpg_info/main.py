@@ -5,13 +5,13 @@ from paper.routines.infrastructure.load.annotations import load_annotations_dict
 from paper.routines.infrastructure.load.papers import load_papers_dict
 from paper.routines.infrastructure.save.table import save_table_dict_xlsx
 
-name = 'q_ss_common'
+name = 'interaction_metal_q_value'
 cpg_key = 'MarkerName'
 
 annotations_keys = ['CHR', 'MAPINFO', 'UCSC_REFGENE_NAME', 'UCSC_REFGENE_GROUP', 'RELATION_TO_UCSC_CPG_ISLAND']
 papers_keys = ['inoshita', 'singmann', 'yousefi']
 
-path = 'E:/YandexDisk/Work/pydnameth/draft/fixes/materials_and_methods/common/raw/ssaDMPs/metal'
+path = 'E:/YandexDisk/Work/pydnameth/draft/fixes/materials_and_methods/update_4_bonferroni'
 
 data_dicts_passed = {}
 cpgs_dicts_passed = {}

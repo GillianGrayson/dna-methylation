@@ -7,13 +7,13 @@ import numpy as np
 import os
 
 
-save_path = 'E:/YandexDisk/Work/pydnameth/approaches/approach_3/residuals/fisher'
+save_path = 'E:/YandexDisk/Work/pydnameth/approaches/approach_4/residuals/fisher'
 
-global_fn = 'E:/YandexDisk/Work/pydnameth/approaches/approach_3/residuals/metal/direction_q_ar_common.xlsx'
+global_fn = 'E:/YandexDisk/Work/pydnameth/approaches/approach_4/residuals/metal/direction_q_f_common.xlsx'
 global_dict = load_table_dict_xlsx(global_fn)
 global_probe_key = 'MarkerName'
 
-target_fn = "E:/YandexDisk/Work/pydnameth/draft/fixes/materials_and_methods/update_3_direction_for_ar_and_ss/supplementary_file_1.xlsx"
+target_fn = "E:/YandexDisk/Work/pydnameth/draft/fixes/materials_and_methods/update_4_bonferroni/saVMPs_males.xlsx"
 target_dict = load_table_dict_xlsx(target_fn)
 target_probe_key = 'CpG'
 
