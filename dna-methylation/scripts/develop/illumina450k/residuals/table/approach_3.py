@@ -3,8 +3,8 @@ from scripts.develop.routines import *
 
 
 data = pdm.Data(
-    path='',
-    base='GSE87571'
+    path='E:/YandexDisk/Work/pydnameth/tissues/liver',
+    base='GSE61446'
 )
 
 annotations = pdm.Annotations(
@@ -17,12 +17,12 @@ annotations = pdm.Annotations(
 )
 
 cells = pdm.Cells(
-    name='cells_horvath_calculator',
+    name='',
     types='any'
 )
 
 observables = pdm.Observables(
-    name='observables',
+    name='observables_part(full)',
     types={}
 )
 
@@ -32,11 +32,15 @@ attributes = pdm.Attributes(
     cells=cells
 )
 
-target_ss = 'gender'
+target_ss = 'sex'
 target_ar = 'age'
 
 data_params_ss = get_data_params(data.base)
 if data.base == 'liver':
+    data_params_ss['observables'] = ['age']
+elif data.base == 'GSE74193':
+    data_params_ss['observables'] = ['age']
+elif data.base == 'GSE61446':
     data_params_ss['observables'] = ['age']
 else:
     data_params_ss['cells'] = ['Bcell', 'CD4T', 'CD8T', 'Gran', 'NK']
@@ -45,6 +49,10 @@ else:
 data_params_ar = get_data_params(data.base)
 if data.base == 'liver':
     data_params_ar['observables'] = ['gender']
+elif data.base == 'GSE74193':
+    data_params_ar['observables'] = ['sex']
+elif data.base == 'GSE61446':
+    data_params_ar['observables'] = ['sex']
 else:
     data_params_ar['cells'] = ['Bcell', 'CD4T', 'CD8T', 'Gran', 'NK']
     data_params_ar['observables'] = ['gender']

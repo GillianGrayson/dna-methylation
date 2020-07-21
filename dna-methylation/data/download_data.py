@@ -5,13 +5,17 @@ from data.infrastructure.path import get_data_path, make_dir
 from data.infrastructure.load.table import load_table_dict_xlsx, load_table_dict_pkl
 from data.infrastructure.save.table import save_table_dict_pkl, save_table_dict_xlsx, save_table_dict_csv
 import os
+import numpy as np
 from tqdm import tqdm
 import re
 import gzip
 import shutil
 import ntpath
-from distutils.dir_util import copy_tree
+import pickle
 
+
+na_values = ['', '#N/A', '#N/A N/A', '#NA', '-1.#IND', '-1.#QNAN', '-NaN', '-nan', '1.#IND', '1.#QNAN', '<NA>',
+             'N/A', 'NA', 'NULL', 'NaN', 'n/a', 'nan', 'null', '-', '--']
 
 def split_words(text):
     rgx = re.compile(r"((?:(?<!'|\w)(?:\w-?'?)+(?<!-))|(?:(?<='|\w)(?:\w-?'?)+(?=')))")
@@ -33,7 +37,7 @@ gse_key = 'series_id'
 source_key = 'source_name_ch1'
 characteristics_key = 'characteristics_ch1'
 
-target_dir = f'{get_data_path()}/GPL{GPL}/filtered/brain'
+target_dir = f'{get_data_path()}/GPL{GPL}/filtered/brain(DLPFC)'
 
 fn_xlsx = f'{get_data_path()}/GPL{GPL}/GPL{GPL}_gsm_table_{suffix}.xlsx'
 fn_pkl = f'{get_data_path()}/GPL{GPL}/GPL{GPL}_gsm_table_{suffix}.pkl'
@@ -85,8 +89,6 @@ else:
 
 
 gses = [f.name for f in os.scandir(target_dir) if f.is_dir()]
-gses.sort()
-gses = gses[::-1]
 
 gse_gsms_passed_dict = {}
 gse_passed_dict = {}
@@ -97,58 +99,131 @@ for gse in tqdm(gses):
     make_dir(path_data)
 
     gsms = gse_gsms_dict[gse]
+
     gsms_exist = []
-
     base_names = {}
-
     chs_keys = set()
-    for gsm_id, gsm in enumerate(gsms):
+    betas_dfs = {}
+    is_beta_process = False
+    cpgs = set()
+
+    files_downloaded = set()
+    for gsm_id, gsm in tqdm(enumerate(gsms), desc='data loading'):
         try:
             while True:
                 try:
-                    gsm_data = GEOparse.get_GEO(geo=gsm, destdir=f'{path_data}', include_data=True, how="")
-                    if len(gsm_data.metadata['supplementary_file']) > 0:
-                        tail = ''
+                    gsm_data = GEOparse.get_GEO(geo=gsm, destdir=f'{path_data}', include_data=True, how="", silent=True)
+                    os.remove(f'{path_data}/{gsm}.txt')
+
+                    # characteristics processing
+                    gsms_exist.append(gsm)
+                    chs_raw = gsm_data.metadata[characteristics_key]
+                    for ch in chs_raw:
+                        ch_split = ch.split(': ')
+                        chs_keys.update([ch_split[0]])
+
+
+                    tail = 'none'
+                    if gsm_data.metadata['supplementary_file'][0] != 'NONE':
+                        # raw signal downloading
                         for supp_file in gsm_data.metadata['supplementary_file']:
                             head, tail = ntpath.split(supp_file)
-                            download_from_url(supp_file, f'{path_data}/{tail}')
-                            with gzip.open( f'{path_data}/{tail}', 'rb') as f_in:
-                                with open( f'{path_data}/{tail[:-3]}', 'wb') as f_out:
-                                    shutil.copyfileobj(f_in, f_out)
-                            os.remove(f'{path_data}/{tail}')
-                        base_names[gsm] = os.path.splitext(tail)[0]
+                            if tail[:-3] in files_downloaded:
+                                raise ValueError('File duplication')
+                            files_downloaded.add(tail[:-3])
+                            if not os.path.exists( f'{path_data}/{tail[:-3]}'):
+                                download_from_url(supp_file, f'{path_data}/{tail}')
+                                with gzip.open( f'{path_data}/{tail}', 'rb') as f_in:
+                                    with open( f'{path_data}/{tail[:-3]}', 'wb') as f_out:
+                                        shutil.copyfileobj(f_in, f_out)
+                                os.remove(f'{path_data}/{tail}')
+                    else:
+                        # beta-values downloading
+                        gsm_data = GEOparse.get_GEO(geo=gsm, destdir=f'{path_data}', include_data=True, how="full")
+                        os.remove(f'{path_data}/{gsm}.txt')
+                        is_beta_process = True
+
+                        betas_dfs[gsm] = gsm_data.table
+                        cpgs.update(set(gsm_data.table['ID_REF']))
+
+                    if tail == 'none':
+                        base_names[gsm] = tail
+                    else:
+                        base_names[gsm] = os.path.splitext(tail)[0][0:-9]
+
                 except ValueError:
                     continue
                 except ConnectionError:
                     continue
                 break
         except GEOparse.GEOparse.NoEntriesException:
-            os.remove(f'{path_data}/{gsm}.txt')
             continue
-        gsms_exist.append(gsm)
-        chs_raw = gsm_data.metadata[characteristics_key]
-        for ch in chs_raw:
-            ch_split = ch.split(': ')
-            chs_keys.update([ch_split[0]])
 
     gsms = gsms_exist
-    gsms_passed = [True] * len(gsms)
+
+    print(f'len(gsms_exist) = {len(gsms_exist)}')
+    print(f'len(files_downloaded) = {len(files_downloaded)}')
+
+    if is_beta_process:
+        cpgs = list(cpgs)
+        cpgs.sort()
+
+        betas_dict = {}
+        betas_missed_dict = {}
+        betas_missed_dict['any'] = []
+        betas_data = np.full((len(cpgs), len(gsms)), np.nan, dtype=np.float32)
+
+        for cpg_id, cpg in enumerate(cpgs):
+            betas_dict[cpg] = cpg_id
+
+        for gsm_id, gsm in tqdm(enumerate(gsms), desc='data filling'):
+            df = betas_dfs[gsm]
+            curr_cpgs = df['ID_REF'].tolist()
+            curr_betas = df['VALUE'].tolist()
+            for cpg_id, cpg in enumerate(curr_cpgs):
+                betas_data[betas_dict[cpg], gsm_id] = curr_betas[cpg_id]
+
+        for cpg in tqdm(betas_dict, desc='missing filling'):
+            row = betas_dict[cpg]
+            betas = betas_data[row, :]
+            missed_indexes = list(np.argwhere(np.isnan(betas)))
+            betas_missed_dict[cpg] = missed_indexes
+
+        f = open(f'{path_data}/betas_dict.pkl', 'wb')
+        pickle.dump(betas_dict, f,  pickle.HIGHEST_PROTOCOL)
+        f.close()
+
+        f = open(f'{path_data}/betas_missed_dict.pkl', 'wb')
+        pickle.dump(betas_missed_dict, f, pickle.HIGHEST_PROTOCOL)
+        f.close()
+
+        np.savez_compressed(f'{path_data}/betas.npz', data=betas_data)
 
     chs = {}
     chs['geo_accession'] = []
-    chs['base_name'] = []
+    chs['Basename'] = []
     for key in chs_keys:
         chs[key] = []
 
-    for gsm_id, gsm in enumerate(gsms):
-        chs['base_name'] = base_names[gsm]
+    for gsm_id, gsm in tqdm(enumerate(gsms), desc='data postprocess'):
 
-        gsm_data = GEOparse.get_GEO(geo=gsm, destdir=f'{path_data}', include_data=False, how="")
+        # characteristics processing
+        chs['Basename'].append(base_names[gsm])
 
-        gsm_is_passed = True
+        try:
+            while True:
+                try:
+                    gsm_data = GEOparse.get_GEO(geo=gsm, destdir=f'{path_data}', include_data=True, how="", silent=True)
+                    os.remove(f'{path_data}/{gsm}.txt')
+                except ValueError:
+                    continue
+                except ConnectionError:
+                    continue
+                break
+        except GEOparse.GEOparse.NoEntriesException:
+            continue
 
         chs['geo_accession'].append(gsm_data.metadata['geo_accession'][0])
-
         chs_raw = gsm_data.metadata[characteristics_key]
         exist_chs = []
         for ch in chs_raw:
@@ -157,11 +232,8 @@ for gse in tqdm(gses):
                 exist_chs.append(ch_split[0])
                 ch_value = ': '.join(ch_split[1::])
                 chs[ch_split[0]].append(ch_value)
-
         missed_chs = list(chs_keys.difference(exist_chs))
         for ch in missed_chs:
             chs[ch].append('NA')
-
-        gsms_passed[gsm_id] = gsm_is_passed
 
     save_table_dict_csv(f'{path_data}/observables', chs)

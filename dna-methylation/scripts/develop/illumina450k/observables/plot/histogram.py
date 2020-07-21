@@ -2,8 +2,8 @@ import pydnameth as pdm
 from scripts.develop.routines import *
 
 data = pdm.Data(
-    path='',
-    base='liver'
+    path='E:/YandexDisk/Work/pydnameth/tissues/liver',
+    base='GSE61446'
 )
 
 annotations = pdm.Annotations(
@@ -16,12 +16,12 @@ annotations = pdm.Annotations(
 )
 
 cells = pdm.Cells(
-    name='cells_horvath_calculator',
+    name='',
     types='any'
 )
 
 observables = pdm.Observables(
-    name='observables',
+    name='observables_part(full)',
     types={}
 )
 
@@ -43,7 +43,7 @@ pdm.observables_plot_histogram(
         'bin_size': 1.0,
         'opacity': 0.80,
         'barmode': 'overlay',
-        'x_range': [5, 105],
-        'legend_size': 1
+        'x_range': 'auto',
+        'legend_size': 2
     }
 )
