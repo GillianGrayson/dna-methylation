@@ -19,7 +19,8 @@ def get_approach_3_hash(dataset):
             'GSE87571': '7c468ca8212428806c727d3e2a836662',
             'EPIC': 'a64c0b99b7e097c668e8300e29ad693f',
             'GSE55763': '01f9edb1330453690b493c5a17624c6c',
-            'liver': '81f11bc49cb451091c552dce079bb478'
+            'liver': 'c86106e13eebe67dca94d658cd652860',
+            'GSE74193': '9e47f0a1c102e177ac5183455d72d1c4'
         }
     else:
         raise ValueError(f'{dataset.type} is not supported')
@@ -33,16 +34,14 @@ def get_approach_4_hash(dataset):
             'GSE40279': 'bc82f74dd244bca21ed33d708bd61b85',
             'GSE87571': 'c098dc79338657b0b9c35f55a8441e80',
             'EPIC': '753bc3a13dfb1e22841bb140a3236dad',
-            'GSE55763': '635cc3bbde1154509bd4c5a564c7f37d',
-
+            'GSE55763': '635cc3bbde1154509bd4c5a564c7f37d'
         }
     elif dataset.type == 'residuals':
         hash = {
             'GSE40279': '4d1b7f192ea49142732bb2b1374c8ff7',
             'GSE87571': 'fde5819ae46149e63fbea22a9d973f30',
             'EPIC': 'b004131b7d5a5657c26ff68dd22d35da',
-            'GSE55763': 'dab3ec0ec397a78a3436c88a4cad6552',
-
+            'GSE55763': 'dab3ec0ec397a78a3436c88a4cad6552'
         }
     else:
         raise ValueError(f'{dataset.type} is not supported')
@@ -98,7 +97,8 @@ def get_ss_hash(dataset):
             'GSE87571': '960bd640',
             'EPIC': '1a502535',
             'GSE55763': 'fb0b2483',
-            'liver': 'ded0cd22'
+            'liver': '5c56208b',
+            'GSE74193': '3f115b3c'
         }
     else:
         raise ValueError(f'{dataset.type} is not supported')
@@ -113,7 +113,8 @@ def get_ar_hash(dataset):
             'GSE87571': '6af05523',
             'EPIC': '018fad6b',
             'GSE55763': 'c7e956c1',
-            'liver': 'b1f058b7'
+            'liver': 'b1f058b7',
+            'GSE74193': '342dd046'
         }
     else:
         raise ValueError(f'{dataset.type} is not supported')

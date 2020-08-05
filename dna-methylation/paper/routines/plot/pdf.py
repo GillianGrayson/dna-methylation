@@ -32,7 +32,7 @@ def get_pdf_x_and_y(data, num_bins=1000, x_left=None, x_right=None):
             else:
                 ys[index] += 1
 
-    print(f'num_outliers: {num_outliers}')
+    #print(f'num_outliers: {num_outliers}')
 
     sum_y = sum(ys)
     ys = [curr_y / (sum_y * shift) for curr_y in ys]

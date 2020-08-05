@@ -14,7 +14,8 @@ import os
 
 
 class Dataset:
-    def __init__(self, type, name):
+    def __init__(self, path, type, name):
+        self.path = path
         self.type = type
         self.name = name
 
@@ -24,7 +25,7 @@ def get_data_dicts(datasets, method, keys_load, keys_save, hash_fun):
     data_dicts = {}
     for ds_id, dataset in enumerate(datasets):
 
-        curr_load_path = f'{get_data_path()}/{dataset.name}/{dataset.type}/table/{method}/{hash_fun(dataset)}'
+        curr_load_path = f'{dataset.path}/{dataset.name}/{dataset.type}/table/{method}/{hash_fun(dataset)}'
         data_dict = load_table_dict_pkl(f'{curr_load_path}/default.pkl')
 
         data_dicts[dataset.name] = defaultdict(list)

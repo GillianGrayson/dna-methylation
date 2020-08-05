@@ -6,6 +6,7 @@ def get_data_params(data_base):
         }
     elif data_base == 'GSE74193':
         data_params = {
+            'part': 'control',
             'norm': 'funnorm',
         }
     elif data_base == 'GSE61446':

@@ -3,23 +3,26 @@ from paper.routines.data.approaches import *
 from paper.methods.approach_3.filter import filter_data_dicts, add_best_pvalue
 from paper.methods.approach_3.metal import *
 
-proteomic = False
-metal = True
+proteomic = True
+metal = False
 metal_proteomic = False
 
-is_rewrite = True
+is_rewrite = False
 
 pval_perc_ss = 10
 pval_perc_ar = 10
 pval_lim = 0.05
-pval_prefix = 'p_value_fdr_bh'
+pval_prefix = 'p_value_bonferroni'
 
 pval_perc_ss_metal = 5
 pval_perc_ar_metal = 5
 
 type = 'residuals'
-names = ['GSE40279', 'GSE87571', 'EPIC', 'GSE55763']
-datasets = [Dataset(type, name) for name in names]
+paths = ['E:/YandexDisk/Work/pydnameth', 'E:/YandexDisk/Work/pydnameth', 'E:/YandexDisk/Work/pydnameth/tissues/brain(DLPFC)']
+names = ['GSE87571', 'liver', 'GSE74193']
+datasets = []
+for name_id, name in enumerate(names):
+    datasets.append(Dataset(paths[name_id], type, name))
 
 keys_save = [
     'item',
@@ -27,23 +30,23 @@ keys_save = [
     'corr_coeff_ss',
     'p_value_ss',
     'p_value_fdr_bh_ss',
-    'p_value_fdr_hb_ss',
+    'p_value_bonferroni_ss',
     'lin_lin_corr_coeff_ar',
     'lin_lin_p_value_ar',
     'lin_lin_p_value_fdr_bh_ar',
-    'lin_lin_p_value_fdr_b_ar',
+    'lin_lin_p_value_bonferroni_ar',
     'lin_log_corr_coeff_ar',
     'lin_log_p_value_ar',
     'lin_log_p_value_fdr_bh_ar',
-    'lin_log_p_value_fdr_b_ar',
+    'lin_log_p_value_bonferroni_ar',
     'log_lin_corr_coeff_ar',
     'log_lin_p_value_ar',
     'log_lin_p_value_fdr_bh_ar',
-    'log_lin_p_value_fdr_b_ar',
+    'log_lin_p_value_bonferroni_ar',
     'log_log_corr_coeff_ar',
     'log_log_p_value_ar',
     'log_log_p_value_fdr_bh_ar',
-    'log_log_p_value_fdr_b_ar',
+    'log_log_p_value_bonferroni_ar',
 ]
 
 keys_load = {}
@@ -138,14 +141,17 @@ if proteomic == True:
         if not os.path.exists(f'{save_path}/proteome/ss/{tmp_ds}'):
             os.makedirs(f'{save_path}/proteome/ss/{tmp_ds}')
         ss_target_dict = {tmp_ds: ss_result_dicts_with_diff[ds]}
-        process_human_plasma_proteome(ss_target_dict, ss_genes_lehallier, f'{save_path}/proteome/ss/{tmp_ds}')
+        if len(ss_target_dict[tmp_ds]['item']) > 0:
+            process_human_plasma_proteome(ss_target_dict, ss_genes_lehallier, f'{save_path}/proteome/ss/{tmp_ds}')
 
         if not os.path.exists(f'{save_path}/proteome/ar/{tmp_ds}'):
             os.makedirs(f'{save_path}/proteome/ar/{tmp_ds}')
         ar_target_dict = {tmp_ds: ar_result_dicts_with_diff[ds]}
-        process_human_plasma_proteome(ar_target_dict, ar_genes_lehallier, f'{save_path}/proteome/ar/{tmp_ds}')
+        if len(ar_target_dict[tmp_ds]['item']) > 0:
+            process_human_plasma_proteome(ar_target_dict, ar_genes_lehallier, f'{save_path}/proteome/ar/{tmp_ds}')
 
         if not os.path.exists(f'{save_path}/proteome/ssar/{tmp_ds}'):
             os.makedirs(f'{save_path}/proteome/ssar/{tmp_ds}')
         ssar_target_dict = {tmp_ds: ssar_result_dicts_with_diff[ds]}
-        process_human_plasma_proteome(ssar_target_dict, ssar_genes_lehallier, f'{save_path}/proteome/ssar/{tmp_ds}')
+        if len(ssar_target_dict[tmp_ds]['item']) > 0:
+            process_human_plasma_proteome(ssar_target_dict, ssar_genes_lehallier, f'{save_path}/proteome/ssar/{tmp_ds}')

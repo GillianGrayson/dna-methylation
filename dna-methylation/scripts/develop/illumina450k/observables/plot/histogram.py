@@ -2,8 +2,9 @@ import pydnameth as pdm
 from scripts.develop.routines import *
 
 data = pdm.Data(
-    path='E:/YandexDisk/Work/pydnameth/tissues/liver',
-    base='GSE61446'
+    #path='E:/YandexDisk/Work/pydnameth/tissues/brain(DLPFC)',
+    path='',
+    base='GSE87571'
 )
 
 annotations = pdm.Annotations(
@@ -21,7 +22,7 @@ cells = pdm.Cells(
 )
 
 observables = pdm.Observables(
-    name='observables_part(full)',
+    name='observables',
     types={}
 )
 

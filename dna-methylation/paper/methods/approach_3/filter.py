@@ -13,10 +13,10 @@ def add_best_pvalue(data_dicts, p_value_prefix):
 
     for dataset in data_dicts:
 
-        lin_lin_pvals = data_dicts[dataset][f'lin_lin_p_value_fdr_bh_ar']
-        lin_log_pvals = data_dicts[dataset][f'lin_log_p_value_fdr_bh_ar']
-        log_lin_pvals = data_dicts[dataset][f'log_lin_p_value_fdr_bh_ar']
-        log_log_pvals = data_dicts[dataset][f'log_log_p_value_fdr_bh_ar']
+        lin_lin_pvals = data_dicts[dataset][f'lin_lin_{p_value_prefix}']
+        lin_log_pvals = data_dicts[dataset][f'lin_log_{p_value_prefix}']
+        log_lin_pvals = data_dicts[dataset][f'log_lin_{p_value_prefix}']
+        log_log_pvals = data_dicts[dataset][f'log_log_{p_value_prefix}']
 
         # data_dicts[dataset][p_value_prefix] = np.minimum(np.minimum(lin_lin_pvals, lin_log_pvals), np.minimum(log_lin_pvals, log_log_pvals))
         data_dicts[dataset][p_value_prefix] = lin_lin_pvals
@@ -42,8 +42,10 @@ def filter_data_dicts(data_dicts, p_value_prefix, pval_perc_ss, pval_perc_ar, pv
 
         pvals_ss = np.array(data_dicts[dataset][f'{p_value_prefix}_ss'])
         pvals_ar = np.array(data_dicts[dataset][f'{p_value_prefix}_ar'])
-        pval_ss_percentile = min(np.percentile(pvals_ss, pval_perc_ss), pval_lim)
-        pval_ar_percentile = min(np.percentile(pvals_ar, pval_perc_ar), pval_lim)
+        # pval_ss_percentile = min(np.percentile(pvals_ss, pval_perc_ss), pval_lim)
+        # pval_ar_percentile = min(np.percentile(pvals_ar, pval_perc_ar), pval_lim)
+        pval_ss_percentile = 0.01
+        pval_ar_percentile = 0.01
         print(f'{dataset} ss percentile: {pval_ss_percentile}')
         print(f'{dataset} ar percentile: {pval_ar_percentile}')
         ss_percentiles[dataset] = pval_ss_percentile

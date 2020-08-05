@@ -117,16 +117,19 @@ def process_human_plasma_proteome(target_dict, proteomic_genes, save_path, aux_k
         if tissue not in ['Name', 'Description']:
             exp_dict[tissue] = np.log10(np.asarray(exp_dict[tissue]) + 1e-4)
 
-    for key in target_dict[list(target_dict.keys())[0]]:
-        if 'aux_' in key:
-            aux_key = key
-            break
-
     genes = {}
     for dataset in target_dict:
+        for key in target_dict[dataset]:
+            if 'aux_' in key:
+                aux_key = key
+                break
         genes[dataset] = {'gene': get_genes(target_dict[dataset], aux_key)}
 
     genes['Proteomic'] = {'gene': proteomic_genes}
+
+    for dataset in genes:
+        tmp_key = 'gene'
+        print(f'num genes in {dataset}: {len(genes[dataset][tmp_key])}')
 
     sets, sets_with_difference = get_sets(genes, item_key='gene')
 

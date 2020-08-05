@@ -3,8 +3,8 @@ from scripts.develop.routines import *
 
 
 data = pdm.Data(
-    path='E:/YandexDisk/Work/pydnameth/tissues/liver',
-    base='GSE61446'
+    path='E:/YandexDisk/Work/pydnameth',
+    base='liver'
 )
 
 annotations = pdm.Annotations(
@@ -22,8 +22,9 @@ cells = pdm.Cells(
 )
 
 observables = pdm.Observables(
-    name='observables_part(full)',
+    name='observables',
     types={}
+    #types={'group': 'Control'}
 )
 
 attributes = pdm.Attributes(
@@ -32,7 +33,7 @@ attributes = pdm.Attributes(
     cells=cells
 )
 
-target_ss = 'sex'
+target_ss = 'gender'
 target_ar = 'age'
 
 data_params_ss = get_data_params(data.base)
