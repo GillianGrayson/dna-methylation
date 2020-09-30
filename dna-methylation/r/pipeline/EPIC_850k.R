@@ -11,7 +11,7 @@ setwd(path)
 
 myImport = champ.import(directory = path, arraytype = "EPIC")
 
-beta_raw = import$beta
+beta_raw = myImport$beta
 write.table(data.frame(beta_raw),file="beta_raw.txt",col.name=TRUE, row.names=TRUE,sep="\t",quote=F)
 
 myLoad <- champ.filter(arraytype = "EPIC")
