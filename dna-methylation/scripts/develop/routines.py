@@ -135,6 +135,8 @@ def get_target(data_base):
         target = 'Age'
     elif data_base == 'GSE74193':
         target = 'age'
+    elif data_base == 'unn_epic':
+        target = 'Age'
     else:
         target = 'age'
 
