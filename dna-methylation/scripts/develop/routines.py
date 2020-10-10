@@ -97,6 +97,11 @@ def get_observables_list(data_base):
             {'sex': 'F'},
             {'sex': 'M'}
         ]
+    elif data_base == 'unn_epic':
+        observables_list = [
+            {'Sex': 'F'},
+            {'Sex': 'M'}
+        ]
     else:
         observables_list = [
             {'gender': 'F'},
