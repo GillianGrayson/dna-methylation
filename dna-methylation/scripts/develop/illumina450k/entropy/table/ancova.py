@@ -1,19 +1,19 @@
 import pydnameth as pdm
+from scripts.develop.routines import *
+
 
 data = pdm.Data(
     path='',
-    base='EPIC'
+    base='GSE55763'
 )
 
 annotations = pdm.Annotations(
     name='annotations',
+    type='450k',
     exclude='bad_cpgs',
-    cross_reactive='any',
-    snp='any',
-    chr='NS',
-    gene_region='any',
-    geo='any',
-    probe_class='any'
+    select_dict={
+        'CHR': ['-X', '-Y']
+    }
 )
 
 observables = pdm.Observables(
@@ -21,41 +21,20 @@ observables = pdm.Observables(
     types={}
 )
 
-if data.base == 'GSE55763':
-    observables_list = [
-        {'gender': 'F', 'is_duplicate': '0', 'age': (35, 100)},
-        {'gender': 'M', 'is_duplicate': '0', 'age': (35, 100)}
-    ]
+cells = pdm.Cells(
+    name='cells_horvath_calculator',
+    types='any'
+)
 
-    data_params = {
-        'data': 'betas_adj',
-        'observables': ['age'],
-        'cells': ['Bcell', 'CD4T', 'NK', 'CD8T', 'Gran']
-    }
+target = get_target(data.base)
+observables_list = get_observables_list(data.base)
+data_params = get_data_params(data.base)
 
-    cells = pdm.Cells(
-        name='cells_horvath_calculator',
-        types='any'
-    )
-else:
-    observables_list = [
-        {'gender': 'F'},
-        {'gender': 'M'}
-    ]
-
-    data_params = {
-        'data': 'betas_adj',
-        'observables': ['age'],
-        'cells': ['B', 'CD4T', 'NK', 'CD8T', 'Gran']
-    }
-
-    cells = pdm.Cells(
-        name='cells',
-        types='any'
-    )
+data_params['data'] = 'betas_adj'
+data_params['cells'] = ['Bcell', 'CD4T', 'CD8T', 'Gran', 'NK']
 
 attributes = pdm.Attributes(
-    target='age',
+    target=target,
     observables=observables,
     cells=cells
 )
@@ -65,5 +44,5 @@ pdm.entropy_table_ancova(
     annotations=annotations,
     attributes=attributes,
     observables_list=observables_list,
-    data_params=data_params,
+    data_params=data_params
 )
