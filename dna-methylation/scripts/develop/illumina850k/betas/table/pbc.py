@@ -1,6 +1,7 @@
 import pydnameth as pdm
 from scripts.develop.routines import *
 
+
 data = pdm.Data(
     path='',
     base='unn_epic'
@@ -15,39 +16,28 @@ annotations = pdm.Annotations(
     }
 )
 
-cells = pdm.Cells(
-    name='',
-    types='any'
-)
-
 observables = pdm.Observables(
     name='observables',
     types={}
 )
 
+cells = pdm.Cells(
+    name='cell_counts',
+    types='any'
+)
+
+target = 'Sample_Group'
 attributes = pdm.Attributes(
-    target='Age',
+    target=target,
     observables=observables,
     cells=cells
 )
 
-observables_list = get_observables_list(data.base)
-# observables_list = [
-#     {'Sample_Group': 'C'},
-#     {'Sample_Group': 'T'}
-# ]
 data_params = get_data_params(data.base)
 
-pdm.observables_plot_histogram(
+pdm.betas_table_pbc(
     data=data,
     annotations=annotations,
     attributes=attributes,
-    observables_list=observables_list,
-    method_params={
-        'bin_size': 1.0,
-        'opacity': 0.80,
-        'barmode': 'overlay',
-        'x_range': 'auto',
-        'legend_size': 2
-    }
+    data_params=data_params,
 )

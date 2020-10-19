@@ -49,15 +49,27 @@ write.table(data.frame(beta_filtered_normalized),file="beta_filtered_normalized_
 
 
 
+if (!requireNamespace("BiocManager", quietly = TRUE))
+  install.packages("BiocManager")
+BiocManager::install("minfi")
+BiocManager::install("FlowSorted.Blood.EPIC")
 
 
+library(minfi)
+library(FlowSorted.Blood.EPIC)
 
 
+# ====== File system =======
+path <- "E:/YandexDisk/Work/pydnameth/unn_epic/raw/release"
+setwd(path)
+# ==========================
 
+# ======= RGset ========
+list.files(path)
+targets <- read.metharray.sheet(path)
+RGset <- read.metharray.exp(targets = targets)
 
-
-
-
+cell_counts <- estimateCellCounts2(RGset, referencePlatform="IlluminaHumanMethylationEPIC")
 
 
 

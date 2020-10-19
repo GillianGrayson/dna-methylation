@@ -31,7 +31,11 @@ cells = pdm.Cells(
 )
 
 target = get_target(data.base)
-observables_list = get_observables_list(data.base)
+#observables_list = get_observables_list(data.base)
+observables_list = [
+    {'Sample_Group': 'C'},
+    {'Sample_Group': 'T'}
+]
 data_params = get_data_params(data.base)
 
 attributes = pdm.Attributes(
@@ -53,7 +57,7 @@ pdm.betas_plot_scatter(
         'y_ranges': y_ranges,
         'line': 'no',
         'fit': 'yes',
-        'semi_window': 6,
+        'semi_window': 4,
         'box_b': 'Q1',
         'box_t': 'Q99',
         'legend_size': 1,
