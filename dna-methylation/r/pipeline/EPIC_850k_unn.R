@@ -71,7 +71,7 @@ RGset <- read.metharray.exp(targets = targets)
 
 cell_counts <- estimateCellCounts2(RGset, referencePlatform="IlluminaHumanMethylationEPIC")
 
-
+write.csv(cell_counts, "cell_counts.csv")
 
 
 

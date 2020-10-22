@@ -1,6 +1,6 @@
 import numpy as np
 
-def get_pdf_x_and_y(data, num_bins=1000, x_left=None, x_right=None):
+def get_pdf_x_and_y(data, num_bins=1000, x_left=None, x_right=None, y_log=False):
     data = np.asarray(data)
     data = data[~np.isnan(data)]
 
@@ -36,5 +36,8 @@ def get_pdf_x_and_y(data, num_bins=1000, x_left=None, x_right=None):
 
     sum_y = sum(ys)
     ys = [curr_y / (sum_y * shift) for curr_y in ys]
+
+    if y_log:
+        ys = np.log10(ys)
 
     return xs, ys

@@ -14,10 +14,10 @@ import colorlover as cl
 import numpy as np
 import plotly
 
-path = 'E:/YandexDisk/Work/pydnameth/limma'
+path = 'E:/YandexDisk/Work/pydnameth/methylation_and_proteomic/limma'
 
-datasets = ['GSE87571', 'GSE74193', 'liver']
-data_type = 'm'
+datasets = ['liver', 'GSE87571', 'GSE74193']
+data_type = 'beta'
 
 annotations = Annotations(
     name='annotations',
@@ -31,7 +31,7 @@ annotations = Annotations(
 dataset_path_dict = {
     'GSE87571': 'E:/YandexDisk/Work/pydnameth/GSE87571',
     'GSE74193': 'E:/YandexDisk/Work/pydnameth/tissues/brain(DLPFC)/GSE74193',
-    'liver': 'E:/YandexDisk/Work/pydnameth/liver'
+    'liver': 'E:/YandexDisk/Work/pydnameth/liver',
 }
 
 values = {}
@@ -39,10 +39,24 @@ labels = {}
 all_data = {}
 xs = {}
 ys = {}
-metrics = []
+metrics = [
+    'Sex_adj.P.Val',
+    'Sex_adj.P.Val_bf',
+    'Sex_adj.P.Val_fdr_bh',
+    'Age_adj.P.Val',
+    'Age_adj.P.Val_bf',
+    'Age_adj.P.Val_fdr_bh',
+    'Sex_P.Value',
+    'Sex_P.Value_bf',
+    'Sex_P.Value_fdr_bh',
+    'Age_P.Value',
+    'Age_P.Value_bf',
+    'Age_P.Value_fdr_bh',
+]
+
 for dataset in datasets:
 
-    target_fn = f'{path}/{dataset}_{data_type}_filtered.pkl'
+    target_fn = f'{path}/{dataset}/{dataset}_{data_type}_filtered.pkl'
     if os.path.isfile(target_fn):
         filtered = load_table_dict_pkl(target_fn)
     else:
@@ -65,7 +79,7 @@ for dataset in datasets:
 
         cpg_dict = { x : 0 for x in cpg_list }
 
-        table_dict = load_table_dict_xlsx(f'{path}/{dataset}_{data_type}.xlsx')
+        table_dict = load_table_dict_xlsx(f'{path}/{dataset}/{dataset}_{data_type}.xlsx')
 
         filtered = { x : [] for x in table_dict.keys() }
         for cpg_id, cpg in tqdm(enumerate(table_dict['CpG'])):
@@ -73,12 +87,10 @@ for dataset in datasets:
                 for key in table_dict:
                     filtered[key].append(table_dict[key][cpg_id])
 
-        metrics = list(filtered.keys())[1::]
-
         filtered = add_info_to_dict(filtered)
 
-        save_table_dict_xlsx(f'{path}/{dataset}_{data_type}_filtered', filtered)
-        save_table_dict_pkl(f'{path}/{dataset}_{data_type}_filtered', filtered)
+        save_table_dict_xlsx(f'{path}/{dataset}/{dataset}_{data_type}_filtered', filtered)
+        save_table_dict_pkl(f'{path}/{dataset}/{dataset}_{data_type}_filtered', filtered)
 
     all_data[dataset] = filtered
 
@@ -95,7 +107,7 @@ for dataset in datasets:
             values[dataset][key] = np.asarray(filtered[key])
             labels[key] = key
 
-        xs[dataset][key], ys[dataset][key] = get_pdf_x_and_y(values[dataset][key])
+        xs[dataset][key], ys[dataset][key] = get_pdf_x_and_y(values[dataset][key], y_log=True)
 
 for key in metrics:
 
@@ -119,7 +131,7 @@ for key in metrics:
         )
         plot_data.append(scatter)
 
-    layout = get_layout(labels[key], 'Probability density function')
+    layout = get_layout(labels[key], 'log(Probability density function)')
 
     fn = f'{path}/figures/{key}'
     figure = go.Figure(data=plot_data, layout=layout)

@@ -150,14 +150,14 @@ def process_intersections(data_dicts, save_path, item_key='item', is_rewrite=Tru
     sets, sets_with_difference = get_sets(data_dicts, item_key)
 
     save_dicts = get_cpg_dataset_save_dicts(sets, data_dicts, cpg_dicts, item_key)
-    curr_save_path = f'{save_path}/intersection'
+    curr_save_path = f'{save_path}/intersection_full'
     if not os.path.exists(curr_save_path):
         os.makedirs(curr_save_path)
     for key, save_dict in save_dicts.items():
         save_table_dict_xlsx(f'{curr_save_path}/{key}', save_dict, is_rewrite)
 
     save_dicts_with_diff = get_cpg_dataset_save_dicts(sets_with_difference, data_dicts, cpg_dicts, item_key)
-    curr_save_path = f'{save_path}/intersection_with_difference'
+    curr_save_path = f'{save_path}/intersection_diff'
     if not os.path.exists(curr_save_path):
         os.makedirs(curr_save_path)
     venn_labels = []
