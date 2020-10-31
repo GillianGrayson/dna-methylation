@@ -9,10 +9,14 @@ library("ChAMP")
 path <- "E:/YandexDisk/Work/pydnameth/unn_epic/raw/release"
 setwd(path)
 
+myLoad = champ.load(directory = path, arraytype = "EPIC")
+write.csv(data.frame(myLoad$beta), "beta_filtered.csv", row.names = TRUE)
+
 myImport = champ.import(directory = path, arraytype = "EPIC")
 
 beta_raw = myImport$beta
 write.table(data.frame(beta_raw),file="beta_raw.txt",col.name=TRUE, row.names=TRUE,sep="\t",quote=F)
+write.csv(data.frame(beta_raw), "beta_raw.csv", row.names = FALSE)
 
 myLoad <- champ.filter(arraytype = "EPIC")
 
