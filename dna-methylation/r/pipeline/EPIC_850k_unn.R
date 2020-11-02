@@ -10,6 +10,8 @@ path <- "E:/YandexDisk/Work/pydnameth/unn_epic/raw/release"
 setwd(path)
 
 myLoad = champ.load(directory = path, arraytype = "EPIC")
+myLoad = champ.load(directory = path, method="minfi", arraytype = "EPIC")
+
 write.csv(data.frame(myLoad$beta), "beta_filtered.csv", row.names = TRUE)
 
 myImport = champ.import(directory = path, arraytype = "EPIC")
@@ -18,13 +20,22 @@ beta_raw = myImport$beta
 write.table(data.frame(beta_raw),file="beta_raw.txt",col.name=TRUE, row.names=TRUE,sep="\t",quote=F)
 write.csv(data.frame(beta_raw), "beta_raw.csv", row.names = FALSE)
 
-myLoad <- champ.filter(arraytype = "EPIC")
+myLoad <- champ.filter(arraytype="EPIC")
 
 champ.QC()
 
 QC.GUI(beta=myLoad$beta,arraytype="EPIC")
 
-myNorm <- champ.norm(arraytype = "EPIC", plotBMIQ = TRUE)
+myNorm <- champ.norm(beta=myLoad$beta,
+                     rgSet=myLoad$rgSet,
+                     mset=myLoad$mset,
+                     method="BMIQ",
+                     arraytype="EPIC")
+myNorm <- champ.norm(beta=myLoad$beta,
+                     rgSet=myLoad$rgSet,
+                     mset=myLoad$mset,
+                     method="FunctionalNormalization",
+                     arraytype="EPIC")
 
 champ.QC(beta = myNorm,
          pheno=myLoad$pd$Sample_Group,
