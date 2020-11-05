@@ -26,7 +26,7 @@ observables = pdm.Observables(
 )
 
 cells = pdm.Cells(
-    name='',
+    name='cell_counts_horvath_norm_fun',
     types='any'
 )
 
@@ -37,6 +37,7 @@ observables_list = [
     {'Sample_Group': 'T'}
 ]
 data_params = get_data_params(data.base)
+data_params['cells'] = ['Bcell', 'CD4T', 'CD8T', 'Gran', 'NK']
 
 attributes = pdm.Attributes(
     target=target,
@@ -44,7 +45,7 @@ attributes = pdm.Attributes(
     cells=cells
 )
 
-pdm.betas_plot_scatter(
+pdm.residuals_plot_scatter(
     data=data,
     annotations=annotations,
     attributes=attributes,

@@ -1,11 +1,12 @@
 import pydnameth as pdm
 from scripts.develop.routines import *
 
+
 f = open('cpgs.txt', 'r')
 items = f.read().splitlines()
-x_ranges = [[5, 105]] * len(items)
+reverses = ['no'] * len(items)
+x_ranges = ['auto'] * len(items)
 y_ranges = ['auto'] * len(items)
-
 
 data = pdm.Data(
     path='',
@@ -35,7 +36,7 @@ observables_list = get_observables_list(data.base)
 
 data_params = get_data_params(data.base)
 #data_params['observables'] = ['gender']
-data_params['cells'] = ['CD8T', 'CD4T', 'NK', 'Bcell', 'Gran']
+data_params['cells'] = ['Bcell', 'CD4T', 'CD8T', 'Gran', 'NK']
 
 attributes = pdm.Attributes(
     target='age',
@@ -51,14 +52,15 @@ pdm.residuals_plot_scatter(
     data_params=data_params,
     method_params={
         'items': items,
+        'reverses': reverses,
         'x_ranges': x_ranges,
         'y_ranges': y_ranges,
-        'line': 'yes',
-        'fit': 'none',
-        'semi_window': 8,
-        'box_b': 'Q5',
-        'box_t': 'Q95',
-        'legend_size': 2,
+        'line': 'no',
+        'fit': 'yes',
+        'semi_window': 6,
+        'box_b': 'Q1',
+        'box_t': 'Q99',
+        'legend_size': 1,
         'add': 'none'
     }
 )

@@ -1,8 +1,8 @@
 clear all;
 
-path = 'E:/YandexDisk/Work/pydnameth/unn_epic';
+path = 'E:/YandexDisk/Work/pydnameth/unn_epic/horvath';
 figures_path = 'E:/YandexDisk/Work/pydnameth/unn_epic/horvath/figures';
-fn = sprintf('%s/betas_horvath_calculator_filtered_normallized.output.csv', path);
+fn = sprintf('%s/data/betas_horvath_calculator_norm_fun.output.csv', path);
 obs = readtable(fn);
 
 status = obs.Sample_Group;
@@ -41,7 +41,7 @@ fig = figure;
 boxplot(h_age_diff)
 hold all;
 set(gca, 'FontSize', 40);
-xlabel('Heatlhy')
+xlabel('Healthy')
 set(gca,'XTick',[]);
 ylabel('AgeAccelerationDiff')
 fn_fig = sprintf('%s/healthy_AgeAccelerationDiff', figures_path);

@@ -10,7 +10,7 @@ data = pdm.Data(
 annotations = pdm.Annotations(
     name='annotations',
     type='850k',
-    exclude='none',
+    exclude='bad_cpgs_from_ChAMP',
     select_dict={
         'CHR': ['-X', '-Y']
     }
@@ -22,7 +22,7 @@ observables = pdm.Observables(
 )
 
 cells = pdm.Cells(
-    name='cell_counts',
+    name='cell_counts_horvath_norm_fun',
     types='any'
 )
 

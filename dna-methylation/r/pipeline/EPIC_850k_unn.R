@@ -68,24 +68,17 @@ if (!requireNamespace("BiocManager", quietly = TRUE))
   install.packages("BiocManager")
 BiocManager::install("minfi")
 BiocManager::install("FlowSorted.Blood.EPIC")
-
-
 library(minfi)
 library(FlowSorted.Blood.EPIC)
-
-
 # ====== File system =======
 path <- "E:/YandexDisk/Work/pydnameth/unn_epic/raw/release"
 setwd(path)
 # ==========================
-
 # ======= RGset ========
 list.files(path)
 targets <- read.metharray.sheet(path)
 RGset <- read.metharray.exp(targets = targets)
-
 cell_counts <- estimateCellCounts2(RGset, referencePlatform="IlluminaHumanMethylationEPIC")
-
 write.csv(cell_counts, "cell_counts.csv")
 
 
@@ -111,22 +104,48 @@ library(FlowSorted.Blood.EPIC)
 # ====== File system =======
 path <- "E:/YandexDisk/Work/pydnameth/unn_epic/raw/release"
 setwd(path)
-# ==========================
+# ================================================================================================================
 
 # ======= RGset ========
 list.files(path)
 targets <- read.metharray.sheet(path)
 RGset <- read.metharray.exp(targets = targets)
+phenoData <- pData(RGset)
+manifest <- getManifest(RGset)
+manifest
+# ================================================================================================================
 
-manifest <- getManifest(RGSet)
+
+# ======= MethylSet and RatioSet ========
+MSet <- preprocessRaw(RGset)
+MSet
+
+head(getMeth(MSet)[,1:3])
+head(getUnmeth(MSet)[,1:3])
+
+RSet <- ratioConvert(MSet, what = "both", keepCN = TRUE)
+RSet
+
+beta <- getBeta(RSet)
+# ================================================================================================================
+
+
+# ======= Quality control ========
+head(getMeth(MSet)[,1:3])
+head(getUnmeth(MSet)[,1:3])
+qc <- getQC(MSet)
+head(qc)
+plotQC(qc)
+
+
+Red <- data.frame(getRed(RGset))
+Green <- data.frame(getGreen(RGset))
+
 # ======================
 
 
 # ======= Control probes ========
-df_TypeControl <- data.frame(getProbeInfo(RGset, type = "Control"))
-pdf("control_negative.pdf",width=15,height=5)
-controlStripPlot(RGset, controls="NEGATIVE")
-dev.off()
+qcReport(RGset, pdf= "qcReport.pdf", sampGroups = phenoData$Sample_Group)
 # ===============================
 
 # ======= shinyMethyl =======
@@ -154,7 +173,6 @@ dev.off()
 qc <- getQC(MSet_raw)
 pdf("QCplot.pdf")
 plotQC(qc)
-plotQC(qc, badSampleCutoff = 10.5)
 dev.off()
 
 pdf("boxplots_beta_Raw.pdf",width=15,height=5)

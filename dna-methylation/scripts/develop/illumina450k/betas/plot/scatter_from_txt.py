@@ -1,6 +1,7 @@
 import pydnameth as pdm
 from scripts.develop.routines import *
 
+
 f = open('cpgs.txt', 'r')
 items = f.read().splitlines()
 reverses = ['no'] * len(items)
@@ -8,8 +9,8 @@ x_ranges = ['auto'] * len(items)
 y_ranges = ['auto'] * len(items)
 
 data = pdm.Data(
-    path='E:/YandexDisk/Work/pydnameth/tissues/brain(DLPFC)',
-    base='GSE74193'
+    path='',
+    base='GSE87571'
 )
 
 annotations = pdm.Annotations(
@@ -22,8 +23,8 @@ annotations = pdm.Annotations(
 )
 
 observables = pdm.Observables(
-    name='observables_part(control)',
-    types={'group': 'Control'}
+    name='observables',
+    types={}
 )
 
 cells = pdm.Cells(
@@ -54,7 +55,7 @@ pdm.betas_plot_scatter(
         'y_ranges': y_ranges,
         'line': 'no',
         'fit': 'yes',
-        'semi_window': 4,
+        'semi_window': 6,
         'box_b': 'Q1',
         'box_t': 'Q99',
         'legend_size': 1,

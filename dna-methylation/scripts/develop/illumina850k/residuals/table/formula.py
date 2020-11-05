@@ -10,7 +10,7 @@ data = pdm.Data(
 annotations = pdm.Annotations(
     name='annotations',
     type='850k',
-    exclude='none',
+    exclude='bad_cpgs_from_ChAMP',
     select_dict={
         'CHR': ['-X', '-Y']
     }
@@ -38,7 +38,7 @@ method_params = {
 }
 
 data_params = get_data_params(data.base)
-data_params['cells'] = ['Bcell', 'CD4T', 'CD8T', 'Mono', 'Neu', 'NK']
+data_params['cells'] = ['Bcell', 'CD4T', 'CD8T', 'Gran', 'NK']
 
 pdm.residuals_table_formula(
     data=data,

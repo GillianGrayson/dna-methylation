@@ -7,7 +7,6 @@ data = pdm.Data(
 )
 
 data_params = get_data_params(data.base)
-data_params['part'] = 'raw'
 
 pdm.betas_horvath_calculator_create_regular(
     data=data,

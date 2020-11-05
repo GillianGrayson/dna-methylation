@@ -1,8 +1,8 @@
 clear all;
 
-path = 'E:/YandexDisk/Work/pydnameth/unn_epic';
+path = 'E:/YandexDisk/Work/pydnameth/unn_epic/horvath';
 figures_path = 'E:/YandexDisk/Work/pydnameth/unn_epic/horvath/figures';
-fn = sprintf('%s/betas_horvath_calculator_filtered_normallized.output.csv', path);
+fn = sprintf('%s/data/betas_horvath_calculator_norm_fun.output.csv', path);
 obs = readtable(fn);
 
 status = obs.Sample_Group;

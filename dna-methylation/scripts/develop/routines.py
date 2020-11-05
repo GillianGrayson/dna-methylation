@@ -14,6 +14,11 @@ def get_data_params(data_base):
             'part': 'full',
             'norm': 'funnorm',
         }
+    elif data_base == 'unn_epic':
+        data_params = {
+            'norm': 'fun',
+            'part': 'final',
+        }
     else:
         data_params = {}
 
