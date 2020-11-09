@@ -35,6 +35,10 @@ attributes_unn_epic = pdm.Attributes(
     cells=cells_unn_epic
 )
 data_params_unn_epic = get_data_params(data_unn_epic.base)
+# data_params_unn_epic = {
+#     'norm': 'BMIQ',
+#     'part': 'raw',
+# }
 config_unn = pdm.load_beta_config(
     data_unn_epic,
     annotations_unn_epic,

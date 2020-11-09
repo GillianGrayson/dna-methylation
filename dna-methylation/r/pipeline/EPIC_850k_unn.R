@@ -11,7 +11,6 @@ setwd(path)
 
 myLoad = champ.load(directory = path, arraytype = "EPIC")
 myLoad = champ.load(directory = path, method="minfi", arraytype = "EPIC")
-
 write.csv(data.frame(myLoad$beta), "beta_filtered.csv", row.names = TRUE)
 
 myImport = champ.import(directory = path, arraytype = "EPIC")
@@ -78,9 +77,23 @@ setwd(path)
 list.files(path)
 targets <- read.metharray.sheet(path)
 RGset <- read.metharray.exp(targets = targets)
-cell_counts <- estimateCellCounts2(RGset, referencePlatform="IlluminaHumanMethylationEPIC")
+cell_counts <- estimateCellCounts2(RGset,
+                                   compositeCellType = "Blood",
+                                   processMethod = "preprocessFunnorm", 
+                                   referencePlatform="IlluminaHumanMethylationEPIC",
+                                   cellTypes = c("CD8T", "CD4T", "NK", "Bcell", "Mono", "Gran"))
+cell_counts <- estimateCellCounts2(RGset,
+                                   compositeCellType = "Blood",
+                                   processMethod = "preprocessFunnorm", 
+                                   referencePlatform="IlluminaHumanMethylationEPIC")
+
+
 write.csv(cell_counts, "cell_counts.csv")
 
+cell_counts <- estimateCellCounts2(RGset,
+                                   compositeCellType = "Blood",
+                                   processMethod = "preprocessFunnorm", 
+                                   referencePlatform="IlluminaHumanMethylationEPIC")
 
 
 
@@ -250,6 +263,11 @@ write.table(beta_funnorm,file="beta_Quantile_filtered_samples_probes.txt",row.na
 
 # ======== preprocessFunnorm =========
 funnorm <- preprocessFunnorm(RGset)
+
+pdf("densityPlot_funnorm.pdf")
+densityPlot(Mset, sampGroups = targets$Sample_Group)
+dev.off()
+
 beta_funnorm <- getBeta(funnorm)
 dim(beta_funnorm)
 pdf("boxplots_beta_Funnorm.pdf",width=15,height=5)

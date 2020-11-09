@@ -6,7 +6,11 @@ data = pdm.Data(
     base='unn_epic'
 )
 
-data_params = get_data_params(data.base)
+#data_params = get_data_params(data.base)
+data_params = {
+    'norm': 'none',
+    'part': 'final',
+}
 
 pdm.betas_horvath_calculator_create_regular(
     data=data,
