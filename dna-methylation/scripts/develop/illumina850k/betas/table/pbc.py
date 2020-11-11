@@ -22,7 +22,7 @@ observables = pdm.Observables(
 )
 
 cells = pdm.Cells(
-    name='cell_counts_horvath_norm_fun',
+    name='cell_counts',
     types='any'
 )
 
@@ -35,7 +35,7 @@ attributes = pdm.Attributes(
 
 #data_params = get_data_params(data.base)
 data_params = {
-    'norm': 'BMIQ',
+    'norm': 'fun',
     'part': 'final',
 }
 

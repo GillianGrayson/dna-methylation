@@ -35,7 +35,7 @@ attributes = pdm.Attributes(
 
 #data_params = get_data_params(data.base)
 data_params = {
-    'norm': 'BMIQ',
+    'norm': 'fun',
     'part': 'final',
 }
 data_params['cells'] = ['Bcell', 'CD4T', 'CD8T', 'Neu', 'NK']

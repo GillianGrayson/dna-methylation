@@ -1,6 +1,6 @@
 clear all;
 
-cell_types = {'Bcell', 'CD4T', 'CD8T', 'Gran', 'NK'}';
+%cell_types = {'Bcell', 'CD4T', 'CD8T', 'Gran', 'NK'}';
 cell_types = {'Bcell', 'CD4T', 'CD8T', 'Neu', 'NK'}';
 
 path = 'E:/YandexDisk/Work/pydnameth/unn_epic';
