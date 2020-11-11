@@ -17,12 +17,12 @@ annotations = pdm.Annotations(
 )
 
 observables = pdm.Observables(
-    name='observables',
+    name='observables_part(final)',
     types={}
 )
 
 cells = pdm.Cells(
-    name='cell_counts_horvath_norm_fun',
+    name='cell_counts',
     types='any'
 )
 
@@ -33,8 +33,12 @@ attributes = pdm.Attributes(
     cells=cells
 )
 
-data_params = get_data_params(data.base)
-data_params['cells'] = ['Bcell', 'CD4T', 'CD8T', 'Gran', 'NK']
+#data_params = get_data_params(data.base)
+data_params = {
+    'norm': 'BMIQ',
+    'part': 'final',
+}
+data_params['cells'] = ['Bcell', 'CD4T', 'CD8T', 'Neu', 'NK']
 
 pdm.residuals_table_pbc(
     data=data,

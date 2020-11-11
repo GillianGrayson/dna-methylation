@@ -31,11 +31,11 @@ cells = pdm.Cells(
 )
 
 target = get_target(data.base)
-observables_list = get_observables_list(data.base)
-# observables_list = [
-#     {'Sample_Group': 'C'},
-#     {'Sample_Group': 'T'}
-# ]
+#observables_list = get_observables_list(data.base)
+observables_list = [
+    {'Sample_Group': 'C'},
+    {'Sample_Group': 'T'}
+]
 data_params = get_data_params(data.base)
 data_params['cells'] = ['Bcell', 'CD4T', 'CD8T', 'Neu', 'NK']
 

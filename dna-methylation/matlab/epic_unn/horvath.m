@@ -1,49 +1,85 @@
 clear all;
 
-norm = 'BMIQ';
-part = 'final';
+norm = 'none';
+part = 'final_treatment';
+
+groups = {'T'}';
+colors = {[1 0 0]}';
+%colors = distinguishable_colors(size(groups, 1));
+
+opacity = 0.65;
 
 path = 'E:/YandexDisk/Work/pydnameth/unn_epic/horvath';
 figures_path = 'E:/YandexDisk/Work/pydnameth/unn_epic/figures/horvath';
 fn = sprintf('%s/data/betas_horvath_calculator_norm_%s_part_%s.output.csv', path, norm, part);
-obs = readtable(fn);
+opts = detectImportOptions(fn);
+opts = setvartype(opts, {'Sample_Group'}, 'string');
+obs = readtable(fn, opts);
 
 status = obs.Sample_Group;
 agediff = obs.AgeAccelerationDiff;
 age = obs.Age;
 age_dnam = obs.DNAmAge;
 
-c_xs = [];
-c_ys = [];
-c_diff = [];
+fig1 = figure;
+propertyeditor('on');
+grid on;
 
-t_xs = [];
-t_ys = [];
-t_diff = [];
+xs_all = {};
+ys_all = {};
+diffs_all = {};
 
-for id = 1 : size(age, 1)
+for g_id = 1:size(groups, 1)
+    xs = [];
+    ys = [];
+    diffs = [];
     
-    if status{id} == 'C'
-        c_xs = vertcat(c_xs, age(id));
-        c_ys = vertcat(c_ys, age_dnam(id));
-        c_diff = vertcat(c_diff, agediff(id));
-    else
-        t_xs = vertcat(t_xs, age(id));
-        t_ys = vertcat(t_ys, age_dnam(id));
-        t_diff = vertcat(t_diff, agediff(id));
+    for id = 1 : size(age, 1)
+
+        if status{id}(1) == groups{g_id}
+            xs = vertcat(xs, age(id));
+            ys = vertcat(ys, age_dnam(id));
+            diffs = vertcat(diffs, agediff(id));
+        end
     end
     
+    xs_all{g_id} = xs;
+    ys_all{g_id} = ys;
+    diffs_all{g_id} = diffs;
+    
+    figure(fig1);
+    hold all;
+    color = colors{g_id};
+    h = scatter(xs, ys, 250, 'o', 'LineWidth',  1, 'MarkerEdgeColor', 'black', 'MarkerFaceColor', color, 'MarkerEdgeAlpha', opacity, 'MarkerFaceAlpha', opacity);
+    legend(h, groups{g_id})
+    
+    if size(groups, 1) == 1
+        fig2 = figure;
+        propertyeditor('on');
+        b = boxplot(diffs,'Notch','on','Labels',{groups(g_id)}, 'Colors', 'k');
+        set(gca, 'FontSize', 40);
+        ylim([-20 30])
+        a = get(get(gca, 'children'), 'children');
+        t = get(a,'tag');
+        idx = strcmpi(t,'box');
+        boxes = a(idx);
+        set(a,'linewidth',3)
+        idx = strcmpi(t,'Outliers');
+        outliers = a(idx);
+        set(outliers, 'visible', 'off')
+        hold all;
+        h = scatter(1. * ones(size(diffs, 1), 1).*(1+(rand(size(diffs))-0.5)/10), diffs, 100, 'o', 'LineWidth',  1, 'MarkerEdgeColor', 'black', 'MarkerFaceColor', color, 'MarkerEdgeAlpha', opacity, 'MarkerFaceAlpha', opacity);
+        h.Annotation.LegendInformation.IconDisplayStyle = 'off';
+        ylabel('Age Acceleration Diff', 'Interpreter', 'latex');
+        box on;
+        grid on;
+        fn_fig = sprintf('%s/AgeAccelerationDiff_(%s)_norm(%s)_part(%s)', figures_path, groups{g_id}, norm, part);
+        oqs_save_fig(gcf, fn_fig)
+    end 
 end
 
-
-
-fig = figure;
-propertyeditor('on');
-h = scatter(c_xs, c_ys, 250, 'o', 'LineWidth',  1, 'MarkerEdgeColor', 'black', 'MarkerFaceColor', 'green', 'MarkerEdgeAlpha', 0.5, 'MarkerFaceAlpha', 0.5);
-legend(h, 'Control')
+figure(fig1);
 hold all;
-h = scatter(t_xs, t_ys, 250, 'o', 'LineWidth',  1, 'MarkerEdgeColor', 'black', 'MarkerFaceColor', 'red', 'MarkerEdgeAlpha', 0.5, 'MarkerFaceAlpha', 0.5);
-legend(h, 'Treatment')
 set(gca, 'FontSize', 40);
 xlabel('Age', 'Interpreter', 'latex');
 set(gca, 'FontSize', 40);
@@ -52,47 +88,35 @@ h = plot([0 100], [0 100], 'k');
 h.Annotation.LegendInformation.IconDisplayStyle = 'off';
 legend(gca,'off');
 legend('Location','Southeast','NumColumns',1)
+box on;
 fn_fig = sprintf('%s/Age_DNAmAge_norm(%s)_part(%s)', figures_path, norm, part);
-oqs_save_fig(fig, fn_fig)
+oqs_save_fig(fig1, fn_fig)
 
-
-% fn = sprintf('%s/control.csv', path);
-% ctrl = readtable(fn);
-% c_xs_l = [0 100];
-% c_ys_l = c_xs_l * ctrl.coeffs(2) + ctrl.coeffs(1);
-% fn = sprintf('%s/treatment.csv', path);
-% ctrl = readtable(fn);
-% t_xs_l = [0 100];
-% t_ys_l = t_xs_l * ctrl.coeffs(2) + ctrl.coeffs(1);
-% h = plot(c_xs_l, c_ys_l, 'Color', 'b');
-% h.Annotation.LegendInformation.IconDisplayStyle = 'off';
-% h = plot(t_xs_l, t_ys_l, 'Color', 'r');
-% h.Annotation.LegendInformation.IconDisplayStyle = 'off';
-
-p = kruskalwallis(agediff, status, 'on');
-grid on;
-propertyeditor('on')
-set(gca, 'FontSize', 40);
-ylim([-20 30])
-a = get(get(gca,'children'),'children');   % Get the handles of all the objects
-t = get(a,'tag');   % List the names of all the objects 
-idx = strcmpi(t,'box');  % Find Box objects
-boxes = a(idx);          % Get the children you need
-set(a,'linewidth',3); % Set width
-idx = strcmpi(t,'Outliers');
-outliers = a(idx);
-set(outliers,'visible','off')
-dim = [.15 .13 .3 .3];
-str = sprintf('Kruskal-Wallis p-value: %0.2e', p);
-tb = annotation('textbox',dim,'String',str,'verticalalignment','Bottom' ,'FitBoxToText','on', 'FontSize', 24);
-hold all;
-h = scatter(1. * ones(size(c_diff, 1), 1).*(1+(rand(size(c_diff))-0.5)/10), c_diff, 100, 'o', 'LineWidth',  1, 'MarkerEdgeColor', 'black', 'MarkerFaceColor', 'green', 'MarkerEdgeAlpha', 0.5, 'MarkerFaceAlpha', 0.5);
-h.Annotation.LegendInformation.IconDisplayStyle = 'off';
-hold all;
-h = scatter(2. * ones(size(t_diff, 1), 1).*(1+(rand(size(c_diff))-0.5)/10), t_diff, 100, 'o', 'LineWidth',  1, 'MarkerEdgeColor', 'black', 'MarkerFaceColor', 'red', 'MarkerEdgeAlpha', 0.5, 'MarkerFaceAlpha', 0.5);
-h.Annotation.LegendInformation.IconDisplayStyle = 'off';
-
-
-fn_fig = sprintf('%s/AgeAccelerationDiff_C_T_norm(%s)_part(%s)', figures_path, norm, part);
-oqs_save_fig(gcf, fn_fig)
-
+if size(groups, 1) > 1
+    p = kruskalwallis(agediff, status, 'on');
+    grid on;
+    propertyeditor('on')
+    set(gca, 'FontSize', 40);
+    ylim([-20 30])
+    a = get(get(gca,'children'),'children');
+    t = get(a,'tag');
+    idx = strcmpi(t,'box');
+    boxes = a(idx);
+    set(a,'linewidth',3);
+    idx = strcmpi(t,'Outliers');
+    outliers = a(idx);
+    set(outliers,'visible','off')
+    dim = [.15 .13 .3 .3];
+    str = sprintf('Kruskal-Wallis p-value: %0.2e', p);
+    tb = annotation('textbox', dim, 'String', str, 'verticalalignment', 'Bottom', 'FitBoxToText', 'on', 'FontSize', 24);
+    hold all;
+    
+    for g_id = 1:size(groups, 1)
+        h = scatter(g_id * ones(size(diffs_all{g_id}, 1), 1).*(1+(rand(size(diffs_all{g_id}))-0.5)/10), diffs_all{g_id}, 100, 'o', 'LineWidth',  1, 'MarkerEdgeColor', 'black', 'MarkerFaceColor', colors{g_id}, 'MarkerEdgeAlpha', opacity, 'MarkerFaceAlpha', opacity);
+        h.Annotation.LegendInformation.IconDisplayStyle = 'off';
+    end
+    
+    box on;
+    fn_fig = sprintf('%s/AgeAccelerationDiff_all_norm(%s)_part(%s)', figures_path, norm, part);
+    oqs_save_fig(gcf, fn_fig)
+end

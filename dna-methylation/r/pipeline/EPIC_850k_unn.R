@@ -6,7 +6,7 @@ BiocManager::install("ChAMP")
 
 library("ChAMP")
 
-path <- "E:/YandexDisk/Work/pydnameth/unn_epic/raw/release"
+path <- "E:/YandexDisk/Work/pydnameth/unn_epic/raw/data"
 setwd(path)
 
 myLoad = champ.load(directory = path, arraytype = "EPIC")
@@ -15,9 +15,9 @@ write.csv(data.frame(myLoad$beta), "beta_filtered.csv", row.names = TRUE)
 
 myImport = champ.import(directory = path, arraytype = "EPIC")
 
-beta_raw = myImport$beta
-write.table(data.frame(beta_raw),file="beta_raw.txt",col.name=TRUE, row.names=TRUE,sep="\t",quote=F)
-write.csv(data.frame(beta_raw), "beta_raw.csv", row.names = FALSE)
+beta_raw = data.frame(myImport$beta)
+write.table(beta_raw, file="beta_raw.txt",col.name=TRUE, row.names=TRUE,sep="\t",quote=F)
+write.csv(beta_raw, "beta_raw.csv", row.names = FALSE)
 
 myLoad <- champ.filter(arraytype="EPIC")
 
@@ -48,8 +48,8 @@ champ.QC(beta = myNorm,
 
 QC.GUI(beta=myNorm,arraytype="EPIC")
 
-beta_filtered_normalized = myNorm
-write.table(data.frame(beta_filtered_normalized),file="beta_filtered_normalized.txt",col.name=TRUE, row.names=TRUE,sep="\t",quote=F)
+beta_filtered_normalized = data.frame(myNorm)
+write.table(beta_filtered_normalized,file="beta_filtered_normalized.txt",col.name=TRUE, row.names=TRUE,sep="\t",quote=F)
 
 #write.table(data.frame(EPIC.manifest.hg19),file="EPIC.manifest.hg19.txt",col.name=TRUE, row.names=TRUE,sep="\t",quote=F)
 
@@ -62,41 +62,32 @@ write.table(data.frame(beta_filtered_normalized),file="beta_filtered_normalized_
 
 
 
+# Cells ===========================================================================================================
+rm(list=ls())
 
 if (!requireNamespace("BiocManager", quietly = TRUE))
   install.packages("BiocManager")
 BiocManager::install("minfi")
 BiocManager::install("FlowSorted.Blood.EPIC")
+
 library(minfi)
 library(FlowSorted.Blood.EPIC)
-# ====== File system =======
-path <- "E:/YandexDisk/Work/pydnameth/unn_epic/raw/release"
+
+path <- "E:/YandexDisk/Work/pydnameth/unn_epic/raw/data"
 setwd(path)
-# ==========================
-# ======= RGset ========
+
 list.files(path)
 targets <- read.metharray.sheet(path)
 RGset <- read.metharray.exp(targets = targets)
 cell_counts <- estimateCellCounts2(RGset,
                                    compositeCellType = "Blood",
                                    processMethod = "preprocessFunnorm", 
-                                   referencePlatform="IlluminaHumanMethylationEPIC",
-                                   cellTypes = c("CD8T", "CD4T", "NK", "Bcell", "Mono", "Gran"))
-cell_counts <- estimateCellCounts2(RGset,
-                                   compositeCellType = "Blood",
-                                   processMethod = "preprocessFunnorm", 
                                    referencePlatform="IlluminaHumanMethylationEPIC")
-
-
 write.csv(cell_counts, "cell_counts.csv")
-
-cell_counts <- estimateCellCounts2(RGset,
-                                   compositeCellType = "Blood",
-                                   processMethod = "preprocessFunnorm", 
-                                   referencePlatform="IlluminaHumanMethylationEPIC")
+# =================================================================================================================
 
 
-
+# minfi ===========================================================================================================
 rm(list=ls())
 
 if (!requireNamespace("BiocManager", quietly = TRUE))
@@ -106,71 +97,27 @@ BiocManager::install("minfiData")
 BiocManager::install("wateRmelon")
 BiocManager::install("shinyMethyl")
 BiocManager::install("FlowSorted.Blood.EPIC")
+BiocManager::install("ChAMP")
 
+library("ChAMP")
 library(minfi)
 library(minfiData)
 library(shinyMethyl)
 library(wateRmelon)
 library(FlowSorted.Blood.EPIC)
 
-
-# ====== File system =======
-path <- "E:/YandexDisk/Work/pydnameth/unn_epic/raw/release"
+path <- "E:/YandexDisk/Work/pydnameth/unn_epic/raw/data"
 setwd(path)
-# ================================================================================================================
 
-# ======= RGset ========
 list.files(path)
 targets <- read.metharray.sheet(path)
 RGset <- read.metharray.exp(targets = targets)
-phenoData <- pData(RGset)
-manifest <- getManifest(RGset)
-manifest
-# ================================================================================================================
 
+qcReport(RGset, 
+         sampGroups = targets$Sample_Group, 
+         pdf = "qcReport.pdf", 
+         controls = c("NEGATIVE", "BISULFITE CONVERSION I", "BISULFITE CONVERSION II", "EXTENSION", "HYBRIDIZATION", "NON-POLYMORPHIC", "SPECIFICITY I", "SPECIFICITY II", "TARGET REMOVAL"))
 
-# ======= MethylSet and RatioSet ========
-MSet <- preprocessRaw(RGset)
-MSet
-
-head(getMeth(MSet)[,1:3])
-head(getUnmeth(MSet)[,1:3])
-
-RSet <- ratioConvert(MSet, what = "both", keepCN = TRUE)
-RSet
-
-beta <- getBeta(RSet)
-# ================================================================================================================
-
-
-# ======= Quality control ========
-head(getMeth(MSet)[,1:3])
-head(getUnmeth(MSet)[,1:3])
-qc <- getQC(MSet)
-head(qc)
-plotQC(qc)
-
-
-Red <- data.frame(getRed(RGset))
-Green <- data.frame(getGreen(RGset))
-
-# ======================
-
-
-# ======= Control probes ========
-qcReport(RGset, pdf= "qcReport.pdf", sampGroups = phenoData$Sample_Group)
-# ===============================
-
-# ======= shinyMethyl =======
-summary <- shinySummarize(RGset)
-save(summary,file="summary_shinyMethyl.RData")
-# ===========================
-
-# ========= pfilter ===========
-wateRmelon_filtered <- pfilter(RGset, pnthresh=0.05, perc=5, pthresh=1)
-# =============================
-
-# ======== Processing with filtering =========
 MSet_raw <- preprocessRaw(RGset)
 green <- getGreen(RGset)
 red <- getRed(RGset)
@@ -192,81 +139,10 @@ pdf("boxplots_beta_Raw.pdf",width=15,height=5)
 par(mfrow=c(1,1))
 boxplot(beta_raw,outline=F,main="No Normalization")
 dev.off()
+# =================================================================================================================
 
-detP <- detectionP(RGset)
-failed <- detP>0.05
-means_of_columns <- colMeans(failed) 
-means_of_columns
-samples_to_retain <- means_of_columns<0.05
-names_samples_to_remove <- names(samples_to_retain)[samples_to_retain==FALSE]
-length(names_samples_to_remove)
-names_samples_to_remove
-
-means_of_rows <- rowMeans(failed)
-probes_to_retain <- means_of_rows<0.01
-names_probes_to_remove <- names(probes_to_retain)[probes_to_retain==FALSE]
-length(names_probes_to_remove)
-
-RGset_filtered_samples <- RGset[, samples_to_retain]
-RGset_filtered_samples
-
-detP_filtered_samples <- detectionP(RGset_filtered_samples)
-failed_filtered_samples <- detP_filtered_samples>0.05
-means_of_rows <- rowMeans(failed_filtered_samples)
-probes_to_retain <- means_of_rows<0.01
-names_probes_to_remove <- names(probes_to_retain)[probes_to_retain==FALSE]
-length(names_probes_to_remove)
-
-MSet_Raw_filtered_samples <- preprocessRaw(RGset_filtered_samples)
-beta_filtered_samples <- getBeta(MSet_Raw_filtered_samples)
-beta_filtered_samples <- beta_filtered_samples[!rownames(beta_filtered_samples) %in% names_probes_to_remove,]
-dim(beta_filtered_samples)
-
-funnorm <- preprocessFunnorm(RGset_filtered_samples)
-beta_funnorm <- getBeta(funnorm)
-beta_funnorm <- beta_funnorm[!rownames(beta_funnorm) %in% names_probes_to_remove,]
-dim(beta_funnorm)
-pdf("boxplots_beta_Raw_filtered_samples_probes.pdf",width=20,height=10)
-par(mfrow=c(1,1))
-boxplot(beta_filtered_samples,outline=F,main="No Normalization")
-dev.off()
-pdf("boxplots_beta_Funnorm_filtered_samples_probes.pdf",width=20,height=10)
-par(mfrow=c(1,1))
-boxplot(beta_funnorm,outline=F,main="Funnorm Normalization")
-dev.off()
-
-beta_funnorm <- data.frame(row.names(beta_funnorm),beta_funnorm)
-colnames(beta_funnorm)[1] <- "ID_REF"
-dim(beta_funnorm)
-str(beta_funnorm)
-getwd()
-save(beta_funnorm,file="beta_Funnorm_filtered_samples_probes.RData")
-write.table(beta_funnorm,file="beta_Funnorm_filtered_samples_probes.txt",row.names=F,sep="\t",quote=F)
-
-quantile <- preprocessQuantile(RGset_filtered_samples)
-beta_quantile <- getBeta(quantile)
-beta_quantile <- beta_quantile[!rownames(beta_quantile) %in% names_probes_to_remove,]
-dim(beta_quantile)
-pdf("boxplots_beta_Quantile_filtered_samples_probes.pdf",width=20,height=10)
-par(mfrow=c(1,1))
-boxplot(beta_quantile,outline=F,main="quantile Normalization")
-dev.off()
-
-beta_quantile <- data.frame(row.names(beta_quantile),beta_quantile)
-colnames(beta_quantile)[1] <- "ID_REF"
-dim(beta_quantile)
-str(beta_quantile)
-getwd()
-save(beta_quantile,file="beta_Quantile_filtered_samples_probes.RData")
-write.table(beta_funnorm,file="beta_Quantile_filtered_samples_probes.txt",row.names=F,sep="\t",quote=F)
-# ===============================
-
-# ======== preprocessFunnorm =========
+# preprocessFunnorm ===============================================================================================
 funnorm <- preprocessFunnorm(RGset)
-
-pdf("densityPlot_funnorm.pdf")
-densityPlot(Mset, sampGroups = targets$Sample_Group)
-dev.off()
 
 beta_funnorm <- getBeta(funnorm)
 dim(beta_funnorm)
@@ -275,30 +151,19 @@ par(mfrow=c(1,1))
 boxplot(beta_funnorm,outline=F,main="Funnorm Normalization")
 dev.off()
 
-beta_funnorm <- data.frame(row.names(beta_funnorm),beta_funnorm)
-colnames(beta_funnorm)[1] <- "ID_REF"
-save(beta_funnorm,file="beta_funnorm.RData")
-write.table(beta_funnorm,file="beta_funnorm.txt",row.names=F,sep="\t",quote=F)
-rm(beta_funnorm)
-# ====================================
+champ.QC(beta = beta_funnorm,
+         pheno=targets$Sample_Group,
+         mdsPlot=TRUE,
+         densityPlot=TRUE,
+         dendrogram=TRUE,
+         PDFplot=TRUE,
+         Rplot=TRUE,
+         Feature.sel="None",
+         resultsDir="./fun/")
 
+QC.GUI(beta=beta_funnorm,arraytype="EPIC")
 
-# ======== preprocessQuantile =========
-quantile <- preprocessQuantile(RGset)
-beta_quantile <- getBeta(quantile)
-dim(beta_quantile)
-pdf("boxplots_beta_Quantile.pdf",width=15,height=5)
-par(mfrow=c(1,1))
-boxplot(beta_quantile,outline=F,main="Quantile Normalization")
-dev.off()
-
-beta_quantile <- data.frame(row.names(beta_quantile),beta_quantile)
-colnames(beta_quantile)[1] <- "ID_REF"
-save(beta_quantile,file="beta_quantile.RData")
-write.table(beta_quantile,file="beta_quantile.txt",row.names=F,sep="\t",quote=F)
-rm(beta_quantile)
-# ====================================
-
-
-
-
+beta_funnorm_df <- data.frame(row.names(beta_funnorm),beta_funnorm)
+colnames(beta_funnorm_df)[1] <- "IlmnID"
+write.table(beta_funnorm_df,file="beta_funnorm.txt",row.names=F,sep="\t",quote=F)
+# =================================================================================================================

@@ -17,7 +17,7 @@ annotations = pdm.Annotations(
 )
 
 observables = pdm.Observables(
-    name='observables',
+    name='observables_part(final)',
     types={}
 )
 
@@ -33,7 +33,11 @@ attributes = pdm.Attributes(
     cells=cells
 )
 
-data_params = get_data_params(data.base)
+#data_params = get_data_params(data.base)
+data_params = {
+    'norm': 'BMIQ',
+    'part': 'final',
+}
 
 pdm.betas_table_pbc(
     data=data,

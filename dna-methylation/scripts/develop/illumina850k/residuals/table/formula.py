@@ -38,7 +38,7 @@ method_params = {
 }
 
 data_params = get_data_params(data.base)
-data_params['cells'] = ['Bcell', 'CD4T', 'CD8T', 'Gran', 'NK']
+data_params['cells'] = ['Bcell', 'CD4T', 'CD8T', 'Neu', 'NK']
 
 pdm.residuals_table_formula(
     data=data,

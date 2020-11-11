@@ -17,10 +17,9 @@ import pandas as pd
 from functions.save.list import save_list
 
 
-path = 'E:/YandexDisk/Work/pydnameth/unn_epic/residuals/table/pbc/d6f73401662d59e3938d1028cd1df562'
+path = 'E:/YandexDisk/Work/pydnameth/unn_epic/residuals/table/pbc/80c5f9771a489e6fb2096695856ed657'
 fn = 'default'
-data_type = 'beta'
-target_metrics = ['p_value_fdr_bh_d6f73401', 'p_value_bonferroni_d6f73401']
+target_metrics = ['p_value_fdr_bh_80c5f977', 'p_value_bonferroni_80c5f977']
 limit = 0.05
 
 table = {}
