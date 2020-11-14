@@ -6,7 +6,7 @@ BiocManager::install("ChAMP")
 
 library("ChAMP")
 
-path <- "E:/YandexDisk/Work/pydnameth/unn_epic/raw/data"
+path <- "E:/YandexDisk/Work/pydnameth/unknown/raw/data"
 setwd(path)
 
 myLoad = champ.load(directory = path, arraytype = "EPIC")
@@ -107,7 +107,7 @@ library(shinyMethyl)
 library(wateRmelon)
 library(FlowSorted.Blood.EPIC)
 
-path <- "E:/YandexDisk/Work/pydnameth/unn_epic/raw/data"
+path <- "E:/YandexDisk/Work/pydnameth/unknown/raw/data"
 setwd(path)
 
 list.files(path)
