@@ -3,16 +3,16 @@ from scripts.develop.routines import *
 
 data = pdm.Data(
     path='',
-    base='unknown'
+    base='unn_epic'
 )
 
 #data_params = get_data_params(data.base)
 data_params = {
     'norm': 'fun',
-    'part': 'full',
+    'part': 'wo_noIntensity_detP',
 }
 
-fn = 'observables_part(full)'
+fn = 'observables_part(wo_noIntensity_detP)'
 
 pdm.betas_horvath_calculator_create_regular(
     fn,

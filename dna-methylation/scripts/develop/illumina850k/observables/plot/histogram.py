@@ -9,7 +9,7 @@ data = pdm.Data(
 annotations = pdm.Annotations(
     name='annotations',
     type='850k',
-    exclude='bad_cpgs_from_ChAMP',
+    exclude='none',
     select_dict={
         'CHR': ['-X', '-Y']
     }
@@ -21,7 +21,7 @@ cells = pdm.Cells(
 )
 
 observables = pdm.Observables(
-    name='observables',
+    name='observables_part(wo_noIntensity_detP)',
     types={}
 )
 

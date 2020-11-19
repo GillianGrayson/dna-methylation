@@ -17,19 +17,19 @@ import pandas as pd
 from functions.save.list import save_list
 
 
-path = 'E:/YandexDisk/Work/pydnameth/unn_epic/betas/table/pbc/c186845722aa1ed8701486a94ec7cdbf'
+path = 'E:/YandexDisk/Work/pydnameth/unn_epic/bop/table/manova/80025992391d7842c38012ef54dee3ec'
 fn = 'default'
-target_metrics = ['pbc_p_value_fdr_bh_c1868457', 'pbc_p_value_bonferroni_c1868457', 'kw_p_value_fdr_bh_c1868457', 'kw_p_value_bonferroni_c1868457']
+target_metrics = ['p_value_fdr_bh_roy_80025992', 'p_value_bonferroni_roy_80025992']
 limit = 0.05
 
 table = {}
-table['Number of'] = ['CpGs', 'Genes']
+table['Number of'] = ['BoPs', 'Genes']
 
 curr_fn = f'{path}/{fn}.pkl'
 data = load_table_dict_pkl(curr_fn)
 
 cpgs = data['item']
-genes = data['aux']
+genes = data['genes_80025992']
 
 for metric in target_metrics:
     column = np.asarray(data[metric])
