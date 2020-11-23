@@ -3,15 +3,77 @@ rm(list=ls())
 if (!requireNamespace("BiocManager", quietly=TRUE))
   install.packages("BiocManager")
 BiocManager::install("ChAMP")
+BiocManager::install("minfi")
+BiocManager::install("minfiData")
+BiocManager::install("wateRmelon")
+BiocManager::install("shinyMethyl")
+BiocManager::install("FlowSorted.Blood.EPIC")
 
-library("ChAMP")
+library(ChAMP)
+library(minfi)
+library(minfiData)
+library(shinyMethyl)
+library(wateRmelon)
+library(FlowSorted.Blood.EPIC)
 
 path <- "E:/YandexDisk/Work/pydnameth/unn_epic/raw/data"
 setwd(path)
 
 myLoad = champ.load(directory = path, arraytype = "EPIC")
-myLoad = champ.load(directory = path, method="minfi", arraytype = "EPIC")
-passed_cpgs = rownames(myLoad$beta)
+passed_cpgs_origin = rownames(myLoad$beta)
+targets <- read.metharray.sheet(path)
+RGset <- read.metharray.exp(targets = targets)
+
+funnorm <- preprocessFunnorm(RGset)
+beta_funnorm <- getBeta(funnorm)
+
+passed_cpgs = intersect(passed_cpgs_origin, rownames(beta_funnorm))
+beta_funnorm_filtered <- beta_funnorm[passed_cpgs,]
+
+beta_funnorm_filtered_df <- data.frame(row.names(beta_funnorm_filtered),beta_funnorm_filtered)
+colnames(beta_funnorm_filtered_df)[1] <- "IlmnID"
+
+
+
+
+
+
+
+
+
+beta_raw_filtered = beta_raw[passed_cpgs,]
+
+pdf("boxplots_beta_raw_filtered.pdf",width=15,height=5)
+par(mfrow=c(1,1))
+boxplot(beta_raw_filtered,outline=F,main="No Normalization")
+dev.off()
+
+pdf("densityPlot_raw_filtered.pdf")
+densityPlot(beta_raw_filtered, sampGroups = targets$Sample_Group)
+dev.off()
+
+
+
+
+passed_cpgs = intersect(passed_cpgs_origin, rownames(beta_funnorm))
+beta_funnorm_filtered <- beta_funnorm[passed_cpgs,]
+
+pdf("boxplots_beta_Funnorm_filtered.pdf",width=15,height=5)
+par(mfrow=c(1,1))
+boxplot(beta_funnorm_filtered,outline=F,main="Funnorm Normalization")
+dev.off()
+
+pdf("densityPlot_Funnorm_filtered.pdf")
+densityPlot(beta_funnorm_filtered, sampGroups = targets$Sample_Group)
+dev.off()
+
+beta_funnorm_filtered_df <- data.frame(row.names(beta_funnorm_filtered),beta_funnorm_filtered)
+colnames(beta_funnorm_filtered_df)[1] <- "IlmnID"
+write.table(beta_funnorm_filtered_df,file="beta_funnorm_filtered.txt",row.names=F,sep="\t",quote=F)
+
+
+
+
 
 write.csv(data.frame(myLoad$beta), "beta_filtered.csv", row.names = TRUE)
 
@@ -189,8 +251,8 @@ qcReport(RGset,
                       "SPECIFICITY I",
                       "SPECIFICITY II",
                       "TARGET REMOVAL"
-                      )
          )
+)
 
 MSet_raw <- preprocessRaw(RGset)
 green <- getGreen(RGset)
