@@ -2,7 +2,7 @@ clear all;
 
 norm = 'fun';
 part = 'wo_noIntensity_detP';
-target = 'DNAmAgeHannum';
+target = 'DNAmGrimAge';
 
 groups = {'C', 'T'}';
 colors = {[0 1 0], [1 0 1]}';
