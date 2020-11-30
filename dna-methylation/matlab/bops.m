@@ -1,18 +1,18 @@
 clear all;
 
-num_top_bops = 10;
+num_top_bops = 50;
 
 groups = {'C', 'T'}';
 colors = {[0 1 0],[1 0 0]}';
 opacity = 0.65;
 
 dataset_path = 'E:/YandexDisk/Work/pydnameth/unn_epic';
-bop_path = 'E:/YandexDisk/Work/pydnameth/unn_epic/bop/table/manova/80025992391d7842c38012ef54dee3ec/default.xlsx';
+bop_path = 'E:/YandexDisk/Work/pydnameth/unn_epic/bop/table/manova/3c48cd40ad58b06cc3b1f27e3c72554c/ABC_mod.xlsx';
 suffix_in_bop_file = '';
 
-data_type = 'residuals';
-norm = 'BMIQ';
-part = 'final';
+data_type = 'betas';
+norm = 'fun';
+part = 'wo_noIntensity_detP';
 
 cell_types = {'''Bcell''', '''CD4T''', '''CD8T''', '''Neu''', '''NK'''}';
 tmp = join(cell_types, ', ');
@@ -35,6 +35,9 @@ elseif strcmp(data_type, 'residuals')
 end
 data = readtable(fn, 'ReadRowNames', true);
 
+tmp = zeros(size(data.Properties.RowNames, 1), 1);
+cpgs_dict = containers.Map(data.Properties.RowNames, tmp);
+
 bop_info = readtable(bop_path, 'ReadRowNames', true);
 bop_names = bop_info.Properties.RowNames;
 target_bops = bop_names(1:num_top_bops);
@@ -53,8 +56,14 @@ for bop_id = 1:size(target_bops, 1)
     bop = target_bops{bop_id};
     save_name = replace(bop, {':', '*'}, '_');
     cpgs_raw = bop_info{bop, 'aux'};
-    p_val = bop_info{bop, 14};
-    cpgs = split(cpgs_raw, ';');
+    p_val = bop_info{bop, end};
+    cpgs_all = split(cpgs_raw, ';');
+    cpgs = [];
+    for cpg_id = 1:size(cpgs_all, 1)
+        if isKey(cpgs_dict, cpgs_all(cpg_id))
+            cpgs = vertcat(cpgs, cpgs_all(cpg_id));
+        end
+    end
     num_cpgs = size(cpgs, 1);
     
     x_font = 20;

@@ -17,9 +17,9 @@ import pandas as pd
 from functions.save.list import save_list
 
 
-path = 'E:/YandexDisk/Work/pydnameth/unn_epic/bop/table/manova/80025992391d7842c38012ef54dee3ec'
-fn = 'default'
-target_metrics = ['p_value_fdr_bh_roy_80025992', 'p_value_bonferroni_roy_80025992']
+path = 'E:/YandexDisk/Work/pydnameth/unn_epic/bop/table/manova/3c48cd40ad58b06cc3b1f27e3c72554c'
+fn = 'ABC_mod'
+target_metrics = ['Sample_Group_p_value_roy_3c48cd40_fdr_bh', 'Sample_Group_p_value_roy_3c48cd40_bonferroni']
 limit = 0.05
 
 table = {}
@@ -29,7 +29,7 @@ curr_fn = f'{path}/{fn}.pkl'
 data = load_table_dict_pkl(curr_fn)
 
 cpgs = data['item']
-genes = data['genes_80025992']
+genes = data['genes_3c48cd40']
 
 for metric in target_metrics:
     column = np.asarray(data[metric])
@@ -38,7 +38,7 @@ for metric in target_metrics:
     genes_targ_raw = [genes[i] for i in indexes[0]]
     genes_targ = []
     for g in genes_targ_raw:
-        if g != '':
+        if g != '' and type(g) != float:
             g_list = g.split(';')
             genes_targ += list(set(g_list))
 

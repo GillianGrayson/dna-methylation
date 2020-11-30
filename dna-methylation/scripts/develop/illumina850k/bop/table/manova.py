@@ -10,19 +10,19 @@ data = pdm.Data(
 annotations = pdm.Annotations(
     name='annotations',
     type='850k',
-    exclude='bad_cpgs_from_ChAMP',
+    exclude='none',
     select_dict={
         'CHR': ['-X', '-Y']
     }
 )
 
 observables = pdm.Observables(
-    name='observables_part(final)',
+    name='observables_part(wo_noIntensity_detP)',
     types={}
 )
 
 cells = pdm.Cells(
-    name='cell_counts',
+    name='cell_counts_part(wo_noIntensity_detP)',
     types='any'
 )
 
@@ -33,16 +33,21 @@ attributes = pdm.Attributes(
     cells=cells
 )
 
+data_params = {
+    'source': 'betas',
+    'norm': 'fun',
+    'part': 'wo_noIntensity_detP',
+}
+
 # data_params = {
-#     'source': 'betas',
-#     'norm': 'BMIQ',
+#     'source': 'residuals',
+#     'norm': 'fun',
 #     'part': 'final',
+#     'cells': ['Bcell', 'CD4T', 'CD8T', 'Neu', 'NK']
 # }
 
-data_params = {
-    'source': 'residuals',
-    'norm': 'fun',
-    'part': 'final',
+method_params = {
+    'observables': ['Sample_Group', 'Age', 'Sex'],
     'cells': ['Bcell', 'CD4T', 'CD8T', 'Neu', 'NK']
 }
 
@@ -51,4 +56,5 @@ pdm.bop_table_manova(
     annotations=annotations,
     attributes=attributes,
     data_params=data_params,
+    method_params=method_params
 )

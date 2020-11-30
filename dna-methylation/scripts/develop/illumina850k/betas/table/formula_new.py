@@ -10,34 +10,37 @@ data = pdm.Data(
 annotations = pdm.Annotations(
     name='annotations',
     type='850k',
-    exclude='bad_cpgs_from_ChAMP',
+    exclude='none',
     select_dict={
         'CHR': ['-X', '-Y']
     }
 )
 
 observables = pdm.Observables(
-    name='observables',
+    name='observables_part(wo_noIntensity_detP)',
     types={}
 )
 
 cells = pdm.Cells(
-    name='cell_counts',
+    name='cell_counts_part(wo_noIntensity_detP)',
     types='any'
 )
 
-target = get_target(data.base)
+target = 'Sample_Group'
 attributes = pdm.Attributes(
     target=target,
     observables=observables,
     cells=cells
 )
 
-method_params = {
-    'formula': 'cpg ~ Age * C(Sample_Group)',
+data_params = {
+    'norm': 'fun',
+    'part': 'wo_noIntensity_detP',
 }
 
-data_params = get_data_params(data.base)
+method_params = {
+    'formula': 'cpg ~ C(Sample_Group) + C(Sex) + Age + Bcell + CD4T + CD8T + Neu + NK',
+}
 
 pdm.betas_table_formula_new(
     data=data,
