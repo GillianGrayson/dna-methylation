@@ -2,11 +2,12 @@ clear all;
 
 norm = 'fun';
 part = 'wo_noIntensity_detP';
-target = 'DNAmGrimAge';
+x_var = 'Age';
+y_var = 'DNAmGrimAge';
 
 groups = {'C', 'T'}';
+group_base = 'C';
 colors = {[0 1 0], [1 0 1]}';
-%colors = distinguishable_colors(size(groups, 1));
 
 opacity = 0.65;
 
@@ -21,8 +22,8 @@ opts = setvartype(opts, {'Sample_Group'}, 'string');
 obs = readtable(fn, opts);
 
 status = obs.Sample_Group;
-age = obs.Age;
-age_dnam = obs.(target);
+x_values = obs.(x_var);
+y_values = obs.(y_var);
 
 fig1 = figure;
 propertyeditor('on');
@@ -38,10 +39,10 @@ for g_id = 1:size(groups, 1)
     xs = [];
     ys = [];
     
-    for id = 1 : size(age, 1)
+    for id = 1 : size(x_values, 1)
         if status{id}(1) == groups{g_id}
-            xs = vertcat(xs, age(id));
-            ys = vertcat(ys, age_dnam(id));
+            xs = vertcat(xs, x_values(id));
+            ys = vertcat(ys, y_values(id));
         end
     end
     
@@ -54,14 +55,20 @@ for g_id = 1:size(groups, 1)
     h = scatter(xs, ys, 250, 'o', 'LineWidth',  1, 'MarkerEdgeColor', 'black', 'MarkerFaceColor', color, 'MarkerEdgeAlpha', opacity, 'MarkerFaceAlpha', opacity);
     legend(h, groups{g_id})
     
-    if (groups{g_id} == 'C') || ((groups{g_id} == 'T') && (size(groups, 1) == 1))
-        T = table(xs, ys, 'VariableNames', {'Age', target});
-        lm = fitlm(T, sprintf('%s~Age', target));
+    
+    T = table(xs, ys, 'VariableNames', {x_var, y_var});
+    lm = fitlm(T, sprintf('%s~%s', y_var, x_var));
+    R2 = lm.Rsquared.Ordinary;
+    RMSE = lm.RMSE;
+    legend(h, sprintf('%s $(R^2=%0.2f)$', groups{g_id}, R2), 'Interpreter','latex');
+    
+    x_fit = [0; 100];
+    y_fit = lm.Coefficients{'(Intercept)','Estimate'} + x_fit * lm.Coefficients{x_var,'Estimate'};
+    h = plot(x_fit, y_fit, 'LineWidth', 2, 'Color', color);
+    h.Annotation.LegendInformation.IconDisplayStyle = 'off';
+    
+    if (groups{g_id} == group_base)
         coeffs = lm.Coefficients;
-        x_fit = [0; 100];
-        y_fit = coeffs{'(Intercept)','Estimate'} + x_fit * coeffs{'Age','Estimate'};
-        h = plot(x_fit, y_fit, 'LineWidth', 2, 'Color', color);
-        h.Annotation.LegendInformation.IconDisplayStyle = 'off';
     end
 end
 
@@ -71,7 +78,7 @@ for g_id = 1:size(groups, 1)
     
     diffs = zeros(size(xs, 1), 1);
     for p_id = 1:size(xs, 1)
-        y_fit = coeffs{'(Intercept)','Estimate'} + xs(p_id) * coeffs{'Age','Estimate'};
+        y_fit = coeffs{'(Intercept)','Estimate'} + xs(p_id) * coeffs{x_var,'Estimate'};
         diffs(p_id) = ys(p_id) - y_fit;
     end
 
@@ -96,7 +103,7 @@ for g_id = 1:size(groups, 1)
         ylabel('Acceleration Diff', 'Interpreter', 'latex');
         box on;
         grid on;
-        fn_fig = sprintf('%s/%s_AccelerationDiff_(%s)', figures_path, target, groups{g_id});
+        fn_fig = sprintf('%s/x(%s)_y(%s)_AccelerationDiff_(%s)', figures_path, x_var, y_var, groups{g_id});
         oqs_save_fig(gcf, fn_fig)
     end 
 end
@@ -104,15 +111,15 @@ end
 figure(fig1);
 hold all;
 set(gca, 'FontSize', 40);
-xlabel('Age', 'Interpreter', 'latex');
+xlabel(x_var, 'Interpreter', 'latex');
 set(gca, 'FontSize', 40);
-ylabel(target, 'Interpreter', 'latex');
+ylabel(y_var, 'Interpreter', 'latex');
 h = plot([0 100], [0 100], 'k');
 h.Annotation.LegendInformation.IconDisplayStyle = 'off';
 legend(gca,'off');
-legend('Location','Southeast','NumColumns',1)
+legend('Location', 'Southeast', 'NumColumns', 1, 'Interpreter', 'latex');
 box on;
-fn_fig = sprintf('%s/Age_%s', figures_path, target);
+fn_fig = sprintf('%s/%s_%s', figures_path, x_var, y_var);
 oqs_save_fig(fig1, fn_fig)
 saveas(fig1, sprintf('%s.png', fn_fig));
 
@@ -151,7 +158,7 @@ if size(groups, 1) > 1
     end
     
     box on;
-    fn_fig = sprintf('%s/%s_AccelerationDiff_all', figures_path, target);
+    fn_fig = sprintf('%s/x(%s)_y(%s)_AccelerationDiff_all', figures_path, x_var, y_var);
     oqs_save_fig(gcf, fn_fig)
     saveas(gcf, sprintf('%s.png', fn_fig));
 end

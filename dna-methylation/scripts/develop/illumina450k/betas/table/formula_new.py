@@ -4,29 +4,29 @@ from scripts.develop.routines import *
 
 data = pdm.Data(
     path='',
-    base='unn_epic'
+    base='GSE87571'
 )
 
 annotations = pdm.Annotations(
     name='annotations',
-    type='850k',
-    exclude='none',
+    type='450k',
+    exclude='bad_cpgs',
     select_dict={
         'CHR': ['-X', '-Y']
     }
 )
 
 observables = pdm.Observables(
-    name='observables_part(wo_noIntensity_detP)',
+    name='observables',
     types={}
 )
 
 cells = pdm.Cells(
-    name='cell_counts_part(wo_noIntensity_detP)',
+    name='cells_horvath_calculator',
     types='any'
 )
 
-target = 'Sample_Group'
+target = 'age'
 attributes = pdm.Attributes(
     target=target,
     observables=observables,
@@ -34,12 +34,10 @@ attributes = pdm.Attributes(
 )
 
 data_params = {
-    'norm': 'fun',
-    'part': 'wo_noIntensity_detP',
 }
 
 method_params = {
-    'formula': 'cpg ~ Sample_Group + Sex*Age + Bcell + CD4T + CD8T + Neu + NK',
+    'formula': 'cpg ~ gender*age + Bcell + CD4T + CD8T + Gran + NK',
 }
 
 pdm.betas_table_formula_new(
