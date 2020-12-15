@@ -1,7 +1,7 @@
 clear all;
 
 chip = '450k';
-dataset = 'GSE87571';
+dataset = 'GSE55763';
 
 dataset_path = sprintf('E:/YandexDisk/Work/pydnameth/%s', dataset);
 

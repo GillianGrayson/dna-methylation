@@ -2,8 +2,12 @@ clear all;
 
 norm = 'fun';
 part = 'wo_noIntensity_detP';
-x_var = 'Age';
-y_var = 'DNAmGrimAge';
+x_var = 'DNAmAge';
+xlims = [0; 100];
+y_var = 'LevineAge';
+ylims = [0; 140];
+
+
 
 groups = {'C', 'T'}';
 group_base = 'C';
@@ -62,7 +66,7 @@ for g_id = 1:size(groups, 1)
     RMSE = lm.RMSE;
     legend(h, sprintf('%s $(R^2=%0.2f)$', groups{g_id}, R2), 'Interpreter','latex');
     
-    x_fit = [0; 100];
+    x_fit = [xlims(1); xlims(2)];
     y_fit = lm.Coefficients{'(Intercept)','Estimate'} + x_fit * lm.Coefficients{x_var,'Estimate'};
     h = plot(x_fit, y_fit, 'LineWidth', 2, 'Color', color);
     h.Annotation.LegendInformation.IconDisplayStyle = 'off';
@@ -114,11 +118,16 @@ set(gca, 'FontSize', 40);
 xlabel(x_var, 'Interpreter', 'latex');
 set(gca, 'FontSize', 40);
 ylabel(y_var, 'Interpreter', 'latex');
-h = plot([0 100], [0 100], 'k');
+bissectrice_s = min(xlims(1), ylims(1));
+bissectrice_f = max(xlims(2), ylims(2));
+hold all;
+h = plot([bissectrice_s bissectrice_f], [bissectrice_s bissectrice_f], 'k');
 h.Annotation.LegendInformation.IconDisplayStyle = 'off';
 legend(gca,'off');
 legend('Location', 'Southeast', 'NumColumns', 1, 'Interpreter', 'latex');
 box on;
+xlim(xlims);
+ylim(ylims);
 fn_fig = sprintf('%s/%s_%s', figures_path, x_var, y_var);
 oqs_save_fig(fig1, fn_fig)
 saveas(fig1, sprintf('%s.png', fn_fig));
