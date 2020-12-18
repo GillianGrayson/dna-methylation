@@ -17,20 +17,6 @@ def add_info_to_dict(data_dict, cpg_key='CpG'):
             data_dict[key].append(annotations_dict[key][cpg])
 
     reject, pvals_corr, alphacSidak, alphacBonf = multipletests(
-        data_dict['Sex_adj.P.Val'],
-        0.05,
-        method='fdr_bh'
-    )
-    data_dict['Sex_adj.P.Val_fdr_bh'] = pvals_corr
-
-    reject, pvals_corr, alphacSidak, alphacBonf = multipletests(
-        data_dict['Sex_adj.P.Val'],
-        0.05,
-        method='bonferroni'
-    )
-    data_dict['Sex_adj.P.Val_bf'] = pvals_corr
-
-    reject, pvals_corr, alphacSidak, alphacBonf = multipletests(
         data_dict['Sex_P.Value'],
         0.05,
         method='fdr_bh'
@@ -43,20 +29,6 @@ def add_info_to_dict(data_dict, cpg_key='CpG'):
         method='bonferroni'
     )
     data_dict['Sex_P.Value_bf'] = pvals_corr
-
-    reject, pvals_corr, alphacSidak, alphacBonf = multipletests(
-        data_dict['Age_adj.P.Val'],
-        0.05,
-        method='fdr_bh'
-    )
-    data_dict['Age_adj.P.Val_fdr_bh'] = pvals_corr
-
-    reject, pvals_corr, alphacSidak, alphacBonf = multipletests(
-        data_dict['Age_adj.P.Val'],
-        0.05,
-        method='bonferroni'
-    )
-    data_dict['Age_adj.P.Val_bf'] = pvals_corr
 
     reject, pvals_corr, alphacSidak, alphacBonf = multipletests(
         data_dict['Age_P.Value'],

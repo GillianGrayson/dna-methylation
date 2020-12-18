@@ -1,3 +1,4 @@
+from routines.limma.data_dicts.data_dicts import *
 from routines.limma.annotations.load import load_annotations_dict
 from routines.limma.annotations.subset import subset_annotations
 from routines.limma.annotations.annotations import Annotations
@@ -16,8 +17,8 @@ import plotly
 
 path = 'E:/YandexDisk/Work/pydnameth/methylation_and_proteomic/limma'
 
-datasets = ['liver', 'GSE87571', 'GSE74193']
-data_type = 'beta'
+datasets = ['GSE87571', 'GSE74193']
+data_type = 'betas'
 
 annotations = Annotations(
     name='annotations',
@@ -30,8 +31,7 @@ annotations = Annotations(
 
 dataset_path_dict = {
     'GSE87571': 'E:/YandexDisk/Work/pydnameth/GSE87571',
-    'GSE74193': 'E:/YandexDisk/Work/pydnameth/tissues/brain(DLPFC)/GSE74193',
-    'liver': 'E:/YandexDisk/Work/pydnameth/liver',
+    'GSE74193': 'E:/YandexDisk/Work/pydnameth/script_datasets/GPL13534/filtered/brain(DLPFC)/GSE74193',
 }
 
 values = {}
@@ -40,12 +40,6 @@ all_data = {}
 xs = {}
 ys = {}
 metrics = [
-    'Sex_adj.P.Val',
-    'Sex_adj.P.Val_bf',
-    'Sex_adj.P.Val_fdr_bh',
-    'Age_adj.P.Val',
-    'Age_adj.P.Val_bf',
-    'Age_adj.P.Val_fdr_bh',
     'Sex_P.Value',
     'Sex_P.Value_bf',
     'Sex_P.Value_fdr_bh',
