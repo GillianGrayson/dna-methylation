@@ -1,6 +1,6 @@
 fc_var = 'Age_logFC';
 pValue_var = 'Age_P_Value_fdr_bh';
-fc_lim = 0.004;
+fc_lim = 0.0015;
 pValue_lim = 0.001;
 
 data.(pValue_var) = data.(pValue_var) + 1e-300; 
@@ -59,7 +59,7 @@ hold all;
 
 propertyeditor on;
 grid on;
-%box on;
+box on;
 legend(gca,'off');
 legend('Location', 'SouthWest', 'NumColumns', 1, 'Interpreter', 'latex');
 legend('FontSize', 16);

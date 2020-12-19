@@ -1,7 +1,7 @@
 clear all;
 
 chip = '450k';
-dataset = 'GSE74193';
+dataset = 'GSE87571';
 data_type = 'betas';
 
 dataset_path = sprintf('E:/YandexDisk/Work/pydnameth/methylation_and_proteomic/limma/%s', dataset);
