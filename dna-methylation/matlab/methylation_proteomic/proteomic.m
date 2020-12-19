@@ -41,7 +41,32 @@ proteomics_SS_genes = get_unique_genes(SS.('EntrezGeneSymbol'), {';', '.'});
 proteomics_AA_genes = get_unique_genes(AA.('EntrezGeneSymbol'), {';', '.'});
 proteomics_SSAA_genes = get_unique_genes(SSAA.('EntrezGeneSymbol'), {';', '.'});
 
-plot_gtex_expDiff({blood_SS_genes, brain_SS_genes, proteomics_SS_genes}, gtex, {'GSE87571', 'GSE74193', 'Proteomic'});
+figuresPathLocal = sprintf('%s/figures/SS', dataPath);
+if ~exist(figuresPathLocal, 'dir')
+    mkdir(figuresPathLocal)
+end
+fig = plot_gtex_expDiff({blood_SS_genes, brain_SS_genes, proteomics_SS_genes}, gtex, {'GSE87571', 'GSE74193', 'Proteomic'}, figuresPathLocal, 3, 'Sex-Specific');
+title('Sex-Specific', 'FontSize', 30, 'FontWeight', 'normal', 'Interpreter', 'latex');
+fn_fig = sprintf('%s/KW_SexSpecific', figuresPath);
+oqs_save_fig(fig, fn_fig);
+
+figuresPathLocal = sprintf('%s/figures/AA', dataPath);
+if ~exist(figuresPathLocal, 'dir')
+    mkdir(figuresPathLocal)
+end
+fig = plot_gtex_expDiff({blood_AA_genes, brain_AA_genes, proteomics_AA_genes}, gtex, {'GSE87571', 'GSE74193', 'Proteomic'}, figuresPathLocal, 3, 'Age-Associated');
+title('Age-Associated', 'FontSize', 30, 'FontWeight', 'normal', 'Interpreter', 'latex');
+fn_fig = sprintf('%s/KW_AgeAssociated', figuresPath);
+oqs_save_fig(fig, fn_fig);
+
+figuresPathLocal = sprintf('%s/figures/SSAA', dataPath);
+if ~exist(figuresPathLocal, 'dir')
+    mkdir(figuresPathLocal)
+end
+fig = plot_gtex_expDiff({blood_SSAA_genes, brain_SSAA_genes, proteomics_SSAA_genes}, gtex, {'GSE87571', 'GSE74193', 'Proteomic'}, figuresPathLocal, 3, 'Sex-Specific Age-Associated');
+title('Sex-Specific Age-Associated', 'FontSize', 30, 'FontWeight', 'normal', 'Interpreter', 'latex');
+fn_fig = sprintf('%s/KW_SexSpecificAgeAssociated', figuresPath);
+oqs_save_fig(fig, fn_fig);
 
 fig = plot_venn3({blood_SS_genes, brain_SS_genes, proteomics_SS_genes}, {'GSE87571', 'GSE74193', 'Proteomic'});
 title('Sex-Specific', 'FontSize', 30, 'FontWeight', 'normal', 'Interpreter', 'latex');

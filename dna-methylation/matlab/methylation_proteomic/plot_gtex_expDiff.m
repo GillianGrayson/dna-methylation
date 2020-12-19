@@ -1,4 +1,4 @@
-function fig = plot_gtex_expDiff(genes, gtex, datasets)
+function fig = plot_gtex_expDiff(genes, gtex, datasets, figurePath, num_kw, title_kw)
 
 colors = distinguishable_colors(7);
 
@@ -47,27 +47,67 @@ for m_id = 1 : size(metrics, 1)
     pvalues_ANOVA(m_id) = anova1(logXs, groups, 'off');
 end
 
-ololo = 1;
+[pvalues_KW, order] = sort(pvalues_KW, 'descend');
+metrics = metrics(order);
 
+if(num_kw > 0)
+    for m_id = size(metrics, 1) : -1 : size(metrics, 1) - num_kw 
+        metric = metrics{m_id};
+        xs = vertcat(A_tbl.(metric), B_tbl.(metric), C_tbl.(metric));
+        minX = min(xs(xs > 0));
+        logXs = log10(xs + 0.1 * minX);
+        logXs_dict = {};
+        logXs_dict{1} = log10(A_tbl.(metric) + 0.1 * minX);
+        logXs_dict{2} = log10(B_tbl.(metric) + 0.1 * minX);
+        logXs_dict{3} = log10(C_tbl.(metric) + 0.1 * minX);
+        p = kruskalwallis(logXs, groups, 'on');
+        grid on;
+        propertyeditor('on')
+        set(gca, 'FontSize', 40);
+        a = get(get(gca,'children'),'children');
+        t = get(a,'tag');
+        idx = strcmpi(t,'box');
+        boxes = a(idx);
+        set(a,'linewidth',3);
+        idx = strcmpi(t,'Outliers');
+        outliers = a(idx);
+        set(outliers,'visible','off')
+        dim = [.165 .13 .3 .3];
+        ylabel('$\log_{10}($GTEx$)$', 'Interpreter', 'Latex')
+        xlabel(metric, 'Interpreter', 'none')
+        ylim([log10(0.1 * minX) inf])
+        str = sprintf('Kruskal-Wallis p-value: %0.2e', p);
+        tb = annotation('textbox', dim, 'String', str, 'verticalalignment', 'Bottom', 'FitBoxToText', 'on', 'FontSize', 24);
+        hold all;
+        title(title_kw, 'FontSize', 30, 'FontWeight', 'normal', 'Interpreter', 'latex');
 
- p = kruskalwallis(agediff, mod_status, 'on');
-    grid on;
-    propertyeditor('on')
-    set(gca, 'FontSize', 40);
-    a = get(get(gca,'children'),'children');
-    t = get(a,'tag');
-    idx = strcmpi(t,'box');
-    boxes = a(idx);
-    set(a,'linewidth',3);
-    idx = strcmpi(t,'Outliers');
-    outliers = a(idx);
-    set(outliers,'visible','off')
-    dim = [.165 .13 .3 .3];
-    ylabel('AccelerationDiff')
-    str = sprintf('Kruskal-Wallis p-value: %0.2e', p);
-    tb = annotation('textbox', dim, 'String', str, 'verticalalignment', 'Bottom', 'FitBoxToText', 'on', 'FontSize', 24);
-    hold all;
+        colors = {[1 0 0], [0 1 0], [0 0 1]}';
+        opacity = 0.4;
+        for g_id = 1:3
+            num_points = size(logXs_dict{g_id}, 1);
+            sc_xs = (g_id - 1) + ones(num_points, 1).*(1+(rand(num_points, 1)-0.5)/10);
+            h = scatter(sc_xs, logXs_dict{g_id}, 100, 'o', 'LineWidth',  1, 'MarkerEdgeColor', 'black', 'MarkerFaceColor', colors{g_id}, 'MarkerEdgeAlpha', opacity, 'MarkerFaceAlpha', opacity);
+            h.Annotation.LegendInformation.IconDisplayStyle = 'off';
+        end
 
+        box on;
+        fn_fig = sprintf('%s/KW_%s', figurePath, metric);
+        oqs_save_fig(gcf, fn_fig);
+    end
+end
 
+fig = figure;
+barh(-log10(pvalues_KW))
+yticks(linspace(1, size(pvalues_KW, 1), size(pvalues_KW, 1)))
+ylim([0.5, size(pvalues_KW, 1) + 0.5]);
+set(gca, 'yTickLabel', metrics);
+set(gca, 'TickLabelInterpreter', 'none')
+ax = gca;
+set(gca, 'FontSize', 40);
+xlabel('$-\log_{10}($Kruskal-Wallis p-value$)$', 'Interpreter', 'Latex')
+ax.YAxis.FontSize = 10;
+propertyeditor on;
+grid on;
+box on;
 
 end
