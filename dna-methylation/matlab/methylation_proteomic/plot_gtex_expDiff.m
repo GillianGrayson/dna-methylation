@@ -47,7 +47,7 @@ for m_id = 1 : size(metrics, 1)
     pvalues_ANOVA(m_id) = anova1(logXs, groups, 'off');
 end
 
-[pvalues_KW, order] = sort(pvalues_KW, 'descend');
+[pvalues_KW, order] = sort(pvalues_KW, 'ascend');
 metrics = metrics(order);
 
 if(num_kw > 0)
@@ -72,7 +72,7 @@ if(num_kw > 0)
         idx = strcmpi(t,'Outliers');
         outliers = a(idx);
         set(outliers,'visible','off')
-        dim = [.165 .13 .3 .3];
+        dim = [.165 .21 .3 .3];
         ylabel('$\log_{10}($GTEx$)$', 'Interpreter', 'Latex')
         xlabel(metric, 'Interpreter', 'none')
         ylim([log10(0.1 * minX) inf])
@@ -97,15 +97,16 @@ if(num_kw > 0)
 end
 
 fig = figure;
-barh(-log10(pvalues_KW))
-yticks(linspace(1, size(pvalues_KW, 1), size(pvalues_KW, 1)))
-ylim([0.5, size(pvalues_KW, 1) + 0.5]);
-set(gca, 'yTickLabel', metrics);
+bar(-log10(pvalues_KW))
+xticks(linspace(1, size(pvalues_KW, 1), size(pvalues_KW, 1)))
+xlim([0.5, size(pvalues_KW, 1) + 0.5]);
+xtickangle(90)
+set(gca, 'xTickLabel', metrics);
 set(gca, 'TickLabelInterpreter', 'none')
 ax = gca;
-set(gca, 'FontSize', 40);
-xlabel('$-\log_{10}($Kruskal-Wallis p-value$)$', 'Interpreter', 'Latex')
-ax.YAxis.FontSize = 10;
+set(gca, 'FontSize', 32);
+ylabel('$-\log_{10}($Kruskal-Wallis p-value$)$', 'Interpreter', 'Latex')
+ax.XAxis.FontSize = 10;
 propertyeditor on;
 grid on;
 box on;

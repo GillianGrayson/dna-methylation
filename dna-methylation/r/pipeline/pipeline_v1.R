@@ -16,10 +16,11 @@ library(shinyMethyl)
 library(wateRmelon)
 library(FlowSorted.Blood.EPIC)
 
-path <- "E:/YandexDisk/Work/pydnameth/script_datasets/GPL13534/filtered/brain(DLPFC)/GSE74193/raw_data"
+path <- "E:/YandexDisk/Work/pydnameth/unn_epic/raw/data"
+chip_type = "EPIC"
 setwd(path)
 
-myLoad = champ.load(directory = path, method="minfi", arraytype = "450k")
+myLoad = champ.load(directory = path, method="minfi", arraytype = chip_type)
 passed_cpgs_origin = rownames(myLoad$beta)
 
 RGset <- myLoad$rgSet

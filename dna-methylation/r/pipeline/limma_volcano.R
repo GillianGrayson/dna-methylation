@@ -2,22 +2,25 @@ rm(list=ls())
 
 if (!requireNamespace("BiocManager", quietly=TRUE))
   install.packages("BiocManager")
-BiocManager::install("ChAMP")
-BiocManager::install("minfi")
-BiocManager::install("minfiData")
-BiocManager::install("wateRmelon")
-BiocManager::install("shinyMethyl")
-BiocManager::install("FlowSorted.Blood.EPIC")
 
-library(ChAMP)
-library(minfi)
-library(minfiData)
-library(shinyMethyl)
-library(wateRmelon)
-library(FlowSorted.Blood.EPIC)
+BiocManager::install('EnhancedVolcano')
+install.packages("readxl", dependencies = TRUE, INSTALL_opts = '--no-lock')
+library(EnhancedVolcano)
+library(readxl)
 
-path <- "E:/YandexDisk/Work/pydnameth/script_datasets/GPL13534/filtered/brain(DLPFC)/GSE74193/raw_data"
+path <- "E:/YandexDisk/Work/pydnameth/methylation_and_proteomic/limma/GSE74193"
 setwd(path)
+
+data <- read_excel(paste(path, "/GSE74193_betas_filtered.xlsx",  sep=''))
+
+EnhancedVolcano(data,
+                lab = data$UCSC_REFGENE_NAME,
+                x = 'Sex_logFC',
+                y = 'Sex_P.Value_fdr_bh',
+                pCutoff = 0.001,
+                FCcutoff = 0.1)
+
+
 
 myLoad = champ.load(directory = path, method="minfi", arraytype = "450k")
 passed_cpgs_origin = rownames(myLoad$beta)

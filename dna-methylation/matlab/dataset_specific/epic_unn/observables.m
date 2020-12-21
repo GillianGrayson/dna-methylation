@@ -47,7 +47,7 @@ ylabel('Number of subjects', 'Interpreter', 'latex');
 grid on;
 legend(gca,'off');
 legend('Location','Northwest','NumColumns',1)
-legend('FontSize', 12);
+legend('FontSize', 28);
 
 fn_fig = sprintf('%s/(%s)_part(%s)', figures_path, target, part);
 oqs_save_fig(fig, fn_fig)
