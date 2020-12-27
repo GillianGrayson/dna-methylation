@@ -1,16 +1,16 @@
 clear all;
 
+
 %cell_types = {'Bcell', 'CD4T', 'CD8T', 'Gran', 'NK'}';
 cell_types = {'Bcell', 'CD4T', 'CD8T', 'Neu', 'NK'}';
 
 path = 'E:/YandexDisk/Work/pydnameth/unn_epic';
 figures_path = 'E:/YandexDisk/Work/pydnameth/unn_epic/figures/cells';
 
-norm = 'x';
-part = 'x';
+part = 'wo_noIntensity_detP';
 
 %fn = sprintf('%s/horvath/data/betas_horvath_calculator_norm_%s_part_%s.output.csv', path, norm, part);
-fn = sprintf('%s/cell_counts.csv', path);
+fn = sprintf('%s/cell_counts_part(%s).csv', path, part);
 
 obs = readtable(fn);
 
@@ -22,7 +22,7 @@ for ct_id = 1:size(cell_types, 1)
     
     color = colors(ct_id, :);
     
-    pdf.x_num_bins = 201;
+    pdf.x_num_bins = 51;
     pdf.x_label = 'Cells';
     pdf.x_bin_s = 0;
     pdf.x_bin_f = 1;
@@ -40,9 +40,9 @@ end
 propertyeditor('on')
 
 legend(gca,'off');
-legend('Location','best','NumColumns',1)
+legend('Location', 'NorthEast', 'NumColumns', 1, 'Interpreter', 'latex');
 
-fn_fig = sprintf('%s/cells_norm(%s)_part(%s)', figures_path, norm, part);
+fn_fig = sprintf('%s/cells_part(%s)', figures_path, part);
 oqs_save_fig(fig, fn_fig)
 
 

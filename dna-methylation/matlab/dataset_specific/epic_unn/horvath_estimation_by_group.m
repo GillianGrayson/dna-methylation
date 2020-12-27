@@ -2,12 +2,10 @@ clear all;
 
 norm = 'fun';
 part = 'wo_noIntensity_detP';
-x_var = 'DNAmAge';
+x_var = 'Age';
 xlims = [0; 100];
-y_var = 'LevineAge';
-ylims = [0; 140];
-
-
+y_var = 'DNAmAgeHannum';
+ylims = [0; 100];
 
 groups = {'C', 'T'}';
 group_base = 'C';
@@ -156,9 +154,10 @@ if size(groups, 1) > 1
     outliers = a(idx);
     set(outliers,'visible','off')
     dim = [.165 .13 .3 .3];
-    ylabel('AccelerationDiff')
+    ylabel(sprintf('AccelerationDiff'), 'Interpreter', 'latex')
     str = sprintf('Kruskal-Wallis p-value: %0.2e', p);
     tb = annotation('textbox', dim, 'String', str, 'verticalalignment', 'Bottom', 'FitBoxToText', 'on', 'FontSize', 24);
+    title(y_var, 'FontSize', 30, 'FontWeight', 'normal', 'Interpreter', 'latex');
     hold all;
     
     for g_id = 1:size(groups, 1)

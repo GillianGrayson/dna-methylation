@@ -1,17 +1,17 @@
 clear all;
 
-part = 'final';
+part = 'wo_noIntensity_detP';
 
 cell_types = {'Bcell', 'CD4T', 'CD8T', 'Neu', 'NK'}';
 
 groups = {'C', 'T'}';
-colors = {[0 1 0],[1 0 0]}';
+colors = {[0 1 0], [1 0 1]}';
 
 opacity = 0.65;
 
 path = 'E:/YandexDisk/Work/pydnameth/unn_epic';
 figures_path = 'E:/YandexDisk/Work/pydnameth/unn_epic/figures/cells/cells_group';
-fn = sprintf('%s/cell_counts.csv', path);
+fn = sprintf('%s/cell_counts_part(%s).csv', path, part);
 cells = readtable(fn);
 
 fn = sprintf('%s/observables_part(%s).csv', path, part);
@@ -38,7 +38,7 @@ for c_id = 1:size(cell_types, 1)
     p = kruskalwallis(cells_all, status, 'on');
     grid on;
     propertyeditor('on')
-    title(cell_type);
+    ylabel(cell_type, 'Interpreter','latex')
     set(gca, 'FontSize', 40);
     ylim([y_s y_f])
     a = get(get(gca,'children'),'children');
