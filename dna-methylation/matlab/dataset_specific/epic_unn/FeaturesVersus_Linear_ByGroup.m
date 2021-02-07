@@ -1,10 +1,10 @@
 clear all;
 
-norm = 'fun';
-part = 'wo_noIntensity_detP';
+part = 'wo_noIntensity_detP_subset';
+
 x_var = 'Age';
 xlims = [0; 100];
-y_var = 'DNAmAgeHannum';
+y_var = 'CKDAge';
 ylims = [0; 100];
 
 groups = {'C', 'T'}';
@@ -13,12 +13,12 @@ colors = {[0 1 0], [1 0 1]}';
 
 opacity = 0.65;
 
-path = 'E:/YandexDisk/Work/pydnameth/unn_epic/horvath';
-figures_path = sprintf('E:/YandexDisk/Work/pydnameth/unn_epic/figures/horvath/norm(%s)_part(%s)', norm, part);
+path = 'E:/YandexDisk/Work/pydnameth/unn_epic';
+figures_path = sprintf('E:/YandexDisk/Work/pydnameth/unn_epic/figures/features/Versus_Linear_ByGroup/part(%s)', part);
 if ~exist(figures_path, 'dir')
     mkdir(figures_path)
 end
-fn = sprintf('%s/data/betas_horvath_calculator_norm_%s_part_%s.output.csv', path, norm, part);
+fn = sprintf('%s/all_data/part(%s).xlsx', path, part);
 opts = detectImportOptions(fn);
 opts = setvartype(opts, {'Sample_Group'}, 'string');
 obs = readtable(fn, opts);
@@ -126,7 +126,7 @@ legend('Location', 'Southeast', 'NumColumns', 1, 'Interpreter', 'latex');
 box on;
 xlim(xlims);
 ylim(ylims);
-fn_fig = sprintf('%s/%s_%s', figures_path, x_var, y_var);
+fn_fig = sprintf('%s/x(%s)_y(%s)_scatter', figures_path, x_var, y_var);
 oqs_save_fig(fig1, fn_fig)
 saveas(fig1, sprintf('%s.png', fn_fig));
 
@@ -166,7 +166,7 @@ if size(groups, 1) > 1
     end
     
     box on;
-    fn_fig = sprintf('%s/x(%s)_y(%s)_AccelerationDiff_all', figures_path, x_var, y_var);
+    fn_fig = sprintf('%s/x(%s)_y(%s)_KW', figures_path, x_var, y_var);
     oqs_save_fig(gcf, fn_fig)
     saveas(gcf, sprintf('%s.png', fn_fig));
 end

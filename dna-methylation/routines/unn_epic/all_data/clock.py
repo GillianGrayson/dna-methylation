@@ -28,13 +28,12 @@ target_columns.remove('ID')
 
 data_frames = [df_main, df_biochem, df_multiplex]
 df_merged = reduce(lambda left, right: pd.merge(left, right, on=['ID']), data_frames)
-df_merged.to_excel(f'{path}/part(wo_noIntensity_detP_subset).xlsx', index=False)
 
-X_C_df = df_merged.loc[df_merged['Sample_Group'] == 'C', list(target_columns) + ['DNAmPhenoAge']]
+X_C_df = df_merged.loc[df_merged['Sample_Group'] == 'C']
 X_C = X_C_df[list(target_columns)].to_numpy()
 y_C = X_C_df['DNAmPhenoAge'].to_numpy()
 
-X_T_df = df_merged.loc[df_merged['Sample_Group'] == 'T', list(target_columns) + ['DNAmPhenoAge']]
+X_T_df = df_merged.loc[df_merged['Sample_Group'] == 'T']
 X_T = X_T_df[list(target_columns)].to_numpy()
 y_T = X_T_df['DNAmPhenoAge'].to_numpy()
 
@@ -65,5 +64,9 @@ X_C_df.to_excel(f'{path}/table/biochemMultiplex_part(ctrl_wo_noIntensity_detP_su
 
 X_T_df['CKDAge'] = y_pred_T
 X_T_df.to_excel(f'{path}/table/biochemMultiplex_part(ckd_wo_noIntensity_detP_subset).xlsx', index=False)
+
+tmp_df = pd.concat([X_C_df, X_T_df])
+df_merged= pd.merge(df_merged, tmp_df[['ID', 'CKDAge']], on=['ID'], how='inner')
+df_merged.to_excel(f'{path}/part(wo_noIntensity_detP_subset).xlsx', index=False)
 
 a = 1

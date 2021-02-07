@@ -1,0 +1,78 @@
+clear all;
+
+part = 'wo_noIntensity_detP_subset';
+
+target = 'GDF15';
+
+groups = {'C', 'T'}';
+colors = {[0 1 0], [1 0 1]}';
+
+opacity = 0.65;
+
+path = 'E:/YandexDisk/Work/pydnameth/unn_epic';
+figures_path = sprintf('E:/YandexDisk/Work/pydnameth/unn_epic/figures/features/ByGroup/part(%s)', part);
+if ~exist(figures_path, 'dir')
+    mkdir(figures_path)
+end
+fn = sprintf('%s/all_data/part(%s).xlsx', path, part);
+opts = detectImportOptions(fn);
+opts = setvartype(opts, {'Sample_Group'}, 'string');
+obs = readtable(fn, opts);
+
+status = obs.Sample_Group;
+features = obs.(target);
+
+
+
+features_byGroup = {};
+for g_id = 1:size(groups, 1)
+    
+    accs = [];
+    for id = 1 : size(features, 1)
+        if status{id}(1) == groups{g_id}
+            accs = vertcat(accs, features(id));
+        end
+    end
+    
+    features_byGroup{g_id} = accs;
+end
+
+if size(groups, 1) > 1
+    
+    features_ordered  = [];
+    mod_status = [];
+    for g_id = 1:size(groups, 1)
+        features_ordered = vertcat(features_ordered, features_byGroup{g_id});
+        tmp = strings(size(features_byGroup{g_id}, 1), 1);
+        tmp(:) = groups{g_id};
+        mod_status = vertcat(mod_status, tmp);
+    end
+ 
+    p = kruskalwallis(features_ordered, mod_status, 'on');
+    grid on;
+    propertyeditor('on')
+    set(gca, 'FontSize', 40);
+    a = get(get(gca,'children'),'children');
+    t = get(a,'tag');
+    idx = strcmpi(t,'box');
+    boxes = a(idx);
+    set(a,'linewidth',3);
+    idx = strcmpi(t,'Outliers');
+    outliers = a(idx);
+    set(outliers,'visible','off')
+    dim = [.165 .13 .3 .3];
+    ylabel(target, 'Interpreter', 'latex')
+    str = sprintf('Kruskal-Wallis p-value: %0.2e', p);
+    title(str, 'FontSize', 30, 'FontWeight', 'normal', 'Interpreter', 'latex');
+    hold all;
+    
+    for g_id = 1:size(groups, 1)
+        h = scatter(g_id * ones(size(features_byGroup{g_id}, 1), 1).*(1+(rand(size(features_byGroup{g_id}))-0.5)/10), features_byGroup{g_id}, 100, 'o', 'LineWidth',  1, 'MarkerEdgeColor', 'black', 'MarkerFaceColor', colors{g_id}, 'MarkerEdgeAlpha', opacity, 'MarkerFaceAlpha', opacity);
+        h.Annotation.LegendInformation.IconDisplayStyle = 'off';
+    end
+    
+    box on;
+    fn_fig = sprintf('%s/%s', figures_path, target);
+    oqs_save_fig(gcf, fn_fig)
+    saveas(gcf, sprintf('%s.png', fn_fig));
+end
