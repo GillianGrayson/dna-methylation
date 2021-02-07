@@ -3,9 +3,9 @@ clear all;
 part = 'wo_noIntensity_detP_subset';
 
 x_var = 'Age';
-xlims = [0; 100];
+xlims = [0; 250];
 y_var = 'CKDAge';
-ylims = [0; 100];
+ylims = [0; 250];
 
 groups = {'C', 'T'}';
 group_base = 'C';
