@@ -1,12 +1,12 @@
 import GEOparse
-from data.routines.routines import is_float
-from data.infrastructure.path import get_data_path, make_dir
-from data.infrastructure.load.table import load_table_dict_xlsx, load_table_dict_pkl
-from data.infrastructure.save.table import save_table_dict_pkl, save_table_dict_xlsx
+from GEO_parsing.infrastructure.path import get_data_path, make_dir
+from GEO_parsing.routines import get_gsm
+from functions.load.table import load_table_dict_xlsx, load_table_dict_pkl
+from functions.save.table import save_table_dict_pkl, save_table_dict_xlsx
+from functions.routines import is_float
 import os
 from tqdm import tqdm
 import re
-import numpy as np
 from distutils.dir_util import copy_tree
 
 
@@ -88,7 +88,10 @@ else:
 
     save_table_dict_pkl(fn_pkl, gse_gsms_dict)
 
-gses = sorted(gse_gsms_dict.keys(),  key=lambda s: len(gse_gsms_dict.get(s)))
+gses = sorted(gse_gsms_dict.keys(),  key=lambda s: len(gse_gsms_dict.get(s)),  reverse=True)
+
+
+
 
 source_unique_words = set()
 ch_unique_words = set()
@@ -108,15 +111,7 @@ for gse in tqdm(gses):
     # Init characteristics dicts
     gsm = gsms[0]
     try:
-        while True:
-            try:
-                gsm_data = GEOparse.get_GEO(geo=gsm, destdir=f'{path_tmp}', include_data=False, how="")
-                os.remove(f'{path_tmp}/{gsm}.txt')
-            except ValueError:
-                continue
-            except ConnectionError:
-                continue
-            break
+        gsm_data = get_gsm(gsm, path_tmp, is_remove=True)
     except GEOparse.GEOparse.NoEntriesException:
         continue
     chs_raw = gsm_data.metadata[characteristics_key]
@@ -144,14 +139,7 @@ for gse in tqdm(gses):
         chs_keys = set()
         for gsm_id, gsm in enumerate(gsms):
             try:
-                while True:
-                    try:
-                        gsm_data = GEOparse.get_GEO(geo=gsm, destdir=f'{path_all}/gsms', include_data=False, how="")
-                    except ValueError:
-                        continue
-                    except ConnectionError:
-                        continue
-                    break
+                gsm_data = get_gsm(gsm, f'{path_all}/gsms')
             except GEOparse.GEOparse.NoEntriesException:
                 os.remove(f'{path_all}/gsms/{gsm}.txt')
                 continue
@@ -229,8 +217,6 @@ for gse in tqdm(gses):
         if gse_passed_dict[gse]:
             make_dir(path_passed)
             copy_tree(path_all, path_passed)
-
-
 
 
 all_unique_words = list(source_unique_words.union(ch_unique_words))
