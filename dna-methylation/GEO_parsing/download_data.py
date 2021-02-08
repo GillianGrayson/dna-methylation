@@ -1,17 +1,16 @@
 import GEOparse
 from GEOparse.utils import download_from_url
-from functions.routines import is_float
 from GEO_parsing.infrastructure.path import get_data_path, make_dir
 from functions.load.table import load_table_dict_xlsx, load_table_dict_pkl
 from functions.save.table import save_table_dict_pkl, save_table_dict_csv
 import os
 import numpy as np
 from tqdm import tqdm
-import re
 import gzip
 import shutil
 import ntpath
 import pickle
+import urllib.request
 
 
 GPL = '13534'
@@ -116,6 +115,7 @@ for gse in tqdm(gses):
                                 raise ValueError('File duplication')
                             files_downloaded.add(tail[:-3])
                             if not os.path.exists( f'{path_data}/{tail[:-3]}'):
+                                # urllib.request.urlretrieve(supp_file, f'{path_data}/{tail}')
                                 download_from_url(supp_file, f'{path_data}/{tail}')
                                 with gzip.open( f'{path_data}/{tail}', 'rb') as f_in:
                                     with open( f'{path_data}/{tail[:-3]}', 'wb') as f_out:
