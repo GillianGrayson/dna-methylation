@@ -203,7 +203,7 @@ for gse in tqdm(gses):
         try:
             while True:
                 try:
-                    gsm_data = GEOparse.get_GEO(geo=gsm, destdir=f'{path_data}', include_data=True, how="", silent=True)
+                    gsm_data = GEOparse.get_GEO(geo=gsm, destdir=f'{path_data}', include_data=True, how="brief", silent=True)
                     os.remove(f'{path_data}/{gsm}.txt')
                 except ValueError:
                     continue

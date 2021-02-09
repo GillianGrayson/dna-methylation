@@ -31,7 +31,8 @@ sink(con, append=TRUE, type="message")
 sink()
 # logging =====================================================================
 
-path <- "E:/YandexDisk/Work/pydnameth/script_datasets/GPL13534/filtered/brain(DLPFC)/GSE74193/raw/data"
+# path <- "E:/YandexDisk/Work/pydnameth/script_datasets/GPL13534/filtered/brain(DLPFC)/GSE74193/raw/data"
+path <- "E:/YandexDisk/Work/pydnameth/script_datasets/GPL13534/filtered/blood(whole)/GSE87571/raw"
 chip_type = "450k"
 detPcut = 0.01
 
@@ -58,14 +59,25 @@ passed_cpgs_origin = rownames(myLoad$beta)
 RGset <- myLoad$rgSet
 observables = myLoad$pd
 
+rm(myLoad)
+
 # detectionP ==================================================================
-detP <- detectionP(RGset)
-write.csv(data.frame(detP), "detP.csv", row.names = FALSE)
-failed <- summary(detP>detPcut)
-failed <- data.frame(failed)
-failed <- failed[seq(3, nrow(failed), 3), 2:3]
-colnames(failed) <- c("Sample",paste("Number of probes (detP>", detPcut, ")",sep=''))
-write.csv(failed, "failed.csv", row.names = FALSE)
+detP_before <- detectionP(RGset)
+
+passed_cpgs = intersect(passed_cpgs_origin, rownames(detP_before))
+detP_after <- detP_before[passed_cpgs,]
+
+failed_before <- summary(detP_before>detPcut)
+failed_before <- data.frame(failed_before)
+failed_before <- failed_before[seq(3, nrow(failed_before), 3), 2:3]
+colnames(failed_before) <- c("Sample",paste("Number of probes (detP_before>", detPcut, ")",sep=''))
+write.csv(failed_before, "failed_before.csv", row.names = FALSE)
+
+failed_after <- summary(detP_after>detPcut)
+failed_after <- data.frame(failed_after)
+failed_after <- failed_after[seq(3, nrow(failed_after), 3), 2:3]
+colnames(failed_after) <- c("Sample",paste("Number of probes (failed_after>", detPcut, ")",sep=''))
+write.csv(failed_after, "failed_after.csv", row.names = FALSE)
 
 # QC ==========================================================================
 h = 5
