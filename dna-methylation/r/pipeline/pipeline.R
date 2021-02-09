@@ -32,7 +32,7 @@ sink()
 # logging =====================================================================
 
 # path <- "E:/YandexDisk/Work/pydnameth/script_datasets/GPL13534/filtered/brain(DLPFC)/GSE74193/raw/data"
-path <- "E:/YandexDisk/Work/pydnameth/script_datasets/GPL13534/filtered/blood(whole)/GSE87571/raw"
+path <- "E:/YandexDisk/Work/pydnameth/script_datasets/GPL13534/filtered/blood(whole)/GSE87571/raw/data"
 chip_type = "450k"
 detPcut = 0.01
 
@@ -57,6 +57,7 @@ myLoad = champ.load(directory = path,
 
 passed_cpgs_origin = rownames(myLoad$beta)
 RGset <- myLoad$rgSet
+Mset <- myLoad$mset
 observables = myLoad$pd
 
 rm(myLoad)
