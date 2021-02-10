@@ -2,7 +2,7 @@ clear all;
 
 part = 'wo_noIntensity_detP_subset';
 
-target = 'GDF15';
+target = 'MIG';
 group_feature = 'Sample_Group';
 groups = {'C', 'T'}';
 colors = {[0 1 0], [1 0 1]}';
@@ -45,31 +45,39 @@ if size(groups, 1) > 1
         tmp(:) = groups{g_id};
         mod_status = vertcat(mod_status, tmp);
     end
- 
-    p = kruskalwallis(features_ordered, mod_status, 'on');
-    grid on;
-    propertyeditor('on')
-    set(gca, 'FontSize', 40);
-    a = get(get(gca,'children'),'children');
-    t = get(a,'tag');
-    idx = strcmpi(t,'box');
-    boxes = a(idx);
-    set(a,'linewidth',3);
-    idx = strcmpi(t,'Outliers');
-    outliers = a(idx);
-    set(outliers,'visible','off')
-    dim = [.165 .13 .3 .3];
+    
+    fig = figure;
+    propertyeditor('on');
+    positions = 0.5 * linspace(1, size(groups, 1), size(groups, 1));
+    for g_id = 1:size(groups, 1)
+        b = boxplot(features_byGroup{g_id},'Notch', 'off', 'positions', positions(g_id), 'Colors', 'k');
+        set(gca, 'FontSize', 30);
+        all_items = handle(b);
+        tags = get(all_items,'tag');
+        idx = strcmpi(tags,'box');
+        boxes = all_items(idx);
+        set(all_items,'linewidth',3)
+        idx = strcmpi(tags,'Outliers');
+        outliers = all_items(idx);
+        set(outliers, 'visible', 'off')
+        hold all;
+        xs = positions(g_id) * ones(size(features_byGroup{g_id}, 1), 1) + ((rand(size(features_byGroup{g_id}))-0.5)/10);
+        h = scatter(xs, features_byGroup{g_id}, 100, 'o', 'LineWidth',  1, 'MarkerEdgeColor', 'black', 'MarkerFaceColor', colors{g_id}, 'MarkerEdgeAlpha', opacity, 'MarkerFaceAlpha', opacity);
+        h.Annotation.LegendInformation.IconDisplayStyle = 'off';
+        hold all;
+    end
+    xticks(positions);
+    xticklabels(groups);
+    axis auto;
+    xlim([min(positions) - 0.3, max(positions) + 0.3])
     ylabel(target, 'Interpreter', 'latex')
+    box on;
+    grid on;
+    p = kruskalwallis(features_ordered, mod_status, 'off');
     str = sprintf('Kruskal-Wallis p-value: %0.2e', p);
     title(str, 'FontSize', 30, 'FontWeight', 'normal', 'Interpreter', 'latex');
     hold all;
     
-    for g_id = 1:size(groups, 1)
-        h = scatter(g_id * ones(size(features_byGroup{g_id}, 1), 1).*(1+(rand(size(features_byGroup{g_id}))-0.5)/10), features_byGroup{g_id}, 100, 'o', 'LineWidth',  1, 'MarkerEdgeColor', 'black', 'MarkerFaceColor', colors{g_id}, 'MarkerEdgeAlpha', opacity, 'MarkerFaceAlpha', opacity);
-        h.Annotation.LegendInformation.IconDisplayStyle = 'off';
-    end
-    
-    box on;
     fn_fig = sprintf('%s/%s_group(%s)', figures_path, target, group_feature);
     oqs_save_fig(gcf, fn_fig)
 end

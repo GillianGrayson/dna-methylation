@@ -1,9 +1,9 @@
 clear all;
 
 x_var = 'Age';
-target = 'Sample_Group';
-target_vals = {'C', 'T'}';
-colors = {[0 1 0],[1 0 1]}';
+target = 'Sex';
+target_vals = {'F', 'M'}';
+colors = {[1 0 0],[0 0 1]}';
 age_bin = 3;
 FaceAlpha = 0.5;
 
@@ -52,4 +52,3 @@ legend('FontSize', 28);
 
 fn_fig = sprintf('%s/x(%s)_group(%s)', figures_path, x_var, target);
 oqs_save_fig(fig, fn_fig)
-saveas(gcf, sprintf('%s.png', fn_fig));

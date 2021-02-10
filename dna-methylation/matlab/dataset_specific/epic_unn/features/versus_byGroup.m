@@ -2,10 +2,10 @@ clear all;
 
 part = 'wo_noIntensity_detP_subset';
 
-x_var = 'Age';
-xlims = [0; 100];
-y_var = 'CKDAge';
-ylims = [0; 250];
+x_var = 'DNAmPhenoAge';
+xlims = [-inf; inf];
+y_var = 'MIG';
+ylims = [-inf; inf];
 
 group_feature = 'Sample_Group';
 groups = {'C', 'T'}';
@@ -55,7 +55,7 @@ for g_id = 1:size(groups, 1)
     RMSE = lm.RMSE;
     legend(h, sprintf('%s $(R^2=%0.2f)$', groups{g_id}, R2), 'Interpreter','latex');
     
-    x_fit = [xlims(1); xlims(2)];
+    x_fit = [min(xs); max(xs)];
     y_fit = lm.Coefficients{'(Intercept)','Estimate'} + x_fit * lm.Coefficients{x_var,'Estimate'};
     h = plot(x_fit, y_fit, 'LineWidth', 2, 'Color', color);
     h.Annotation.LegendInformation.IconDisplayStyle = 'off';
@@ -77,29 +77,6 @@ for g_id = 1:size(groups, 1)
     end
 
     diffs_all{g_id} = diffs;
-
-    if size(groups, 1) == 1
-        fig2 = figure;
-        propertyeditor('on');
-        b = boxplot(diffs,'Notch','on','Labels',{groups(g_id)}, 'Colors', 'k');
-        set(gca, 'FontSize', 40);
-        a = get(get(gca, 'children'), 'children');
-        t = get(a,'tag');
-        idx = strcmpi(t,'box');
-        boxes = a(idx);
-        set(a,'linewidth',3)
-        idx = strcmpi(t,'Outliers');
-        outliers = a(idx);
-        set(outliers, 'visible', 'off')
-        hold all;
-        h = scatter(1. * ones(size(diffs, 1), 1).*(1+(rand(size(diffs))-0.5)/10), diffs, 100, 'o', 'LineWidth',  1, 'MarkerEdgeColor', 'black', 'MarkerFaceColor', color, 'MarkerEdgeAlpha', opacity, 'MarkerFaceAlpha', opacity);
-        h.Annotation.LegendInformation.IconDisplayStyle = 'off';
-        ylabel('Acceleration Diff', 'Interpreter', 'latex');
-        box on;
-        grid on;
-        fn_fig = sprintf('%s/x(%s)_y(%s)_AccelerationDiff_(%s)', figures_path, x_var, y_var, groups{g_id});
-        oqs_save_fig(gcf, fn_fig)
-    end 
 end
 
 figure(fig1);
@@ -114,7 +91,7 @@ hold all;
 h = plot([bissectrice_s bissectrice_f], [bissectrice_s bissectrice_f], 'k');
 h.Annotation.LegendInformation.IconDisplayStyle = 'off';
 legend(gca,'off');
-legend('Location', 'Southeast', 'NumColumns', 1, 'Interpreter', 'latex');
+legend('Location', 'best', 'NumColumns', 1, 'Interpreter', 'latex');
 box on;
 xlim(xlims);
 ylim(ylims);
@@ -133,28 +110,37 @@ if size(groups, 1) > 1
         mod_status = vertcat(mod_status, tmp);
     end
     
-    p = kruskalwallis(agediff, mod_status, 'on');
+    fig = figure;
+    propertyeditor('on');
+    positions = 0.5 * linspace(1, size(groups, 1), size(groups, 1));
+    for g_id = 1:size(groups, 1)
+        b = boxplot(diffs_all{g_id},'Notch', 'off', 'positions', positions(g_id), 'Colors', 'k');
+        set(gca, 'FontSize', 30);
+        all_items = handle(b);
+        tags = get(all_items,'tag');
+        idx = strcmpi(tags,'box');
+        boxes = all_items(idx);
+        set(all_items,'linewidth',3)
+        idx = strcmpi(tags,'Outliers');
+        outliers = all_items(idx);
+        set(outliers, 'visible', 'off')
+        hold all;
+        xs = positions(g_id) * ones(size(diffs_all{g_id}, 1), 1) + ((rand(size(diffs_all{g_id}))-0.5)/10);
+        h = scatter(xs, diffs_all{g_id}, 100, 'o', 'LineWidth',  1, 'MarkerEdgeColor', 'black', 'MarkerFaceColor', colors{g_id}, 'MarkerEdgeAlpha', opacity, 'MarkerFaceAlpha', opacity);
+        h.Annotation.LegendInformation.IconDisplayStyle = 'off';
+        hold all;
+    end
+    xticks(positions);
+    xticklabels(groups);
+    axis auto;
+    xlim([min(positions) - 0.3, max(positions) + 0.3])
+    box on;
     grid on;
-    propertyeditor('on')
-    set(gca, 'FontSize', 40);
-    a = get(get(gca,'children'),'children');
-    t = get(a,'tag');
-    idx = strcmpi(t,'box');
-    boxes = a(idx);
-    set(a,'linewidth',3);
-    idx = strcmpi(t,'Outliers');
-    outliers = a(idx);
-    set(outliers,'visible','off')
+    p = kruskalwallis(agediff, mod_status, 'off');
     ylabel(sprintf('AccelerationDiff'), 'Interpreter', 'latex')
     title(sprintf('%s (KW p-value: %0.2e)', y_var, p), 'FontSize', 30, 'FontWeight', 'normal', 'Interpreter', 'latex');
     hold all;
     
-    for g_id = 1:size(groups, 1)
-        h = scatter(g_id * ones(size(diffs_all{g_id}, 1), 1).*(1+(rand(size(diffs_all{g_id}))-0.5)/10), diffs_all{g_id}, 100, 'o', 'LineWidth',  1, 'MarkerEdgeColor', 'black', 'MarkerFaceColor', colors{g_id}, 'MarkerEdgeAlpha', opacity, 'MarkerFaceAlpha', opacity);
-        h.Annotation.LegendInformation.IconDisplayStyle = 'off';
-    end
-    
-    box on;
     fn_fig = sprintf('%s/x(%s)_y(%s)_group(%s)_KW', figures_path, x_var, y_var, group_feature);
     oqs_save_fig(gcf, fn_fig)
     saveas(gcf, sprintf('%s.png', fn_fig));
