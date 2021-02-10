@@ -10,13 +10,15 @@ FaceAlpha = 0.5;
 part = 'wo_noIntensity_detP';
 
 path = 'E:/YandexDisk/Work/pydnameth/unn_epic';
-figures_path = 'E:/YandexDisk/Work/pydnameth/unn_epic/figures/observables';
+figures_path = sprintf('E:/YandexDisk/Work/pydnameth/unn_epic/figures/features/histogram_byGroup/part(%s)', part);
 if ~exist(figures_path, 'dir')
     mkdir(figures_path)
 end
 
-fn = sprintf('%s/observables_part(%s).csv', path, part);
-data = readtable(fn);
+fn = sprintf('%s/all_data/part(%s).xlsx', path, part);
+opts = detectImportOptions(fn);
+opts = setvartype(opts, {'Sample_Group'}, 'string');
+data = readtable(fn, opts);
 x = data.(x_var);
 min_x = min(x);
 max_x = max(x);
@@ -39,7 +41,6 @@ for t_id = 1:size(target_vals, 1)
     hold all;
 end
 
-
 set(gca, 'FontSize', 40);
 xlabel(x_var, 'Interpreter', 'latex');
 set(gca, 'FontSize', 40);
@@ -49,6 +50,6 @@ legend(gca,'off');
 legend('Location','Northwest','NumColumns',1)
 legend('FontSize', 28);
 
-fn_fig = sprintf('%s/(%s)_part(%s)', figures_path, target, part);
+fn_fig = sprintf('%s/x(%s)_group(%s)', figures_path, x_var, target);
 oqs_save_fig(fig, fn_fig)
 saveas(gcf, sprintf('%s.png', fn_fig));

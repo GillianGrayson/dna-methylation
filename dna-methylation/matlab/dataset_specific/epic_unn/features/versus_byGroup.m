@@ -3,10 +3,11 @@ clear all;
 part = 'wo_noIntensity_detP_subset';
 
 x_var = 'Age';
-xlims = [0; 250];
+xlims = [0; 100];
 y_var = 'CKDAge';
 ylims = [0; 250];
 
+group_feature = 'Sample_Group';
 groups = {'C', 'T'}';
 group_base = 'C';
 colors = {[0 1 0], [1 0 1]}';
@@ -14,18 +15,18 @@ colors = {[0 1 0], [1 0 1]}';
 opacity = 0.65;
 
 path = 'E:/YandexDisk/Work/pydnameth/unn_epic';
-figures_path = sprintf('E:/YandexDisk/Work/pydnameth/unn_epic/figures/features/Versus_Linear_ByGroup/part(%s)', part);
+figures_path = sprintf('E:/YandexDisk/Work/pydnameth/unn_epic/figures/features/versus_byGroup/part(%s)', part);
 if ~exist(figures_path, 'dir')
     mkdir(figures_path)
 end
 fn = sprintf('%s/all_data/part(%s).xlsx', path, part);
 opts = detectImportOptions(fn);
-opts = setvartype(opts, {'Sample_Group'}, 'string');
-obs = readtable(fn, opts);
+opts = setvartype(opts, {group_feature}, 'string');
+tbl = readtable(fn, opts);
 
-status = obs.Sample_Group;
-x_values = obs.(x_var);
-y_values = obs.(y_var);
+status = tbl.(group_feature);
+x_values = tbl.(x_var);
+y_values = tbl.(y_var);
 
 fig1 = figure;
 propertyeditor('on');
@@ -33,21 +34,12 @@ grid on;
 
 xs_all = {};
 ys_all = {};
-diffs_all = {};
 coeffs = table();
-
 for g_id = 1:size(groups, 1)
     
-    xs = [];
-    ys = [];
-    
-    for id = 1 : size(x_values, 1)
-        if status{id}(1) == groups{g_id}
-            xs = vertcat(xs, x_values(id));
-            ys = vertcat(ys, y_values(id));
-        end
-    end
-    
+    xs = tbl{tbl.(group_feature) == groups{g_id}, x_var};
+    ys = tbl{tbl.(group_feature) == groups{g_id}, y_var};
+   
     xs_all{g_id} = xs;
     ys_all{g_id} = ys;
     
@@ -56,7 +48,6 @@ for g_id = 1:size(groups, 1)
     color = colors{g_id};
     h = scatter(xs, ys, 250, 'o', 'LineWidth',  1, 'MarkerEdgeColor', 'black', 'MarkerFaceColor', color, 'MarkerEdgeAlpha', opacity, 'MarkerFaceAlpha', opacity);
     legend(h, groups{g_id})
-    
     
     T = table(xs, ys, 'VariableNames', {x_var, y_var});
     lm = fitlm(T, sprintf('%s~%s', y_var, x_var));
@@ -74,6 +65,7 @@ for g_id = 1:size(groups, 1)
     end
 end
 
+diffs_all = {};
 for g_id = 1:size(groups, 1)
     xs = xs_all{g_id};
     ys = ys_all{g_id};
@@ -126,7 +118,7 @@ legend('Location', 'Southeast', 'NumColumns', 1, 'Interpreter', 'latex');
 box on;
 xlim(xlims);
 ylim(ylims);
-fn_fig = sprintf('%s/x(%s)_y(%s)_scatter', figures_path, x_var, y_var);
+fn_fig = sprintf('%s/x(%s)_y(%s)_group(%s)_scatter', figures_path, x_var, y_var, group_feature);
 oqs_save_fig(fig1, fn_fig)
 saveas(fig1, sprintf('%s.png', fn_fig));
 
@@ -153,11 +145,8 @@ if size(groups, 1) > 1
     idx = strcmpi(t,'Outliers');
     outliers = a(idx);
     set(outliers,'visible','off')
-    dim = [.165 .13 .3 .3];
     ylabel(sprintf('AccelerationDiff'), 'Interpreter', 'latex')
-    str = sprintf('Kruskal-Wallis p-value: %0.2e', p);
-    tb = annotation('textbox', dim, 'String', str, 'verticalalignment', 'Bottom', 'FitBoxToText', 'on', 'FontSize', 24);
-    title(y_var, 'FontSize', 30, 'FontWeight', 'normal', 'Interpreter', 'latex');
+    title(sprintf('%s (KW p-value: %0.2e)', y_var, p), 'FontSize', 30, 'FontWeight', 'normal', 'Interpreter', 'latex');
     hold all;
     
     for g_id = 1:size(groups, 1)
@@ -166,7 +155,7 @@ if size(groups, 1) > 1
     end
     
     box on;
-    fn_fig = sprintf('%s/x(%s)_y(%s)_KW', figures_path, x_var, y_var);
+    fn_fig = sprintf('%s/x(%s)_y(%s)_group(%s)_KW', figures_path, x_var, y_var, group_feature);
     oqs_save_fig(gcf, fn_fig)
     saveas(gcf, sprintf('%s.png', fn_fig));
 end

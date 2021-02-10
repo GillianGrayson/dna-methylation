@@ -3,26 +3,24 @@ clear all;
 part = 'wo_noIntensity_detP_subset';
 
 target = 'GDF15';
-
+group_feature = 'Sample_Group';
 groups = {'C', 'T'}';
 colors = {[0 1 0], [1 0 1]}';
 
 opacity = 0.65;
 
 path = 'E:/YandexDisk/Work/pydnameth/unn_epic';
-figures_path = sprintf('E:/YandexDisk/Work/pydnameth/unn_epic/figures/features/ByGroup/part(%s)', part);
+figures_path = sprintf('E:/YandexDisk/Work/pydnameth/unn_epic/figures/features/boxplot_byGroup/part(%s)', part);
 if ~exist(figures_path, 'dir')
     mkdir(figures_path)
 end
 fn = sprintf('%s/all_data/part(%s).xlsx', path, part);
 opts = detectImportOptions(fn);
-opts = setvartype(opts, {'Sample_Group'}, 'string');
+opts = setvartype(opts, {group_feature}, 'string');
 obs = readtable(fn, opts);
 
-status = obs.Sample_Group;
+status = obs.(group_feature);
 features = obs.(target);
-
-
 
 features_byGroup = {};
 for g_id = 1:size(groups, 1)
@@ -72,7 +70,6 @@ if size(groups, 1) > 1
     end
     
     box on;
-    fn_fig = sprintf('%s/%s', figures_path, target);
+    fn_fig = sprintf('%s/%s_group(%s)', figures_path, target, group_feature);
     oqs_save_fig(gcf, fn_fig)
-    saveas(gcf, sprintf('%s.png', fn_fig));
 end
