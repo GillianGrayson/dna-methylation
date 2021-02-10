@@ -32,8 +32,9 @@ sink()
 # logging =====================================================================
 
 # path <- "E:/YandexDisk/Work/pydnameth/script_datasets/GPL13534/filtered/brain(DLPFC)/GSE74193/raw/data"
-path <- "E:/YandexDisk/Work/pydnameth/script_datasets/GPL13534/filtered/blood(whole)/GSE87571/raw/data"
-chip_type = "450k"
+# path <- "E:/YandexDisk/Work/pydnameth/script_datasets/GPL13534/filtered/blood(whole)/GSE87571/raw/data"
+path <- "E:/YandexDisk/Work/pydnameth/unn_epic/raw/data"
+chip_type = "EPIC"
 detPcut = 0.01
 
 setwd(path)
@@ -229,8 +230,8 @@ colnames(beta_filtered_normalized)[1] <- "IlmnID"
 write.table(beta_filtered_normalized,file="beta_BMIQ_filtered.txt",col.name=TRUE, row.names=FALSE,sep="\t",quote=F)
 
 # Cells =======================================================================
-cellType = "DLPFC" # Should be one of "Blood", "CordBloodCombined", "CordBlood", "CordBloodNorway", "CordTissueAndBlood", or "DLPFC"
-cellTypes = c("NeuN_neg", "NeuN_pos") # c("CD8T","CD4T", "NK","Bcell","Mono","Gran") for "Blood" and c("NeuN_neg", "NeuN_pos") for "DLPFC"
+cellType = "Blood" # Should be one of "Blood", "CordBloodCombined", "CordBlood", "CordBloodNorway", "CordTissueAndBlood", or "DLPFC"
+cellTypes = c("CD8T", "CD4T", "NK", "Bcell", "Mono", "Neu") # c("CD8T", "CD4T", "NK", "Bcell", "Mono", "Neu") for "Blood" and c("NeuN_neg", "NeuN_pos") for "DLPFC"
 
 refPlatform = "IlluminaHumanMethylation450k"
 if (chip_type == "EPIC") {

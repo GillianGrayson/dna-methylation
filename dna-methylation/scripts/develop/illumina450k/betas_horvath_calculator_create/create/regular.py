@@ -1,5 +1,5 @@
 import pydnameth as pdm
-from scripts.develop.routines import *
+
 
 data = pdm.Data(
     path='E:/YandexDisk/Work/pydnameth/script_datasets/GPL13534/filtered/blood(whole)',

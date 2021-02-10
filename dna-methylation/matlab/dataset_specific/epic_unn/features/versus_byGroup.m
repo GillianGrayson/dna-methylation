@@ -2,9 +2,9 @@ clear all;
 
 part = 'wo_noIntensity_detP_subset';
 
-x_var = 'DNAmPhenoAge';
+x_var = 'Age';
 xlims = [-inf; inf];
-y_var = 'MIG';
+y_var = 'DNAmPhenoAge';
 ylims = [-inf; inf];
 
 group_feature = 'Sample_Group';
