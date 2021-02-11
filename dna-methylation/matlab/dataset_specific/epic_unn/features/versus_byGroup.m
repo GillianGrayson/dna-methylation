@@ -3,9 +3,11 @@ clear all;
 part = 'wo_noIntensity_detP_subset';
 
 x_var = 'Age';
-xlims = [-inf; inf];
-y_var = 'DNAmPhenoAge';
-ylims = [-inf; inf];
+x_label = 'Age';
+xlims = [0; 100];
+y_var = 'CKDAge_DNAmAge_all';
+y_label = 'CKDAge';
+ylims = [0; 100];
 
 group_feature = 'Sample_Group';
 groups = {'C', 'T'}';
@@ -82,9 +84,9 @@ end
 figure(fig1);
 hold all;
 set(gca, 'FontSize', 40);
-xlabel(x_var, 'Interpreter', 'latex');
+xlabel(x_label, 'Interpreter', 'latex');
 set(gca, 'FontSize', 40);
-ylabel(y_var, 'Interpreter', 'latex');
+ylabel(y_label, 'Interpreter', 'latex');
 bissectrice_s = min(xlims(1), ylims(1));
 bissectrice_f = max(xlims(2), ylims(2));
 hold all;
@@ -138,7 +140,7 @@ if size(groups, 1) > 1
     grid on;
     p = kruskalwallis(agediff, mod_status, 'off');
     ylabel(sprintf('AccelerationDiff'), 'Interpreter', 'latex')
-    title(sprintf('%s (KW p-value: %0.2e)', y_var, p), 'FontSize', 30, 'FontWeight', 'normal', 'Interpreter', 'latex');
+    title(sprintf('%s (KW p-value: %0.2e)', y_label, p), 'FontSize', 30, 'FontWeight', 'normal', 'Interpreter', 'latex');
     hold all;
     
     fn_fig = sprintf('%s/x(%s)_y(%s)_group(%s)_KW', figures_path, x_var, y_var, group_feature);
