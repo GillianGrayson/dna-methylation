@@ -1,10 +1,11 @@
 clear all;
 
-part = 'wo_noIntensity_detP_subset';
+part = 'wo_noIntensity_detP_H17+_negDNAmPhenoAge';
 
 target = 'MIG';
-group_feature = 'Sample_Group';
-groups = {'C', 'T'}';
+group_feature = 'Group';
+groups = {'Control', 'Disease'}';
+
 colors = {[0 1 0], [1 0 1]}';
 
 opacity = 0.65;
@@ -14,7 +15,7 @@ figures_path = sprintf('E:/YandexDisk/Work/pydnameth/unn_epic/figures/features/b
 if ~exist(figures_path, 'dir')
     mkdir(figures_path)
 end
-fn = sprintf('%s/all_data/part(%s).xlsx', path, part);
+fn = sprintf('%s/all_data/table_part(%s).xlsx', path, part);
 opts = detectImportOptions(fn);
 opts = setvartype(opts, {group_feature}, 'string');
 obs = readtable(fn, opts);
@@ -27,7 +28,7 @@ for g_id = 1:size(groups, 1)
     
     accs = [];
     for id = 1 : size(features, 1)
-        if status{id}(1) == groups{g_id}
+        if status{id} == groups{g_id}
             accs = vertcat(accs, features(id));
         end
     end

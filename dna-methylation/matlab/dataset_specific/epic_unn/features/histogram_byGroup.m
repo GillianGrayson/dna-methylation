@@ -1,13 +1,13 @@
 clear all;
 
 x_var = 'Age';
-target = 'Sex';
-target_vals = {'F', 'M'}';
-colors = {[1 0 0],[0 0 1]}';
+target = 'Group';
+target_vals = {'Control', 'Disease'}';
+colors = {[0 1 0],[1 0 1]}';
 age_bin = 3;
 FaceAlpha = 0.5;
 
-part = 'wo_noIntensity_detP';
+part = 'wo_noIntensity_detP_H17+_negDNAmPhenoAge';
 
 path = 'E:/YandexDisk/Work/pydnameth/unn_epic';
 figures_path = sprintf('E:/YandexDisk/Work/pydnameth/unn_epic/figures/features/histogram_byGroup/part(%s)', part);
@@ -15,9 +15,9 @@ if ~exist(figures_path, 'dir')
     mkdir(figures_path)
 end
 
-fn = sprintf('%s/all_data/part(%s).xlsx', path, part);
+fn = sprintf('%s/all_data/table_part(%s).xlsx', path, part);
 opts = detectImportOptions(fn);
-opts = setvartype(opts, {'Sample_Group'}, 'string');
+opts = setvartype(opts, {target}, 'string');
 data = readtable(fn, opts);
 x = data.(x_var);
 min_x = min(x);
@@ -31,9 +31,9 @@ edges = (min_x : age_bin : max_x)';
 fig = figure;
 propertyeditor('on');
 for t_id = 1:size(target_vals, 1)
-    val = target_vals{t_id};
+    val = string(target_vals{t_id});
     
-    sub_data = data(cell2mat(data.(target)) == val, :);
+    sub_data = data(strcmp(cell2mat(data.(target)), string(val)), :);
     sub_x = sub_data.(x_var);
     
     h = histogram(sub_x, edges, 'FaceColor', colors{t_id}, 'FaceAlpha', FaceAlpha);

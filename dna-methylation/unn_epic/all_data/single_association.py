@@ -3,14 +3,14 @@ from scipy import stats
 import statsmodels.formula.api as smf
 
 
-part = 'wo_noIntensity_detP_subset'
+part = 'wo_noIntensity_detP_H17+_negDNAmPhenoAge'
 path = f'E:/YandexDisk/Work/pydnameth/unn_epic/all_data'
 
 target_key = 'Sample_Group'
 target_groups = ['C', 'T']
-regression_features = ['Age', 'DNAmAge', 'DNAmAgeHannum', 'DNAmPhenoAge', 'DNAmGrimAge']
+regression_features = ['Age', 'LevineAge', 'DNAmAge', 'DNAmAgeHannum', 'DNAmPhenoAge', 'DNAmGrimAge']
 
-df_merged = pd.read_excel(f'{path}/part({part}).xlsx', converters={'ID': str}, engine='openpyxl')
+df_merged = pd.read_excel(f'{path}/table_part({part}).xlsx', converters={'ID': str}, engine='openpyxl')
 
 with open(f'{path}/features_list.txt') as f:
     target_features = f.read().splitlines()

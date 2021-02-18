@@ -1,17 +1,17 @@
 clear all;
 
-part = 'wo_noIntensity_detP_subset';
+part = 'wo_noIntensity_detP_H17+_negDNAmPhenoAge';
 
 x_var = 'Age';
 x_label = 'Age';
 xlims = [0; 100];
-y_var = 'CKDAge_DNAmAge_all';
+y_var = 'CKDAge_Age_all';
 y_label = 'CKDAge';
 ylims = [0; 100];
 
-group_feature = 'Sample_Group';
-groups = {'C', 'T'}';
-group_base = 'C';
+group_feature = 'Group';
+groups = {'Control', 'Disease'}';
+group_base = 'Control';
 colors = {[0 1 0], [1 0 1]}';
 
 opacity = 0.65;
@@ -21,7 +21,7 @@ figures_path = sprintf('E:/YandexDisk/Work/pydnameth/unn_epic/figures/features/v
 if ~exist(figures_path, 'dir')
     mkdir(figures_path)
 end
-fn = sprintf('%s/all_data/part(%s).xlsx', path, part);
+fn = sprintf('%s/all_data/table_part(%s).xlsx', path, part);
 opts = detectImportOptions(fn);
 opts = setvartype(opts, {group_feature}, 'string');
 tbl = readtable(fn, opts);

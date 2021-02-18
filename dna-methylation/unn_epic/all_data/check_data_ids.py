@@ -1,9 +1,9 @@
 import pandas as pd
 import numpy as np
 
-path = f'E:/YandexDisk/Work/pydnameth/unn_epic/all_data/markers/IDs.xlsx'
+path = f'E:/YandexDisk/Work/pydnameth/unn_epic/all_data/raw/IDs.xlsx'
 
-df = pd.read_excel(path)
+df = pd.read_excel(path, engine='openpyxl')
 
 DNAm = df['ID_DNAm'].values
 DNAm = DNAm[~pd.isnull(DNAm)]
@@ -21,6 +21,6 @@ print(*BioChem_missed, sep='\n')
 print(f'Multiplex_missed:')
 print(*Multiplex_missed, sep='\n')
 
-inter = set.intersection(set(DNAm), set(BioChem), set(Multiplex))
+inter = set.intersection(set(DNAm), set(Multiplex))
 print(f'intersection: {len(inter)}')
 

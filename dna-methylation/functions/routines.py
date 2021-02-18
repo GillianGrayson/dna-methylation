@@ -26,3 +26,15 @@ def get_na_values():
     na_values = ['', '#N/A', '#N/A N/A', '#NA', '-1.#IND', '-1.#QNAN', '-NaN', '-nan', '1.#IND', '1.#QNAN', '<NA>',
                  'N/A', 'NA', 'NULL', 'NaN', 'n/a', 'nan', 'null', '-', '--']
     return na_values
+
+
+def label_race (row, candidate, column):
+    target_string = row[column]
+    if isinstance(target_string, str):
+        target_string = target_string.lower()
+        if candidate in target_string:
+            return 'yes'
+        else:
+            return 'no'
+    else:
+        return 'no'

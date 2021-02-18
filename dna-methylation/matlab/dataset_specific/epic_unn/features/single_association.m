@@ -1,9 +1,9 @@
 clear all;
 
-part = 'wo_noIntensity_detP_subset';
+part = 'wo_noIntensity_detP_H17+_negDNAmPhenoAge';
 
-group_feature = 'Sample_Group';
-groups = {'C', 'T'}';
+group_feature = 'Group';
+groups = {'Control', 'Disease'}';
 colors = {[0 1 0], [1 0 1]}';
 
 opacity = 0.65;
