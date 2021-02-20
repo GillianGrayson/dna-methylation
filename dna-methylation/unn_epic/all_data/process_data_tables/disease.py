@@ -3,19 +3,20 @@ from functions.routines import label_race
 
 
 path = f'E:/YandexDisk/Work/pydnameth/unn_epic/all_data/raw/origin'
-columns = ['main diagnosis', 'concomitant diseases', 'drugs', 'excessive level of parathyroid hormone']
+columns = ['diseases']
 
-df = pd.read_excel(f"{path}/disease.xlsx", engine='openpyxl')
+df = pd.read_excel(f"{path}/ckd_diseases.xlsx", engine='openpyxl')
 
 for col in columns:
 
     cds_raw = df[col].values
     cds = set()
-    for row in cds_raw:
+    for row_id, row in enumerate(cds_raw):
         if isinstance(row, str):
-            row_cds = row.split(',')
+            row_cds = sorted(list(set(row.split(', '))))
+            df.iloc[row_id, df.columns.get_loc(col)] = ', '.join(row_cds)
             for cd in row_cds:
-                cds.update([cd.lower()])
+                cds.update([cd])
     tmp = {'yes', 'no', ''}
     cds.difference_update(tmp)
 

@@ -45,9 +45,9 @@ myLoad = champ.load(directory = path,
            methValue = "B", # Indicates whether you prefer m-values M or beta-values B. (default = "B")
            autoimpute = TRUE, # If after filtering (or not do filtering) there are NA values in it, should impute.knn(k=3) should be done for the rest NA?
            filterDetP = TRUE, # If filter = TRUE, then probes above the detPcut will be filtered out.(default = TRUE)
-           ProbeCutoff = 0.1, # The NA ratio threshhold for probes. Probes with above proportion of NA will be removed.
+           ProbeCutoff = 0.0, # The NA ratio threshhold for probes. Probes with above proportion of NA will be removed.
            SampleCutoff = 0.1, # The failed p value (or NA) threshhold for samples. Samples with above proportion of failed p value (NA) will be removed.
-           detPcut = detPcut, # The detection p-value threshhold. Probes about this cutoff will be filtered out. (default = 0.01)
+           detPcut = detPcut, # The detection p-value threshold. Probes about this cutoff will be filtered out. (default = 0.01)
            filterBeads = TRUE, # If filterBeads=TRUE, probes with a beadcount less than 3 will be removed depending on the beadCutoff value.(default = TRUE)
            beadCutoff = 0.05, # The beadCutoff represents the fraction of samples that must have a beadcount less than 3 before the probe is removed.(default = 0.05)
            filterNoCG = TRUE, # If filterNoCG=TRUE, non-cg probes are removed.(default = TRUE)

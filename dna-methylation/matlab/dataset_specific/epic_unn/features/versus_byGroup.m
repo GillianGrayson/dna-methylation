@@ -5,9 +5,12 @@ part = 'wo_noIntensity_detP_H17+_negDNAmPhenoAge';
 x_var = 'Age';
 x_label = 'Age';
 xlims = [0; 100];
-y_var = 'CKDAge_Age_all';
-y_label = 'CKDAge';
+y_var = 'CKDAge_DNAmPhenoAge_all';
+y_label = 'ImmunoAge';
 ylims = [0; 100];
+y_label_acceleration = 'Age Acceleration';
+fit_range_mode = 'lim'; % 'minmax'
+legend_location = 'NorthWest';
 
 group_feature = 'Group';
 groups = {'Control', 'Disease'}';
@@ -55,14 +58,18 @@ for g_id = 1:size(groups, 1)
     lm = fitlm(T, sprintf('%s~%s', y_var, x_var));
     R2 = lm.Rsquared.Ordinary;
     RMSE = lm.RMSE;
-    legend(h, sprintf('%s $(R^2=%0.2f)$', groups{g_id}, R2), 'Interpreter','latex');
-    
-    x_fit = [min(xs); max(xs)];
-    y_fit = lm.Coefficients{'(Intercept)','Estimate'} + x_fit * lm.Coefficients{x_var,'Estimate'};
-    h = plot(x_fit, y_fit, 'LineWidth', 2, 'Color', color);
-    h.Annotation.LegendInformation.IconDisplayStyle = 'off';
-    
+    %legend(h, sprintf('%s $(R^2=%0.2f)$', groups{g_id}, R2), 'Interpreter','latex');
+    legend(h, sprintf('%s', groups{g_id}), 'Interpreter','latex');
+
     if (groups{g_id} == group_base)
+        if strcmp(fit_range_mode, 'minmax')
+            x_fit = [min(xs); max(xs)];
+        else
+            x_fit = [xlims(1); xlims(2)];
+        end
+        y_fit = lm.Coefficients{'(Intercept)','Estimate'} + x_fit * lm.Coefficients{x_var,'Estimate'};
+        h = plot(x_fit, y_fit, 'LineWidth', 2, 'Color', color);
+        h.Annotation.LegendInformation.IconDisplayStyle = 'off';
         coeffs = lm.Coefficients;
     end
 end
@@ -93,7 +100,7 @@ hold all;
 h = plot([bissectrice_s bissectrice_f], [bissectrice_s bissectrice_f], 'k');
 h.Annotation.LegendInformation.IconDisplayStyle = 'off';
 legend(gca,'off');
-legend('Location', 'best', 'NumColumns', 1, 'Interpreter', 'latex');
+legend('Location', legend_location, 'NumColumns', 1, 'Interpreter', 'latex');
 box on;
 xlim(xlims);
 ylim(ylims);
@@ -117,7 +124,7 @@ if size(groups, 1) > 1
     positions = 0.5 * linspace(1, size(groups, 1), size(groups, 1));
     for g_id = 1:size(groups, 1)
         b = boxplot(diffs_all{g_id},'Notch', 'off', 'positions', positions(g_id), 'Colors', 'k');
-        set(gca, 'FontSize', 30);
+        set(gca, 'FontSize', 40);
         all_items = handle(b);
         tags = get(all_items,'tag');
         idx = strcmpi(tags,'box');
@@ -136,10 +143,11 @@ if size(groups, 1) > 1
     xticklabels(groups);
     axis auto;
     xlim([min(positions) - 0.3, max(positions) + 0.3])
+    set(gca, 'TickLabelInterpreter', 'latex')
     box on;
     grid on;
     p = kruskalwallis(agediff, mod_status, 'off');
-    ylabel(sprintf('AccelerationDiff'), 'Interpreter', 'latex')
+    ylabel(sprintf(y_label_acceleration), 'Interpreter', 'latex')
     title(sprintf('%s (KW p-value: %0.2e)', y_label, p), 'FontSize', 30, 'FontWeight', 'normal', 'Interpreter', 'latex');
     hold all;
     

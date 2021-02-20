@@ -18,7 +18,7 @@ def calc_metrics(model, X, y, comment):
       print(f'{comment} mae: {mae}')
       return y_pred
 
-y_name = 'Age'
+y_name = 'DNAmPhenoAge'
 part = 'wo_noIntensity_detP_H17+_negDNAmPhenoAge'
 
 path = f'E:/YandexDisk/Work/pydnameth/unn_epic/all_data'
@@ -31,11 +31,11 @@ if not os.path.exists(save_path):
 with open(f'{path}/features_list.txt') as f:
     target_features = f.read().splitlines()
 
-X_C_df = df_merged.loc[df_merged['Sample_Group'] == 'C']
+X_C_df = df_merged.loc[df_merged['Group'] == 'Control']
 X_C = X_C_df[list(target_features)].to_numpy()
 y_C = X_C_df[y_name].to_numpy()
 
-X_T_df = df_merged.loc[df_merged['Sample_Group'] == 'T']
+X_T_df = df_merged.loc[df_merged['Group'] == 'Disease']
 X_T = X_T_df[list(target_features)].to_numpy()
 y_T = X_T_df[y_name].to_numpy()
 
@@ -49,8 +49,8 @@ cv = RepeatedKFold(n_splits=3, n_repeats=10, random_state=1)
 model_type = ElasticNet()
 # define grid
 grid = dict()
-grid['alpha'] = np.logspace(-5, 2, 8)
-grid['l1_ratio'] = np.linspace(0.0, 1.0, 11)
+grid['alpha'] = np.logspace(-5, 1, 61)
+grid['l1_ratio'] = np.linspace(0.0, 1.0, 21)
 # define search
 scoring = 'r2'
 search = GridSearchCV(estimator=model_type, scoring=scoring, param_grid=grid, cv=cv)

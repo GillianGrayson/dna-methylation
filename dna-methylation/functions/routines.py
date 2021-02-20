@@ -28,10 +28,9 @@ def get_na_values():
     return na_values
 
 
-def label_race (row, candidate, column):
+def label_race(row, candidate, column):
     target_string = row[column]
     if isinstance(target_string, str):
-        target_string = target_string.lower()
         if candidate in target_string:
             return 'yes'
         else:
