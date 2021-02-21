@@ -6,9 +6,9 @@ import statsmodels.formula.api as smf
 part = 'wo_noIntensity_detP_H17+_negDNAmPhenoAge'
 path = f'E:/YandexDisk/Work/pydnameth/unn_epic/all_data'
 
-target_key = 'Sample_Group'
-target_groups = ['C', 'T']
-regression_features = ['Age', 'LevineAge', 'DNAmAge', 'DNAmAgeHannum', 'DNAmPhenoAge', 'DNAmGrimAge']
+target_key = 'Group'
+target_groups = ['Control', 'Disease']
+regression_features = ['Age', 'PhenoAge', 'DNAmPhenoAge']
 
 df_merged = pd.read_excel(f'{path}/table_part({part}).xlsx', converters={'ID': str}, engine='openpyxl')
 
@@ -38,7 +38,7 @@ for m_id, m in enumerate(target_features):
                                          test_data[target_groups[0]] + test_data[target_groups[1]])
     res_dict['pb_p_value'].append(pb_p_value)
 
-    df_control = df_merged.loc[df_merged[target_key] == 'C']
+    df_control = df_merged.loc[df_merged[target_key] == 'Control']
     for a in regression_features:
         formula = f'{m} ~ {a}'
         reg_res = smf.ols(formula=formula, data=df_control).fit()
@@ -46,7 +46,7 @@ for m_id, m in enumerate(target_features):
         res_dict[f'{a}_R2_C'].append(reg_res.rsquared)
         res_dict[f'{a}_p_value_C'].append(pvalues[a])
 
-    df_disease = df_merged.loc[df_merged[target_key] == 'T']
+    df_disease = df_merged.loc[df_merged[target_key] == 'Disease']
     for a in regression_features:
         formula = f'{m} ~ {a}'
         reg_res = smf.ols(formula=formula, data=df_disease).fit()

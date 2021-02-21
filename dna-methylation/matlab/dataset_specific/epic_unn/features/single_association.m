@@ -61,6 +61,9 @@ for m_id = 1 : size(metrics, 1)
     barh(values, 'FaceColor', color);
     yticks(linspace(1, size(values, 1), size(values, 1)))
     ylim([0.5, size(values, 1) + 0.5])
+    hold all;
+    h = plot([-log10(0.05), -log10(0.05)], [0, size(values, 1) + 1], ':', 'Color', 'black', 'LineWidth', 4);
+    h.Annotation.LegendInformation.IconDisplayStyle = 'off';
     set(gca, 'yTickLabel', names);
     ax = gca;
     ax.YAxis.FontSize = fontSizeY;

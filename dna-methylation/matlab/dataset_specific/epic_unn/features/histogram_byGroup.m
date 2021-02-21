@@ -1,10 +1,14 @@
 clear all;
 
-x_var = 'Age';
+%x_var = 'Age';
+x_var = 'Dialysis_months_';
+x_label = 'Dialysis (months)';
 target = 'Group';
-target_vals = {'Control', 'Disease'}';
-colors = {[0 1 0],[1 0 1]}';
-age_bin = 3;
+%target_vals = {'Control', 'Disease'}';
+%colors = {[0 1 0],[1 0 1]}';
+target_vals = {'Disease'}';
+colors = {[1 0 1]}';
+bin_size = 10;
 FaceAlpha = 0.5;
 
 part = 'wo_noIntensity_detP_H17+_negDNAmPhenoAge';
@@ -23,10 +27,10 @@ x = data.(x_var);
 min_x = min(x);
 max_x = max(x);
 shift_x = max_x - min_x;
-num_bins = floor(shift_x / age_bin);
+num_bins = floor(shift_x / bin_size);
 min_x = floor(min_x - 0.05 * shift_x);
 max_x = ceil(max_x + 0.05 * shift_x);
-edges = (min_x : age_bin : max_x)';
+edges = (min_x : bin_size : max_x)';
 
 fig = figure;
 propertyeditor('on');
@@ -42,7 +46,7 @@ for t_id = 1:size(target_vals, 1)
 end
 
 set(gca, 'FontSize', 40);
-xlabel(x_var, 'Interpreter', 'latex');
+xlabel(x_label, 'Interpreter', 'latex');
 set(gca, 'FontSize', 40);
 ylabel('Number of subjects', 'Interpreter', 'latex');
 grid on;

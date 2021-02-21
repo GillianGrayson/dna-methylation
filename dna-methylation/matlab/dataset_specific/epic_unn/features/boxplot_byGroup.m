@@ -2,7 +2,7 @@ clear all;
 
 part = 'wo_noIntensity_detP_H17+_negDNAmPhenoAge';
 
-target = 'MIG';
+target = 'IL_6';
 group_feature = 'Group';
 groups = {'Control', 'Disease'}';
 
@@ -52,7 +52,7 @@ if size(groups, 1) > 1
     positions = 0.5 * linspace(1, size(groups, 1), size(groups, 1));
     for g_id = 1:size(groups, 1)
         b = boxplot(features_byGroup{g_id},'Notch', 'off', 'positions', positions(g_id), 'Colors', 'k');
-        set(gca, 'FontSize', 30);
+        set(gca, 'FontSize', 40);
         all_items = handle(b);
         tags = get(all_items,'tag');
         idx = strcmpi(tags,'box');
@@ -71,6 +71,7 @@ if size(groups, 1) > 1
     xticklabels(groups);
     axis auto;
     xlim([min(positions) - 0.3, max(positions) + 0.3])
+    set(gca, 'TickLabelInterpreter', 'latex')
     ylabel(target, 'Interpreter', 'latex')
     box on;
     grid on;
