@@ -2,7 +2,7 @@ clear all;
 
 part = 'wo_noIntensity_detP_H17+_negDNAmPhenoAge';
 
-target = 'IL_6';
+target = 'IL_13';
 group_feature = 'Group';
 groups = {'Control', 'Disease'}';
 

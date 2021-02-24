@@ -8,47 +8,48 @@ library(glmnet)
 library(xlsx)
 library(emdbook)
 library(Metrics)
+library(openxlsx)
+
 
 path <- "E:/YandexDisk/Work/pydnameth/unn_epic/all_data"
-fn_ctrl <- paste(path, "/table/", "biochemMultiplex_part(ctrl_wo_noIntensity_detP_subset).xlsx",  sep='')
-fn_ckd <- paste(path, "/table/", "biochemMultiplex_part(ckd_wo_noIntensity_detP_subset).xlsx",  sep='')
+fn = paste(path, "/table_part(wo_noIntensity_detP_H17+_negDNAmPhenoAge).xlsx",  sep='')
+fn_save = paste(path, "/R_table_part(wo_noIntensity_detP_H17+_negDNAmPhenoAge).xlsx",  sep='')
 
-data_ctrl <- read_excel(fn_ctrl)
-X_ctrl = data_ctrl[, !(names(data_ctrl) %in% c("DNAmPhenoAge", "CKDAge"))]
-X_ctrl_mtx = data.matrix(X_ctrl)
-y_ctrl = data_ctrl$DNAmPhenoAge
 
-data_ckd <- read_excel(fn_ckd)
-X_ckd = data_ckd[, !(names(data_ckd) %in% c("DNAmPhenoAge", "CKDAge"))]
-X_ckd_mtx = data.matrix(X_ckd)
-y_ckd = data_ckd$DNAmPhenoAge
+target_feature = "DNAmAge"
+target_part = "Control"
+features = scan(paste(path, "/features_list.txt",  sep=''), character(), quote = "")
 
-dim(X_ctrl_mtx)
-dim(X_ckd_mtx)
+data = read_excel(fn)
+X_All = data[, (names(data) %in% features)]
+y_All = data[, target_feature]
 
-lambdas <- lseq(0.001, 100000, length= 91)
-model_ctrl = cv.glmnet(X_ctrl_mtx, y_ctrl, nfolds=10, nlambda=100, alpha=0.5, family="gaussian")
-lambda_opt = model_ctrl$lambda.min
+X_Control = data[data$Group == "Control", (names(data) %in% features)]
+y_Control = data[data$Group == "Control", target_feature]
 
-y_ctrl_pred = predict(model_ctrl,X_ctrl_mtx,type="response",s=lambda_opt)
-y_ckd_pred = predict(model_ctrl,X_ckd_mtx,type="response",s=lambda_opt)
+X_Disease = data[data$Group == "Disease", (names(data) %in% features)]
+y_Disease = data[data$Group == "Disease", target_feature]
 
-y_ctrl_df = data.frame(y_ctrl, y_ctrl_pred)
-rmse(y_ctrl, y_ctrl_pred)
-colnames(y_ctrl_df) = c("y_gt", "y_pred")
-str(y_ctrl_df)
-fn <- paste(path, "/table/", "R_biochemMultiplex_part(ctrl_wo_noIntensity_detP_subset).xlsx",  sep='')
-write.xlsx(y_ctrl_df, fn, sheetName = "Sheet1",col.names = TRUE, row.names = FALSE, append = FALSE)
+X_target = as.matrix(X_All)
+y_target = y_All[[target_feature]]
 
-y_ckd_df = data.frame(y_ckd, y_ckd_pred)
-rmse(y_ckd, y_ckd_pred)
-colnames(y_ckd_df) = c("y_gt", "y_pred")
-str(y_ckd_df)
-fn <- paste(path, "/table/", "R_biochemMultiplex_part(ckd_wo_noIntensity_detP_subset).xlsx",  sep='')
-write.xlsx(y_ckd_df, fn, sheetName = "Sheet1",col.names = TRUE, row.names = FALSE, append = FALSE)
+model = cv.glmnet(X_target, y_target, nfolds=10, nlambda=100, alpha=0.5, family="gaussian")
+lambda_opt = model$lambda.min
 
-coeffs_tmp <- coef(model_ctrl, s = "lambda.min")
+y_pred = predict(model, as.matrix(X_All), type="response", s=lambda_opt)
+y_real = y_All[[target_feature]]
+rmse(y_real, y_pred)
+
+rsq <- function(x, y) summary(lm(x~y))
+R2 <- rsq(y_real, y_pred)
+
+data[paste("Immuno", target_feature, target_part, sep='')] = y_pred
+
+write.xlsx(data, fn_save, sheetName = "Sheet1", col.names = TRUE, row.names = FALSE, append = FALSE)
+
+coeffs_tmp <- coef(model, s = "lambda.min")
 coeffs <- data.frame(name = coeffs_tmp@Dimnames[[1]][coeffs_tmp@i + 1], coefficient = coeffs_tmp@x)
-
-fn <- paste(path, "/clock/", "R_biochemMultiplex_part(ctrl_wo_noIntensity_detP_subset).xlsx",  sep='')
+fn <- paste(path, "/R_clock.xlsx",  sep='')
 write.xlsx(coeffs, fn, sheetName = "Sheet1",col.names = TRUE, row.names = FALSE, append = FALSE)
+
+
