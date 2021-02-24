@@ -6,19 +6,20 @@ import numpy as np
 import pickle
 from pathlib import Path
 import os
+import copy
 
 
-def calc_metrics(model, X, y, comment):
+def calc_metrics(model, X, y, comment, params):
       y_pred = model.predict(X)
       score = model.score(X, y)
       rmse = np.sqrt(mean_squared_error(y_pred, y))
       mae = mean_absolute_error(y_pred, y)
-      print(f'{comment} score: {score}')
-      print(f'{comment} rmse: {rmse}')
-      print(f'{comment} mae: {mae}')
+      params[f'{comment} R2'] = score
+      params[f'{comment} RMSE'] = rmse
+      params[f'{comment} MAE'] = mae
       return y_pred
 
-y_name = 'DNAmPhenoAge'
+y_name = 'PhenoAge'
 part = 'wo_noIntensity_detP_H17+_negDNAmPhenoAge'
 
 path = f'E:/YandexDisk/Work/pydnameth/unn_epic/all_data'
@@ -59,28 +60,20 @@ results = search.fit(X_all, y_all)
 # summarize
 model = search.best_estimator_
 score = model.score(X_all, y_all)
-print('Config: %s' % results.best_params_)
-print("Best estimator found by grid search:")
-print(model)
-print(f"Best R2: {score}")
+
+params = copy.deepcopy(results.best_params_)
 
 searching_process = pd.DataFrame(search.cv_results_)
 searching_process.to_excel(f'{path}/clock/{y_name}/part({part})/searching_process_{scoring}.xlsx', index=False)
 
-# ratios = np.linspace(0.3, 0.9, 7)
-# alphas = np.logspace(-5, 3, 9)
-#
-# model = ElasticNetCV(l1_ratio=ratios, alphas=alphas, cv=cv)
-# model.fit(X_all, y_all)
-# print(f'alpha: {model.alpha_}')
-# print(f'l1_ratio: {model.l1_ratio_}')
-
 model_dict = {'feauture': ['Intercept'], 'coef': [model.intercept_]}
+num_features = 0
 for f_id, f in enumerate(target_features):
       coef = model.coef_[f_id]
       if abs(coef) > 0:
             model_dict['feauture'].append(f)
             model_dict['coef'].append(coef)
+            num_features += 1
 model_df = pd.DataFrame(model_dict)
 
 Path(f'{path}/clock/{y_name}/part({part})').mkdir(parents=True, exist_ok=True)
@@ -89,9 +82,14 @@ model_df.to_excel(f'{path}/clock/{y_name}/part({part})/clock.xlsx', index=False)
 with open(f'{path}/clock/{y_name}/part({part})/clock.pkl', 'wb') as handle:
     pickle.dump(model, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
-y_pred_C = calc_metrics(model, X_C, y_C, 'ctrl')
-y_pred_T = calc_metrics(model, X_T, y_T, 'ckd')
-y_pred_all = calc_metrics(model, X_all, y_all, 'all')
+y_pred_C = calc_metrics(model, X_C, y_C, 'Control', params)
+y_pred_T = calc_metrics(model, X_T, y_T, 'Disease', params)
+y_pred_all = calc_metrics(model, X_all, y_all, 'All', params)
+params['num_features'] = num_features
+params_df = pd.DataFrame({'Feature': list(params.keys()), 'Value': list(params.values())})
+params_df.to_excel(f'{path}/clock/{y_name}/part({part})/params.xlsx', index=False)
+
+print(params_df)
 
 df_merged[f'CKDAge_{y_name}_all'] = y_pred_all
 
