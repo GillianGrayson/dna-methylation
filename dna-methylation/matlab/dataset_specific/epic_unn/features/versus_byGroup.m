@@ -2,11 +2,11 @@ clear all;
 
 part = 'wo_noIntensity_detP_H17+_negDNAmPhenoAge';
 
-x_var = 'DNAmAge';
-x_label = 'DNAmAge';
+x_var = 'Age';
+x_label = 'Age';
 xlims = [0; 100];
-y_var = 'CKDAge_DNAmAge_Control';
-y_label = 'ImmunoDNAmAge';
+y_var = 'CKDAge_Age_Control';
+y_label = 'ImmunoAge';
 ylims = [0; 100];
 y_label_acceleration = 'Age Acceleration';
 fit_range_mode = 'lim'; % 'minmax'

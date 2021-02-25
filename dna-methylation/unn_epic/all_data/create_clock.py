@@ -19,7 +19,7 @@ def calc_metrics(model, X, y, comment, params):
       params[f'{comment} MAE'] = mae
       return y_pred
 
-y_name = 'DNAmAge'
+y_name = 'Age'
 part = 'wo_noIntensity_detP_H17+_negDNAmPhenoAge'
 
 target_part = 'Control'
@@ -61,8 +61,9 @@ cv = RepeatedKFold(n_splits=3, n_repeats=10, random_state=1)
 model_type = ElasticNet(max_iter=10000, tol=0.001)
 # define grid
 grid = dict()
-grid['alpha'] = np.logspace(-5, 1, 7)
-grid['l1_ratio'] = np.linspace(0.0, 1.0, 11)
+grid['alpha'] = np.logspace(-5, 1, 61)
+#grid['l1_ratio'] = np.linspace(0.0, 1.0, 11)
+grid['l1_ratio'] = [0.5]
 # define search
 scoring = 'r2'
 search = GridSearchCV(estimator=model_type, scoring=scoring, param_grid=grid, cv=cv, verbose=3)
@@ -79,17 +80,17 @@ params = copy.deepcopy(results.best_params_)
 searching_process = pd.DataFrame(search.cv_results_)
 searching_process.to_excel(f'{path}/clock/{target_part}/{y_name}/part({part})/searching_process_{scoring}.xlsx', index=False)
 
-model_dict = {'feauture': ['Intercept'], 'coef': [model.intercept_]}
+model_dict = {'feature': ['Intercept'], 'coef': [model.intercept_]}
 num_features = 0
 for f_id, f in enumerate(target_features):
       coef = model.coef_[f_id]
       if abs(coef) > 0:
-            model_dict['feauture'].append(f)
+            model_dict['feature'].append(f)
             model_dict['coef'].append(coef)
             num_features += 1
 model_df = pd.DataFrame(model_dict)
 
-Path(f'{path}/clock/{y_name}/part({part})').mkdir(parents=True, exist_ok=True)
+Path(f'{path}/clock/{target_part}/{y_name}/part({part})').mkdir(parents=True, exist_ok=True)
 model_df.to_excel(f'{path}/clock/{target_part}/{y_name}/part({part})/clock.xlsx', index=False)
 
 with open(f'{path}/clock/{target_part}/{y_name}/part({part})/clock.pkl', 'wb') as handle:
