@@ -3,9 +3,9 @@ from functions.routines import label_race
 
 
 path = f'E:/YandexDisk/Work/pydnameth/unn_epic/all_data/raw/origin'
-columns = ['diseases']
+columns = ['drugs']
 
-df = pd.read_excel(f"{path}/ckd_diseases.xlsx", engine='openpyxl')
+df = pd.read_excel(f"{path}/diagnosis_drug.xlsx", engine='openpyxl')
 
 for col in columns:
 
