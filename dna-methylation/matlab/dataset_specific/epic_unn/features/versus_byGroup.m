@@ -2,8 +2,8 @@ clear all;
 
 part = 'wo_noIntensity_detP_H17+_negDNAmPhenoAge';
 
-x_var = 'Age';
-x_label = 'Age';
+x_var = 'DNAmGrimAge';
+x_label = 'DNAmGrimAge';
 xlims = [0; 100];
 y_var = 'CKDAge_DNAmGrimAge_Control';
 y_label = 'ImmunoDNAmGrimAge';

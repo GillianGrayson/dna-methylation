@@ -3,16 +3,17 @@ from scipy import stats
 import statsmodels.formula.api as smf
 
 
-part = 'wo_noIntensity_detP_H17+_negDNAmPhenoAge'
+part = 'wo_noIntensity_detP_H17+_negDNAmPhenoAge_missGDF15'
 path = f'E:/YandexDisk/Work/pydnameth/unn_epic/all_data'
 
 target_key = 'Group'
 target_groups = ['Control', 'Disease']
-regression_features = ['Age', 'PhenoAge', 'DNAmPhenoAge']
+features_type = 'cytokines'
+regression_features = ['DNAmAgeHannum', 'DNAmAge', 'DNAmPhenoAge', 'DNAmGrimAge', 'Age', 'PhenoAge', 'CKDAge_DNAmAge_Control', 'CKDAge_DNAmAgeHannum_Control', 'CKDAge_DNAmPhenoAge_Control', 'CKDAge_DNAmGrimAge_Control', 'CKDAge_PhenoAge_Control', 'CKDAge_Age_Control']
 
 df_merged = pd.read_excel(f'{path}/table_part({part}).xlsx', converters={'ID': str}, engine='openpyxl')
 
-with open(f'{path}/features_list.txt') as f:
+with open(f'{path}/{features_type}.txt') as f:
     target_features = f.read().splitlines()
 
 res_dict = {'metric': target_features}
@@ -55,6 +56,6 @@ for m_id, m in enumerate(target_features):
         res_dict[f'{a}_p_value_T'].append(pvalues[a])
 
 res_df = pd.DataFrame(res_dict)
-fn_save = f"{path}/result/single_association.xlsx"
+fn_save = f"{path}/result/part({part})/{features_type}.xlsx"
 
 res_df.to_excel(fn_save, index=False)

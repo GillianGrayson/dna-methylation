@@ -8,8 +8,8 @@ df_multiplex = pd.read_excel(f'{path}/raw/MULTIPLEX_20_11_2020_xtd_ver1.xlsx', c
 df_dignosis = pd.read_excel(f'{path}/raw/diagnosis.xlsx', converters={'ID': str}, engine='openpyxl')
 df_drug = pd.read_excel(f'{path}/raw/drug.xlsx', converters={'ID': str}, engine='openpyxl')
 
-features = set.union(set(df_drug.columns))
+features = set.union(set(df_biochem.columns))
 features.remove('ID')
-np.savetxt(f'{path}/drug_list.txt', list(features), fmt='%s')
+np.savetxt(f'{path}/tmp.txt', list(features), fmt='%s')
 
 

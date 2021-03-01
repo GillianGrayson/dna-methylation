@@ -12,7 +12,7 @@ df_drug = pd.read_excel(f'{path}/raw/drug.xlsx', converters={'ID': str}, engine=
 
 df_tmp = pd.read_excel(f'{path}/table_part(wo_noIntensity_detP_H17+_negDNAmPhenoAge).xlsx', converters={'ID': str}, engine='openpyxl')
 
-data_frames = [df_tmp, df_drug, df_dignosis]
+data_frames = [df_tmp, df_biochem]
 df_merged = reduce(lambda left, right: pd.merge(left, right, on=['ID']), data_frames)
 df_merged.to_excel(f'{path}/current_table.xlsx', index=False)
 
