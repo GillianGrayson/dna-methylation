@@ -1,7 +1,7 @@
 import pickle
 
 cpg_file_path = ''
-cpg_file_name = 'cpgs.txt'
+cpg_file_name = '../cpgs.txt'
 f = open(cpg_file_path + cpg_file_name, 'r')
 cpgs = [line.rstrip('\n') for line in f]
 f.close()

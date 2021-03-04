@@ -5,6 +5,7 @@ library(limma)
 library(openxlsx)
 
 path = "E:/YandexDisk/Work/pydnameth/script_datasets/GPL13534/filtered/brain(DLPFC)/GSE74193"
+path = "E:/YandexDisk/Work/pydnameth/script_datasets/GPL13534/filtered/blood(whole)/GSE87571"
 path_wd = paste(path, "/limma", sep='')
 setwd(path_wd)
 
@@ -49,8 +50,6 @@ topl1_Age <- topTable(fit2, num=Inf,coef="Age",sort.by="none")
 colnames(topl1_Age) <- paste0("Age_",colnames(topl1_Age))
 table(rownames(topl1_Sex)==rownames(topl1_Age))
 results <- data.frame(topl1_Sex,topl1_Age)
-
-write.table(data.frame(results),file=paste(gse, "_beta.txt", sep=''),col.name=TRUE, row.names=TRUE,sep="\t",quote=F)
 
 write.xlsx(results, 
            paste(path_wd, "/m.xlsx", sep=''), 
