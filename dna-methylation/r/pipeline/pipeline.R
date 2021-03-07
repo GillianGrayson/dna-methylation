@@ -45,7 +45,7 @@ myLoad = champ.load(directory = path,
            methValue = "B", # Indicates whether you prefer m-values M or beta-values B. (default = "B")
            autoimpute = TRUE, # If after filtering (or not do filtering) there are NA values in it, should impute.knn(k=3) should be done for the rest NA?
            filterDetP = TRUE, # If filter = TRUE, then probes above the detPcut will be filtered out.(default = TRUE)
-           ProbeCutoff = 0.0, # The NA ratio threshhold for probes. Probes with above proportion of NA will be removed.
+           ProbeCutoff = 0.1, # The NA ratio threshhold for probes. Probes with above proportion of NA will be removed.
            SampleCutoff = 0.1, # The failed p value (or NA) threshhold for samples. Samples with above proportion of failed p value (NA) will be removed.
            detPcut = detPcut, # The detection p-value threshold. Probes about this cutoff will be filtered out. (default = 0.01)
            filterBeads = TRUE, # If filterBeads=TRUE, probes with a beadcount less than 3 will be removed depending on the beadCutoff value.(default = TRUE)
@@ -121,7 +121,6 @@ controlStripPlot(RGset, controls="TARGET REMOVAL")
 dev.off()
 
 qcReport(RGset,
-         sampGroups = observables$Sample_Group, 
          pdf = "qcReport.pdf", 
          controls = c("NEGATIVE",
                       "BISULFITE CONVERSION I",
@@ -234,9 +233,7 @@ cellType = "Blood" # Should be one of "Blood", "CordBloodCombined", "CordBlood",
 cellTypes = c("CD8T", "CD4T", "NK", "Bcell", "Mono", "Neu") # c("CD8T", "CD4T", "NK", "Bcell", "Mono", "Neu") for "Blood" and c("NeuN_neg", "NeuN_pos") for "DLPFC"
 
 refPlatform = "IlluminaHumanMethylation450k"
-if (chip_type == "EPIC") {
-  refPlatform = "IlluminaHumanMethylationEPIC"
-}
+refPlatform = "IlluminaHumanMethylationEPIC"
 
 cell_counts <- estimateCellCounts2(RGset,
                                    compositeCellType = cellType,
