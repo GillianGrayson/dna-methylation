@@ -20,20 +20,21 @@ def calc_metrics(model, X, y, comment, params):
     return y_pred
 
 
-y_name = 'Age'
-part = 'wo_noIntensity_detP_H17+_negDNAmPhenoAge'
+y_name = 'PhenoAge'
+part = 'v2'
 
 target_part = 'Control'
-data_type = 'Multiplex'
+data_type = 'immuno'
 
-path = f'E:/YandexDisk/pydnameth/unn_epic/all_data'
+
+path = f'E:/YandexDisk/Work/pydnameth/unn_epic/all_data'
 df_merged = pd.read_excel(f'{path}/table_part({part}).xlsx', converters={'ID': str}, engine='openpyxl')
 
 save_path = f'{path}/clock/{data_type}/{target_part}/{y_name}/part({part})'
 if not os.path.exists(save_path):
     os.makedirs(save_path)
 
-with open(f'{path}/features_list.txt') as f:
+with open(f'{path}/{data_type}.txt') as f:
     target_features = f.read().splitlines()
 
 X_C_df = df_merged.loc[df_merged['Group'] == 'Control']
@@ -57,7 +58,7 @@ else:
     raise ValueError("Unsupported target_part")
 
 # define model evaluation method
-cv = RepeatedKFold(n_splits=3, n_repeats=10, random_state=1)
+cv = RepeatedKFold(n_splits=4, n_repeats=10, random_state=1)
 
 # define model
 model_type = ElasticNet(max_iter=10000, tol=0.001)

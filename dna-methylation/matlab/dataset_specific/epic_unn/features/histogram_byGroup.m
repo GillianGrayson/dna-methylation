@@ -1,17 +1,18 @@
 clear all;
 
-%x_var = 'Age';
-x_var = 'Dialysis_months_';
-x_label = 'Dialysis (months)';
+x_var = 'Age';
+x_label = 'Age';
+%x_var = 'Dialysis_months_';
+%x_label = 'Dialysis (months)';
 target = 'Group';
-%target_vals = {'Control', 'Disease'}';
-%colors = {[0 1 0],[1 0 1]}';
-target_vals = {'Disease'}';
-colors = {[1 0 1]}';
-bin_size = 10;
+target_vals = {'Control', 'Disease'}';
+colors = {[0 1 0],[1 0 1]}';
+%target_vals = {'Disease'}';
+%colors = {[1 0 1]}';
+bin_size = 5;
 FaceAlpha = 0.5;
 
-part = 'wo_noIntensity_detP_H17+_negDNAmPhenoAge';
+part = 'v2';
 
 path = 'E:/YandexDisk/Work/pydnameth/unn_epic';
 figures_path = sprintf('E:/YandexDisk/Work/pydnameth/unn_epic/figures/features/histogram_byGroup/part(%s)', part);

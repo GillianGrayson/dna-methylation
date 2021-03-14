@@ -1,15 +1,15 @@
 clear all;
 
-part = 'wo_noIntensity_detP_H17+_negDNAmPhenoAge';
+part = 'v2';
 
-x_var = 'DNAmGrimAge';
-x_label = 'DNAmGrimAge';
+x_var = 'Age';
+x_label = 'Age';
 xlims = [0; 100];
-y_var = 'CKDAge_DNAmGrimAge_Control';
-y_label = 'ImmunoDNAmGrimAge';
+y_var = 'CKDAge_PhenoAge_Control';
+y_label = 'ImmunoPhenoAge';
 ylims = [0; 100];
 y_label_acceleration = 'Age Acceleration';
-fit_range_mode = 'lim'; % 'minmax'
+fit_range_mode = 'lim'; %'lim'; % 'minmax';
 legend_location = 'NorthWest';
 
 group_feature = 'Group';
@@ -17,7 +17,7 @@ groups = {'Control', 'Disease'}';
 group_base = 'Control';
 colors = {[0 1 0], [1 0 1]}';
 
-opacity = 0.65;
+opacity = 0.5;
 
 path = 'E:/YandexDisk/Work/pydnameth/unn_epic';
 figures_path = sprintf('E:/YandexDisk/Work/pydnameth/unn_epic/figures/features/versus_byGroup/part(%s)', part);
@@ -28,7 +28,7 @@ fn = sprintf('%s/all_data/table_part(%s).xlsx', path, part);
 opts = detectImportOptions(fn);
 opts = setvartype(opts, {group_feature}, 'string');
 tbl = readtable(fn, opts);
-
+   
 status = tbl.(group_feature);
 x_values = tbl.(x_var);
 y_values = tbl.(y_var);

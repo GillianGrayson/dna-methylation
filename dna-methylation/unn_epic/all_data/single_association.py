@@ -3,12 +3,12 @@ from scipy import stats
 import statsmodels.formula.api as smf
 
 
-part = 'wo_noIntensity_detP_H17+_negDNAmPhenoAge_missGDF15'
+part = 'v2'
 path = f'E:/YandexDisk/Work/pydnameth/unn_epic/all_data'
 
 target_key = 'Group'
 target_groups = ['Control', 'Disease']
-features_type = 'cytokines'
+features_type = 'immuno'
 regression_features = ['DNAmAgeHannum', 'DNAmAge', 'DNAmPhenoAge', 'DNAmGrimAge', 'Age', 'PhenoAge', 'CKDAge_DNAmAge_Control', 'CKDAge_DNAmAgeHannum_Control', 'CKDAge_DNAmPhenoAge_Control', 'CKDAge_DNAmGrimAge_Control', 'CKDAge_PhenoAge_Control', 'CKDAge_Age_Control']
 
 df_merged = pd.read_excel(f'{path}/table_part({part}).xlsx', converters={'ID': str}, engine='openpyxl')

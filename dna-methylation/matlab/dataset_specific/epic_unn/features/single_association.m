@@ -1,8 +1,8 @@
 clear all;
 
-part = 'wo_noIntensity_detP_H17+_negDNAmPhenoAge_missGDF15';
+part = 'v2';
 
-feature_type = 'cytokines';
+feature_type = 'immuno';
 
 group_feature = 'Group';
 groups = {'Control', 'Disease'}';
@@ -10,7 +10,7 @@ colors = {[0 1 0], [1 0 1]}';
 
 opacity = 0.65;
 fontSizeX = 20;
-fontSizeY = 24;
+fontSizeY = 10;
 
 path = 'E:/YandexDisk/Work/pydnameth/unn_epic';
 figures_path = sprintf('E:/YandexDisk/Work/pydnameth/unn_epic/figures/features/single_association/part(%s)', part);

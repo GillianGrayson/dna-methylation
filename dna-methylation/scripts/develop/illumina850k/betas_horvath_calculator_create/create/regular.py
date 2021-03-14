@@ -7,14 +7,14 @@ data = pdm.Data(
 )
 
 data_params = {
-    'part': 'wo_noIntensity_detP',
-    'config': '0.01_0.10_0.00',
+    'part': 'v1',
+    'config': '0.01_0.10_0.10',
     'norm': 'fun',
 
 }
 
 chip_type = '850k'
-fn = 'observables_part(wo_noIntensity_detP)'
+fn = 'observables_part(v1)'
 
 pdm.betas_horvath_calculator_create_regular(
     chip_type=chip_type,

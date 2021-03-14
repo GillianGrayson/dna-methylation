@@ -1,8 +1,8 @@
 clear all;
 
-part = 'wo_noIntensity_detP_H17+_negDNAmPhenoAge';
+part = 'v2';
 
-target = 'IL_13';
+target = 'IL_12_p40';
 group_feature = 'Group';
 groups = {'Control', 'Disease'}';
 
