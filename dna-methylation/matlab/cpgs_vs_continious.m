@@ -1,19 +1,19 @@
-figures_path = sprintf('%s/figures/cpgs/dataType(%s)_norm(%s)_part(%s)', dataset_path, data_type, norm, part);
+figures_path = sprintf('%s/figures/cpgs/dataType(%s)_part(%s)_config(%s)_norm(%s)', dataset_path, data_type, norm, config, part);
 if ~exist(figures_path, 'dir')
     mkdir(figures_path)
 end
 
-continious = 'age';
-xlims = [8; 100];
+continious = 'Age';
+xlims = [0; 100];
 
 cgs = ...
-    {
-    'cg23256579'; ...
-    'cg01620164'; ...
-    'cg24079702'; ...
-    'cg16867657'; ...
-    'cg22454769'; ...
-    };
+    { ...
+    'cg07553761', ...
+    'cg00481951', ...
+    'cg23256579', ...
+    'cg06639320', ...
+    'cg22454769' ...
+    }';
 
 % Contour params ==========================================================
 is_contour = 0;
@@ -25,7 +25,7 @@ meshgrid_size = 50;
 
 is_lin_fit = 1;
 
-group_by = 'gender';
+group_by = 'Sex';
 groups = {'F', 'M'}';
 colors = {[1 0 0],[0 0 1]}';
 opacity = 0.65;
@@ -35,7 +35,7 @@ for g_id = 1 : size(groups, 1)
     group_indeces{g_id} = find(cell2mat(obs.(group_by)) == groups{g_id});
 end
 
-for cg_id = 1:size(cgs)
+for cg_id = 1:size(cgs, 1)
     
     cg = cgs{cg_id};
     cg_data = betas{cg, :}';

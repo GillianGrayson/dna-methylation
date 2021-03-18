@@ -1,17 +1,18 @@
 clear all;
 
-chip = '450k';
-dataset = 'GSE55763';
+chip = '850k';
+dataset = 'unn_epic';
 
 dataset_path = sprintf('E:/YandexDisk/Work/pydnameth/%s', dataset);
 
 data_type = 'betas';
-norm = '';
-part = '';
+norm = 'fun';
+part = 'v1';
+config = '0.01_0.10_0.10';
 
 if strcmp(dataset, 'unn_epic')
-    fn_obs = sprintf('%s/observables_part(%s).csv', dataset_path, part);
-    fn_betas = sprintf('%s/betas_norm(%s)_part(%s).txt', dataset_path, norm, part);
+    fn_obs = sprintf('%s/observables_part(%s).xlsx', dataset_path, part);
+    fn_betas = sprintf('%s/betas_part(%s)_config(%s)_norm(%s).txt', dataset_path, part, config, norm);
     fn_ann = sprintf('%s/annotations.txt', dataset_path);
 else
     fn_obs = sprintf('%s/observables.txt', dataset_path);

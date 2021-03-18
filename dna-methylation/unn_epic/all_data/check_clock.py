@@ -19,14 +19,17 @@ def calc_metrics(model, X, y, comment, params):
       params[f'{comment} MAE'] = mae
       return y_pred
 
-y_name = 'DNAmGrimAge'
-part = 'wo_noIntensity_detP_H17+_negDNAmPhenoAge'
+features_type = 'immuno'
+
+y_name = 'DNAmAgeHannum'
+part = 'v2'
 
 target_part = 'Control'
 
 path = f'E:/YandexDisk/Work/pydnameth/unn_epic/all_data'
-df_merged = pd.read_excel(f'{path}/table_part({part}).xlsx', converters={'ID': str}, engine='openpyxl')
-model_df = pd.read_excel(f'{path}/clock/{target_part}/{y_name}/part({part})/clock.xlsx', engine='openpyxl')
+fn = 'E:/YandexDisk/Work/pydnameth/vedunova/I111/MULTIPLEX_all.xlsx'
+df_merged = pd.read_excel(fn, converters={'ID': str}, engine='openpyxl')
+model_df = pd.read_excel(f'{path}/clock/{features_type}/{target_part}/{y_name}/part({part})/clock.xlsx', engine='openpyxl')
 
 features = model_df['feature'].to_list()
 coefs = model_df['coef'].to_list()
@@ -38,4 +41,4 @@ for index, row in df_merged.iterrows():
 
 df_merged[f'CKDAge_{y_name}_{target_part}_CHECK'] = predicted
 
-df_merged.to_excel(f'{path}/table_part({part}).xlsx', index=False)
+df_merged.to_excel(fn, index=False)
