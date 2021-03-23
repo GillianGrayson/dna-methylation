@@ -7,6 +7,10 @@ import pickle
 from pathlib import Path
 import os
 import copy
+from numpy import mean
+from numpy import std
+from numpy import absolute
+from sklearn.model_selection import cross_val_score
 
 
 def calc_metrics(model, X, y, comment, params):
@@ -20,12 +24,11 @@ def calc_metrics(model, X, y, comment, params):
     return y_pred
 
 
-y_name = 'PhenoAge'
+y_name = 'DNAmAgeHannum'
 part = 'v2'
 
 target_part = 'Control'
 data_type = 'immuno'
-
 
 path = f'E:/YandexDisk/Work/pydnameth/unn_epic/all_data'
 df_merged = pd.read_excel(f'{path}/table_part({part}).xlsx', converters={'ID': str}, engine='openpyxl')
@@ -57,30 +60,29 @@ elif target_part == 'Control':
 else:
     raise ValueError("Unsupported target_part")
 
-# define model evaluation method
-cv = RepeatedKFold(n_splits=4, n_repeats=10, random_state=1)
-
-# define model
-model_type = ElasticNet(max_iter=10000, tol=0.001)
-# define grid
-grid = dict()
-grid['alpha'] = np.logspace(-5, 1, 61)
-# grid['l1_ratio'] = np.linspace(0.0, 1.0, 11)
-grid['l1_ratio'] = [0.5]
-# define search
 scoring = 'r2'
-search = GridSearchCV(estimator=model_type, scoring=scoring, param_grid=grid, cv=cv, verbose=3)
-# perform the search
-results = search.fit(X_target, y_target)
-# summarize
+cv = RepeatedKFold(n_splits=3, n_repeats=5, random_state=1)
+model_type = ElasticNet(max_iter=10000, tol=0.01)
 
-model = search.best_estimator_
+# define grid
+alphas = np.logspace(-5, 1, 61)
+# alphas = np.logspace(-5, np.log10(0.3 + 0.7 * random.uniform(0, 1)), 51)
+# l1_ratios = np.linspace(0.0, 1.0, 6)
+l1_ratios = [0.5]
+
+grid = dict()
+grid['alpha'] = alphas
+grid['l1_ratio'] = l1_ratios
+# define search
+search = GridSearchCV(estimator=model_type, scoring=scoring, param_grid=grid, cv=cv, verbose=3)
+results = search.fit(X_target, y_target)
+
+model = results.best_estimator_
 
 score = model.score(X_target, y_target)
-
 params = copy.deepcopy(results.best_params_)
 
-searching_process = pd.DataFrame(search.cv_results_)
+searching_process = pd.DataFrame(results.cv_results_)
 searching_process.to_excel(
     f'{path}/clock/{data_type}/{target_part}/{y_name}/part({part})/searching_process_{scoring}.xlsx',
     index=False)

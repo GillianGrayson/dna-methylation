@@ -1,14 +1,14 @@
 clear all;
 
-x_var = 'Age';
-x_label = 'Age';
-%x_var = 'Dialysis_months_';
-%x_label = 'Dialysis (months)';
+%x_var = 'Age';
+%x_label = 'Age';
+x_var = 'Dialysis_months_';
+x_label = 'Dialysis (months)';
 target = 'Group';
-target_vals = {'Control', 'Disease'}';
-colors = {[0 1 0],[1 0 1]}';
-%target_vals = {'Disease'}';
-%colors = {[1 0 1]}';
+%target_vals = {'F', 'M'}';
+%colors = {[1 0 0],[0 0 1]}';
+target_vals = {'Disease'}';
+colors = {[1 0 1]}';
 bin_size = 5;
 FaceAlpha = 0.5;
 

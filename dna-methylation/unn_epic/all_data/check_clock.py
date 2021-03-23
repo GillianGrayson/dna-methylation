@@ -21,13 +21,13 @@ def calc_metrics(model, X, y, comment, params):
 
 features_type = 'immuno'
 
-y_name = 'DNAmAgeHannum'
+y_name = 'Age'
 part = 'v2'
 
 target_part = 'Control'
 
 path = f'E:/YandexDisk/Work/pydnameth/unn_epic/all_data'
-fn = 'E:/YandexDisk/Work/pydnameth/vedunova/I111/MULTIPLEX_all.xlsx'
+fn = 'E:/YandexDisk/Work/pydnameth/unn_epic/all_data/raw/immuno_clocks.xlsx'
 df_merged = pd.read_excel(fn, converters={'ID': str}, engine='openpyxl')
 model_df = pd.read_excel(f'{path}/clock/{features_type}/{target_part}/{y_name}/part({part})/clock.xlsx', engine='openpyxl')
 
@@ -39,6 +39,6 @@ for index, row in df_merged.iterrows():
     for feat_id in range(1, len(features)):
         predicted[index] += row[features[feat_id]] * coefs[feat_id]
 
-df_merged[f'CKDAge_{y_name}_{target_part}_CHECK'] = predicted
+df_merged[f'Immuno{y_name}'] = predicted
 
 df_merged.to_excel(fn, index=False)

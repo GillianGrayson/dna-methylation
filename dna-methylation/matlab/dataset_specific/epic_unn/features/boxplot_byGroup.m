@@ -1,12 +1,12 @@
 clear all;
 
-part = 'v2';
+part = 'immuno';
 
-target = 'IL_12_p40';
-group_feature = 'Group';
-groups = {'Control', 'Disease'}';
+target = 'ImmunoDNAmGrimAge';
+group_feature = 'Sex';
+groups = {'F', 'M'}';
 
-colors = {[0 1 0], [1 0 1]}';
+colors = {[1 0 0], [0 0 1]}';
 
 opacity = 0.65;
 

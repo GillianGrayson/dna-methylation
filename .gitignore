@@ -128,3 +128,5 @@ dna-methylation/r/fisher/\.Rhistory
 dna-methylation/routines/mortality_score\.txt
 
 dna-methylation/routines/phenotypic_age\.txt
+
+*.fig
