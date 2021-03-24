@@ -65,7 +65,11 @@ metrics = [
     'cpg',
     'genes',
     'mixed_anova_pval',
-    'diff_kw_pval'
+    'diff_kw_pval',
+    'mean_bef_ctrl',
+    'mean_aft_ctrl',
+    'mean_bef_case',
+    'mean_aft_case'
 ]
 res = dict((x, []) for x in metrics)
 
@@ -78,6 +82,8 @@ anova_dict = {
 anova_df = pd.DataFrame(anova_dict)
 
 kw_dict = {
+    'betas_bef': [0] * obs_bef.shape[0],
+    'betas_aft': [0] * obs_bef.shape[0],
     'betas_diff': [0] * obs_bef.shape[0],
     'group': obs_bef['COVID'].to_list(),
     'subject': obs_bef['ID'].to_list()
@@ -101,7 +107,17 @@ for cpg in tqdm(betas_bef.index, mininterval=5, desc='cpgs_full'):
     aov = pg.mixed_anova(dv='betas', within='time', between='group', subject='subject', data=anova_df)
     res['mixed_anova_pval'].append(aov.loc[aov['Source'] == 'Interaction', 'p-unc'].values[0])
 
+    kw_df.loc[:, 'betas_bef'] = list(dep_bef)
+    kw_df.loc[:, 'betas_aft'] = list(dep_aft)
     kw_df.loc[:, 'betas_diff'] = list(map(sub, dep_aft, dep_bef))
+    vals_bef_ctrl = kw_df.loc[kw_df['group'] == 'no', 'betas_bef'].values
+    vals_aft_ctrl = kw_df.loc[kw_df['group'] == 'no', 'betas_aft'].values
+    vals_bef_case = kw_df.loc[kw_df['group'] == 'yes', 'betas_bef'].values
+    vals_aft_case = kw_df.loc[kw_df['group'] == 'yes', 'betas_aft'].values
+    res['mean_bef_ctrl'].append(np.mean(vals_bef_ctrl))
+    res['mean_aft_ctrl'].append(np.mean(vals_aft_ctrl))
+    res['mean_bef_case'].append(np.mean(vals_bef_case))
+    res['mean_aft_case'].append(np.mean(vals_aft_case))
     vals_1 = kw_df.loc[kw_df['group'] == 'no', 'betas_diff'].values
     vals_2 = kw_df.loc[kw_df['group'] == 'yes', 'betas_diff'].values
     _, kw_p_value = stats.kruskal(vals_1, vals_2)
