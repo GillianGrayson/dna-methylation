@@ -123,7 +123,7 @@ for cpg in tqdm(betas_bef.index, mininterval=5, desc='cpgs_full'):
     _, kw_p_value = stats.kruskal(vals_1, vals_2)
     res['diff_kw_pval'].append(kw_p_value)
 
-for metric in metrics[2::]:
+for metric in metrics[2:4]:
     reject, pvals_corr, alphacSidak, alphacBonf = multipletests(res[metric], 0.05, method='fdr_bh')
     res[f'{metric}_fdr_bh'] = pvals_corr
     reject, pvals_corr, alphacSidak, alphacBonf = multipletests(res[metric], 0.05, method='bonferroni')
