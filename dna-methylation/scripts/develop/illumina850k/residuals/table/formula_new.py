@@ -39,10 +39,11 @@ data_params = {
 }
 
 method_params = {
-    'formula': 'cpg ~ Group + Sex*Age + Bcell + CD4T + CD8T + Neu + NK',
+    'formula': 'cpg ~ Group + Sex*Age',
 }
+data_params['cells'] = ['Bcell', 'CD4T', 'CD8T', 'Neu', 'NK']
 
-pdm.betas_table_formula_new(
+pdm.residuals_table_formula_new(
     data=data,
     annotations=annotations,
     attributes=attributes,

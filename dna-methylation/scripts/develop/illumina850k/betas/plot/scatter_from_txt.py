@@ -14,27 +14,26 @@ data = pdm.Data(
 annotations = pdm.Annotations(
     name='annotations',
     type='850k',
-    exclude='bad_cpgs_from_ChAMP',
-    select_dict={
-        'CHR': ['-X', '-Y']
-    }
+    exclude='none',
+    select_dict={}
 )
 
 observables = pdm.Observables(
-    name='observables',
-    types={}
+    name='observables_part(v1)',
+    types={'COVID': ['no', 'before'],
+           'Sample_Chronology': [0, 1]}
 )
 
 cells = pdm.Cells(
-    name='',
+    name='cell_counts_part(v1)',
     types='any'
 )
 
 target = get_target(data.base)
 #observables_list = get_observables_list(data.base)
 observables_list = [
-    {'Sample_Group': 'C'},
-    {'Sample_Group': 'T'}
+    {'Group': 'Control'},
+    {'Group': 'Disease'}
 ]
 data_params = get_data_params(data.base)
 

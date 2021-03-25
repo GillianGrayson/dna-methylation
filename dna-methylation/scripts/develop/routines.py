@@ -16,8 +16,9 @@ def get_data_params(data_base):
         }
     elif data_base == 'unn_epic':
         data_params = {
-            'norm': 'fun',
-            'part': 'wo_noIntensity_detP',
+            'part': 'v1',
+            'config': '0.01_0.10_0.10',
+            'norm': 'fun'
         }
     else:
         data_params = {}

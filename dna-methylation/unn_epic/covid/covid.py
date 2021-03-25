@@ -11,32 +11,40 @@ from statsmodels.stats.multitest import multipletests
 
 dataset_path = "E:/YandexDisk/Work/pydnameth/unn_epic"
 
-data_type = 'betas'
+data_type = 'residuals'
 norm = 'fun'
 part = 'v1'
 config = '0.01_0.10_0.10'
+cells = "['Bcell', 'CD4T', 'CD8T', 'Neu', 'NK']"
 
 fn_obs = f"{dataset_path}/observables_part({part})"
-if not os.path.isfile(f"{fn_obs}.pkl"):
+if not os.path.isfile(f"{fn_obs}_df.pkl"):
     obs = pd.read_excel(f"{fn_obs}.xlsx", index_col=0, engine='openpyxl')
-    obs.to_pickle(f"{fn_obs}.pkl")
+    obs.to_pickle(f"{fn_obs}_df.pkl")
 else:
-    obs = pd.read_pickle(f"{fn_obs}.pkl")
-
+    obs = pd.read_pickle(f"{fn_obs}_df.pkl")
 
 fn_betas = f"{dataset_path}/betas_part({part})_config({config})_norm({norm})"
-if not os.path.isfile(f"{fn_betas}.pkl"):
-    betas = pd.read_csv(f"{fn_betas}.txt", delimiter = "\t", index_col=0)
-    betas.to_pickle(f"{fn_betas}.pkl")
-else:
-    betas = pd.read_pickle(f"{fn_betas}.pkl")
+fn_residuals = f"{dataset_path}/betas_part({part})_config({config})_norm({norm})_cells({cells})"
+if data_type == 'betas':
+    if not os.path.isfile(f"{fn_betas}_df.pkl"):
+        data_df = pd.read_csv(f"{fn_betas}.txt", delimiter ="\t", index_col=0)
+        data_df.to_pickle(f"{fn_betas}_df.pkl")
+    else:
+        data_df = pd.read_pickle(f"{fn_betas}_df.pkl")
+elif data_type == 'residuals':
+    if not os.path.isfile(f"{fn_residuals}_df.pkl"):
+        data_df = pd.read_csv(f"{fn_residuals}.txt", delimiter ="\t", index_col=0)
+        data_df.to_pickle(f"{fn_residuals}_df.pkl")
+    else:
+        data_df = pd.read_pickle(f"{fn_residuals}_df.pkl")
 
 fn_ann = f"{dataset_path}/annotations"
-if not os.path.isfile(f"{fn_ann}.pkl"):
+if not os.path.isfile(f"{fn_ann}_df.pkl"):
     ann = pd.read_csv(f"{fn_ann}.txt", delimiter = "\t", index_col=0)
-    ann.to_pickle(f"{fn_ann}.pkl")
+    ann.to_pickle(f"{fn_ann}_df.pkl")
 else:
-    ann = pd.read_pickle(f"{fn_ann}.pkl")
+    ann = pd.read_pickle(f"{fn_ann}_df.pkl")
 
 obs_bef = obs.loc[(obs['Sample_Chronology'] == 1) & (obs['ID'] != 'I64_1')].copy(deep=True)
 obs_bef.loc[:, 'BetasColumn'] = ["X" + x for x in list(obs_bef.index)]
@@ -58,8 +66,8 @@ for l1,l2 in zip(obs_bef['ID'].to_list(), obs_aft['ID'].to_list()):
     if l1 != l2:
         raise ValueError('Wrong ID order in after and before')
 
-betas_bef = betas[sn_bef].copy(deep=True)
-betas_aft = betas[sn_aft].copy(deep=True)
+betas_bef = data_df[sn_bef].copy(deep=True)
+betas_aft = data_df[sn_aft].copy(deep=True)
 
 metrics = [
     'cpg',
@@ -133,5 +141,5 @@ if not os.path.exists(f'{dataset_path}/covid'):
     os.makedirs(f'{dataset_path}/covid')
 
 res_df = pd.DataFrame(res)
-fn_save = f"{dataset_path}/covid/table.xlsx"
+fn_save = f"{dataset_path}/covid/{data_type}.xlsx"
 res_df.to_excel(fn_save, index=False)

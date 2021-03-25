@@ -10,23 +10,22 @@ data = pdm.Data(
 annotations = pdm.Annotations(
     name='annotations',
     type='850k',
-    exclude='bad_cpgs_from_ChAMP',
-    select_dict={
-        'CHR': ['-X', '-Y']
-    }
+    exclude='none',
+    select_dict={}
 )
 
 observables = pdm.Observables(
-    name='observables',
-    types={}
+    name='observables_part(v1)',
+    types={'COVID': ['no', 'before'],
+           'Sample_Chronology': [0, 1]}
 )
 
 cells = pdm.Cells(
-    name='cell_counts',
+    name='cell_counts_part(v1)',
     types='any'
 )
 
-target = get_target(data.base)
+target = 'Group'
 attributes = pdm.Attributes(
     target=target,
     observables=observables,
@@ -37,7 +36,11 @@ method_params = {
     'observables': ['Sample_Group'],
 }
 
-data_params = get_data_params(data.base)
+data_params = {
+    'part': 'v1',
+    'config': '0.01_0.10_0.10',
+    'norm': 'fun'
+}
 data_params['cells'] = ['Bcell', 'CD4T', 'CD8T', 'Neu', 'NK']
 
 pdm.residuals_table_formula(
