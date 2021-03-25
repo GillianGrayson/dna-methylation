@@ -11,7 +11,7 @@ from statsmodels.stats.multitest import multipletests
 
 dataset_path = "E:/YandexDisk/Work/pydnameth/unn_epic"
 
-data_type = 'residuals'
+data_type = 'betas'
 norm = 'fun'
 part = 'v1'
 config = '0.01_0.10_0.10'
