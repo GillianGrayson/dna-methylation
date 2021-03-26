@@ -1,20 +1,20 @@
 clear all;
 
-part = 'v2';
+part = 'covid_single';
 
 x_var = 'Age';
 x_label = 'Age';
 xlims = [0; 100];
-y_var = 'CKDAge_DNAmAgeHannum_Control';
-y_label = 'ImmunoDNAmAgeHannum';
+y_var = 'DNAmGrimAge';
+y_label = 'DNAmGrimAge';
 ylims = [0; 100];
 y_label_acceleration = 'Age Acceleration';
 fit_range_mode = 'lim'; %'lim'; % 'minmax';
 legend_location = 'NorthWest';
 
-group_feature = 'Group';
-groups = {'Control', 'Disease'}';
-group_base = 'Control';
+group_feature = 'COVID_status';
+groups = {'before', 'after'}';
+group_base = 'before';
 colors = {[0 1 0], [1 0 1]}';
 
 opacity = 0.5;
@@ -28,7 +28,44 @@ fn = sprintf('%s/all_data/table_part(%s).xlsx', path, part);
 opts = detectImportOptions(fn);
 opts = setvartype(opts, {group_feature}, 'string');
 tbl = readtable(fn, opts);
-   
+
+base_filter = true(height(tbl), 1);
+keySet_inc = {'Group', 'Sample_Chronology'};
+valueSet_inc = {{'Disease'}, {0, 1, 2}};
+keySet_dec = {'ID'};
+valueSet_dec = {{'I64_2'}};
+fitering_inc = containers.Map(keySet_inc,valueSet_inc);
+fitering_dec = containers.Map(keySet_dec,valueSet_dec);
+for k = keys(fitering_inc)
+    b = false(height(tbl), 1);
+    vals = fitering_inc(k{1});
+    column = tbl.(k{1});
+    for v_id = 1:size(vals, 2)
+        if iscell(column)
+            b = b | strcmp(column, vals{v_id});
+        else
+            b = b | (column == vals{v_id});
+        end
+    end
+    base_filter = base_filter & b;
+end
+for k = keys(fitering_dec)
+    b = false(height(tbl), 1);
+    vals = fitering_dec(k{1});
+    column = tbl.(k{1});
+    for v_id = 1:size(vals, 2)
+        if iscell(column)
+            b = b | (~strcmp(column, vals{v_id}));
+        else
+            b = b | (column ~= vals{v_id});
+        end
+    end
+    base_filter = base_filter & b;
+end
+sum(base_filter)
+
+tbl = tbl(base_filter, :);
+
 status = tbl.(group_feature);
 x_values = tbl.(x_var);
 y_values = tbl.(y_var);
@@ -61,7 +98,7 @@ for g_id = 1:size(groups, 1)
     %legend(h, sprintf('%s $(R^2=%0.2f)$', groups{g_id}, R2), 'Interpreter','latex');
     legend(h, sprintf('%s', groups{g_id}), 'Interpreter','latex');
 
-    if (groups{g_id} == group_base)
+    if (strcmp(groups{g_id}, group_base))
         if strcmp(fit_range_mode, 'minmax')
             x_fit = [min(xs); max(xs)];
         else

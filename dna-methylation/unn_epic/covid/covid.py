@@ -11,7 +11,7 @@ from statsmodels.stats.multitest import multipletests
 
 dataset_path = "E:/YandexDisk/Work/pydnameth/unn_epic"
 
-data_type = 'betas'
+data_type = 'residuals'
 norm = 'fun'
 part = 'v1'
 config = '0.01_0.10_0.10'
@@ -25,7 +25,7 @@ else:
     obs = pd.read_pickle(f"{fn_obs}_df.pkl")
 
 fn_betas = f"{dataset_path}/betas_part({part})_config({config})_norm({norm})"
-fn_residuals = f"{dataset_path}/betas_part({part})_config({config})_norm({norm})_cells({cells})"
+fn_residuals = f"{dataset_path}/residuals_part({part})_config({config})_norm({norm})_cells({cells})"
 if data_type == 'betas':
     if not os.path.isfile(f"{fn_betas}_df.pkl"):
         data_df = pd.read_csv(f"{fn_betas}.txt", delimiter ="\t", index_col=0)
