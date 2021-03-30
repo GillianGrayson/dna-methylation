@@ -8,7 +8,7 @@ opacity = 0.65;
 
 cpgs = importdata(sprintf('%s/covid/cpgs.txt', dataset_path));
 
-%res_table = readtable(sprintf('%s/covid/table.xlsx', dataset_path), 'ReadRowNames', true);
+res_table = readtable(sprintf('%s/covid/current_table.xlsx', dataset_path), 'ReadRowNames', true);
 
 obs_before = obs((obs.('Sample_Chronology') == 1) & (~strcmp(obs.('ID'), 'I64_1')), :);
 obs_before.('BetasColumn') = strcat('X', obs_before.Properties.RowNames);
