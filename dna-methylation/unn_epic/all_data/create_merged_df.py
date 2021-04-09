@@ -6,6 +6,7 @@ import collections
 path = f'E:/YandexDisk/Work/pydnameth/unn_epic/all_data'
 
 df_DNAm = pd.read_excel(f'{path}/raw/DNAm_part(v2).xlsx', converters={'ID': str}, engine='openpyxl')
+df_cells = pd.read_excel(f'{path}/raw/cells_part(v1).xlsx', converters={'ID': str}, engine='openpyxl')
 df_biochem = pd.read_excel(f'{path}/raw/FGF23_FGF21_Klotho_GDF15_all.xlsx', converters={'ID': str}, engine='openpyxl')
 df_multiplex = pd.read_excel(f'{path}/raw/MULTIPLEX_all.xlsx', converters={'ID': str}, engine='openpyxl')
 df_gdoc = pd.read_excel(f'{path}/raw/gdoc_part(v2).xlsx', converters={'ID': str}, engine='openpyxl')
@@ -22,7 +23,7 @@ print(len(set_IDs))
 print([item for item, count in collections.Counter(IDs).items() if count > 1])
 
 
-data_frames = [df_tmp, df_drug, df_dignosis]
+data_frames = [df_tmp, df_cells]
 df_merged = reduce(lambda left, right: pd.merge(left, right, on=['ID']), data_frames)
 df_merged.to_excel(f'{path}/current_table.xlsx', index=False)
 

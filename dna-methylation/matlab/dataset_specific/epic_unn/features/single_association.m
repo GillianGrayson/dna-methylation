@@ -44,6 +44,8 @@ for m_id = 1 : size(metrics, 1)
             xlab = '$-\log_{10}($Kruskal-Wallis p-value$)$';
         elseif strcmp(m, 'pb_p_value')
             xlab = '$-\log_{10}($Point-Biserial p-value$)$';
+        elseif strcmp(m, 'mw_p_value')
+            xlab = '$-\log_{10}($p-value$)$';
         else
             tmp = spl(end);
             if strcmp(tmp, 'C')

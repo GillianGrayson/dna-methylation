@@ -6,7 +6,7 @@ end
 colors = {[0 1 0], [1 0 1]}';
 opacity = 0.65;
 
-cpgs = importdata(sprintf('%s/covid/cpgs.txt', dataset_path));
+cpgs = importdata(sprintf('%s/covid/cpgs_mike_1.txt', dataset_path));
 
 res_table = readtable(sprintf('%s/covid/current_table.xlsx', dataset_path), 'ReadRowNames', true);
 
@@ -123,9 +123,9 @@ for cpg_id = 1:size(cpgs, 1)
     grid on;
     ylabel('$\beta$', 'Interpreter', 'latex');
     
-    anova_pVal = res_table{cpg, 'mixed_anova_pval'};
-    anova_pVal_fdr_bh = res_table{cpg, 'mixed_anova_pval_fdr_bh'};
-    title(sprintf('%s (%s): mixed ANOVA p-value=%0.2e (FDR=%0.2e)', cpg, genes, anova_pVal, anova_pVal_fdr_bh), 'FontSize', 16, 'FontWeight', 'normal', 'Interpreter', 'latex');
+%     anova_pVal = res_table{cpg, 'mixed_anova_pval'};
+%     anova_pVal_fdr_bh = res_table{cpg, 'mixed_anova_pval_fdr_bh'};
+%     title(sprintf('%s (%s): mixed ANOVA p-value=%0.2e (FDR=%0.2e)', cpg, genes, anova_pVal, anova_pVal_fdr_bh), 'FontSize', 16, 'FontWeight', 'normal', 'Interpreter', 'latex');
     hold all;
     
     fn_fig = sprintf('%s/%d_%s(%s)_mANOVA', figures_path, cpg_id, cpg, genes);
@@ -176,9 +176,9 @@ for cpg_id = 1:size(cpgs, 1)
     box on;
     grid on;
     ylabel('$\beta_{\mathrm{after}} - \beta_{\mathrm{before}}$', 'Interpreter', 'latex')
-    kw_pVal = res_table{cpg, 'diff_kw_pval'};
-    kw_pVal_fdr_bh = res_table{cpg, 'diff_kw_pval_fdr_bh'};
-    title(sprintf('%s (%s): KW p-value=%0.2e (FDR=%0.2e)', cpg, genes, kw_pVal, kw_pVal_fdr_bh), 'FontSize', 16, 'FontWeight', 'normal', 'Interpreter', 'latex');
+%     kw_pVal = res_table{cpg, 'diff_kw_pval'};
+%     kw_pVal_fdr_bh = res_table{cpg, 'diff_kw_pval_fdr_bh'};
+%     title(sprintf('%s (%s): KW p-value=%0.2e (FDR=%0.2e)', cpg, genes, kw_pVal, kw_pVal_fdr_bh), 'FontSize', 16, 'FontWeight', 'normal', 'Interpreter', 'latex');
     hold all;
     
     fn_fig = sprintf('%s/%d_%s(%s)_KW', figures_path, cpg_id, cpg, genes);

@@ -3,7 +3,7 @@ from functions.routines import label_race
 
 
 path = f'E:/YandexDisk/Work/pydnameth/unn_epic/all_data/raw/origin'
-columns = ['diseases']
+columns = ['drugs']
 
 df = pd.read_excel(f"{path}/diagnosis_drug_all.xlsx", engine='openpyxl')
 
@@ -25,7 +25,7 @@ for col in columns:
     for cd in cds:
         df[cd] = df.apply(lambda row: label_race(row, cd, col), axis=1)
 
-df.to_excel(f"{path}/diseases_tmp.xlsx", index=False)
+df.to_excel(f"{path}/drugs_tmp.xlsx", index=False)
 
 
 

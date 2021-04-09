@@ -17,7 +17,8 @@ annotations = pdm.Annotations(
 observables = pdm.Observables(
     name='observables_part(v1)',
     types={'COVID': ['no', 'before'],
-           'Sample_Chronology': [0, 1]}
+           'Sample_Chronology': [0, 1],
+           'is_v2': ['yes']}
 )
 
 cells = pdm.Cells(
@@ -39,7 +40,7 @@ data_params = {
 }
 
 method_params = {
-    'formula': 'cpg ~ Group + Sex*Age + Bcell + CD4T + CD8T + Neu + NK',
+    'formula': 'cpg ~ Group + Sex + Age + Bcell + CD4T + CD8T + Neu + NK',
 }
 
 pdm.betas_table_formula_new(

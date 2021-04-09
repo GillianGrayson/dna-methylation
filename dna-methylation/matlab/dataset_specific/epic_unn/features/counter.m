@@ -1,11 +1,11 @@
 clear all;
 
-part = 'wo_noIntensity_detP_H17+_negDNAmPhenoAge';
+part = 'v2';
 
 count_target = 'yes';
-count_limit = 3;
+count_limit = 5;
 
-features_type = 'drug';
+features_type = 'drugs';
 y_label = 'Medicines';
 
 opacity = 0.65;
@@ -18,11 +18,56 @@ if ~exist(figures_path, 'dir')
     mkdir(figures_path)
 end
 
-target_features = importdata(sprintf('%s/all_data/%s_list.txt', path, features_type));
+target_features = importdata(sprintf('%s/all_data/%s.txt', path, features_type));
 
 fn = sprintf('%s/all_data/table_part(%s).xlsx', path, part);
 opts = detectImportOptions(fn);
 tbl = readtable(fn, opts);
+
+keySet_inc = {'Group'};
+valueSet_inc = {{'Disease'}};
+keySet_dec = {};
+valueSet_dec = {{}};
+base_filter = true(height(tbl), 1);
+if size(keySet_inc, 1) > 0
+    fitering_inc = containers.Map(keySet_inc,valueSet_inc);
+else
+    fitering_inc = containers.Map();
+end
+for k = keys(fitering_inc)
+    b = false(height(tbl), 1);
+    vals = fitering_inc(k{1});
+    column = tbl.(k{1});
+    for v_id = 1:size(vals, 2)
+        if iscell(column)
+            b = b | strcmp(column, vals{v_id});
+        else
+            b = b | (column == vals{v_id});
+        end
+    end
+    base_filter = base_filter & b;
+end
+if size(keySet_dec, 1) > 0
+    fitering_dec = containers.Map(keySet_dec,valueSet_dec);
+else
+    fitering_dec = containers.Map();
+end
+for k = keys(fitering_dec)
+    b = false(height(tbl), 1);
+    vals = fitering_dec(k{1});
+    column = tbl.(k{1});
+    for v_id = 1:size(vals, 2)
+        if iscell(column)
+            b = b | (~strcmp(column, vals{v_id}));
+        else
+            b = b | (column ~= vals{v_id});
+        end
+    end
+    base_filter = base_filter & b;
+end
+sum(base_filter)
+
+tbl = tbl(base_filter, :);
 
 counts = zeros(size(target_features, 1), 1);
 for f_id = 1:size(target_features, 1)

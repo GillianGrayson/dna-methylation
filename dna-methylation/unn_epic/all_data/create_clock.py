@@ -24,7 +24,7 @@ def calc_metrics(model, X, y, comment, params):
     return y_pred
 
 
-y_name = 'DNAmAgeHannum'
+y_name = 'Age'
 part = 'v2'
 
 target_part = 'Control'

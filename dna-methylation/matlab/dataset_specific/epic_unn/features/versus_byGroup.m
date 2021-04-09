@@ -1,23 +1,26 @@
 clear all;
 
-part = 'covid_single';
+part = 'v2';
 
 x_var = 'Age';
 x_label = 'Age';
 xlims = [0; 100];
-y_var = 'DNAmGrimAge';
-y_label = 'DNAmGrimAge';
+y_var = 'PhenoAge';
+y_label = 'Phenotypic Age';
 ylims = [0; 100];
 y_label_acceleration = 'Age Acceleration';
 fit_range_mode = 'lim'; %'lim'; % 'minmax';
-legend_location = 'NorthWest';
 
-group_feature = 'COVID_status';
-groups = {'before', 'after'}';
-group_base = 'before';
+group_feature = 'Group';
+groups = {'Control', 'Disease'}';
+group_base = 'Control';
 colors = {[0 1 0], [1 0 1]}';
 
 opacity = 0.5;
+globalFontSize = 36;
+legendFontSize = 18;
+legend_location = 'NorthEast';
+yLimAA = [-15, 70];
 
 path = 'E:/YandexDisk/Work/pydnameth/unn_epic';
 figures_path = sprintf('E:/YandexDisk/Work/pydnameth/unn_epic/figures/features/versus_byGroup/part(%s)', part);
@@ -29,42 +32,22 @@ opts = detectImportOptions(fn);
 opts = setvartype(opts, {group_feature}, 'string');
 tbl = readtable(fn, opts);
 
-base_filter = true(height(tbl), 1);
-keySet_inc = {'Group', 'Sample_Chronology'};
-valueSet_inc = {{'Disease'}, {0, 1, 2}};
-keySet_dec = {'ID'};
-valueSet_dec = {{'I64_2'}};
-fitering_inc = containers.Map(keySet_inc,valueSet_inc);
-fitering_dec = containers.Map(keySet_dec,valueSet_dec);
-for k = keys(fitering_inc)
-    b = false(height(tbl), 1);
-    vals = fitering_inc(k{1});
-    column = tbl.(k{1});
-    for v_id = 1:size(vals, 2)
-        if iscell(column)
-            b = b | strcmp(column, vals{v_id});
-        else
-            b = b | (column == vals{v_id});
-        end
-    end
-    base_filter = base_filter & b;
+incKeys = {};
+incVals = {{}};
+decKeys = {};
+decVals = {{}};
+if size(incKeys, 1) > 0
+    incMap = containers.Map(incKeys,incVals);
+else
+    incMap = containers.Map();
 end
-for k = keys(fitering_dec)
-    b = false(height(tbl), 1);
-    vals = fitering_dec(k{1});
-    column = tbl.(k{1});
-    for v_id = 1:size(vals, 2)
-        if iscell(column)
-            b = b | (~strcmp(column, vals{v_id}));
-        else
-            b = b | (column ~= vals{v_id});
-        end
-    end
-    base_filter = base_filter & b;
+if size(decKeys, 1) > 0
+    decMap = containers.Map(decKeys,decVals);
+else
+    decMap = containers.Map();
 end
-sum(base_filter)
-
-tbl = tbl(base_filter, :);
+indexesFilt = get_filtered_indexes(tbl, incMap, decMap); 
+tbl = tbl(indexesFilt, :);
 
 status = tbl.(group_feature);
 x_values = tbl.(x_var);
@@ -118,7 +101,7 @@ for g_id = 1:size(groups, 1)
     
     diffs = zeros(size(xs, 1), 1);
     for p_id = 1:size(xs, 1)
-        y_fit = coeffs{'(Intercept)','Estimate'} + xs(p_id) * coeffs{x_var,'Estimate'};
+        y_fit = coeffs{'(Intercept)','Estimate'} + xs(p_id) * coeffs{x_var, 'Estimate'};
         diffs(p_id) = ys(p_id) - y_fit;
     end
 
@@ -145,50 +128,82 @@ fn_fig = sprintf('%s/x(%s)_y(%s)_group(%s)_scatter', figures_path, x_var, y_var,
 oqs_save_fig(fig1, fn_fig)
 saveas(fig1, sprintf('%s.png', fn_fig));
 
-if size(groups, 1) > 1
-    
-    agediff  = [];
-    mod_status = [];
-    for g_id = 1:size(groups, 1)
-        agediff = vertcat(agediff, diffs_all{g_id});
-        tmp = strings(size(diffs_all{g_id}, 1), 1);
-        tmp(:) = groups{g_id};
-        mod_status = vertcat(mod_status, tmp);
-    end
-    
-    fig = figure;
-    propertyeditor('on');
-    positions = 0.5 * linspace(1, size(groups, 1), size(groups, 1));
-    for g_id = 1:size(groups, 1)
-        b = boxplot(diffs_all{g_id},'Notch', 'off', 'positions', positions(g_id), 'Colors', 'k');
-        set(gca, 'FontSize', 40);
-        all_items = handle(b);
-        tags = get(all_items,'tag');
-        idx = strcmpi(tags,'box');
-        boxes = all_items(idx);
-        set(all_items,'linewidth',3)
-        idx = strcmpi(tags,'Outliers');
-        outliers = all_items(idx);
-        set(outliers, 'visible', 'off')
-        hold all;
-        xs = positions(g_id) * ones(size(diffs_all{g_id}, 1), 1) + ((rand(size(diffs_all{g_id}))-0.5)/10);
-        h = scatter(xs, diffs_all{g_id}, 100, 'o', 'LineWidth',  1, 'MarkerEdgeColor', 'black', 'MarkerFaceColor', colors{g_id}, 'MarkerEdgeAlpha', opacity, 'MarkerFaceAlpha', opacity);
-        h.Annotation.LegendInformation.IconDisplayStyle = 'off';
-        hold all;
-    end
-    xticks(positions);
-    xticklabels(groups);
-    axis auto;
-    xlim([min(positions) - 0.3, max(positions) + 0.3])
-    set(gca, 'TickLabelInterpreter', 'latex')
-    box on;
-    grid on;
-    p = kruskalwallis(agediff, mod_status, 'off');
-    ylabel(sprintf(y_label_acceleration), 'Interpreter', 'latex')
-    title(sprintf('%s (KW p-value: %0.2e)', y_label, p), 'FontSize', 30, 'FontWeight', 'normal', 'Interpreter', 'latex');
-    hold all;
-    
-    fn_fig = sprintf('%s/x(%s)_y(%s)_group(%s)_KW', figures_path, x_var, y_var, group_feature);
-    oqs_save_fig(gcf, fn_fig)
-    saveas(gcf, sprintf('%s.png', fn_fig));
+
+agediff  = [];
+mod_status = [];
+for g_id = 1:size(groups, 1)
+    agediff = vertcat(agediff, diffs_all{g_id});
+    tmp = strings(size(diffs_all{g_id}, 1), 1);
+    tmp(:) = groups{g_id};
+    mod_status = vertcat(mod_status, tmp);
 end
+
+fig = figure;
+propertyeditor('on');
+
+
+subplot(1, 2, 2)
+for g_id = 1:size(groups, 1)
+    [f,xi] = ksdensity(diffs_all{g_id});
+     
+    hline = plot(f, xi, 'LineWidth', 2, 'Color', colors{g_id});
+    legend(hline, sprintf('%s', groups{g_id}))
+    set(gca, 'FontSize', globalFontSize);
+    ylabel('')
+    set(gca,'yticklabel',{[]})
+    hold all;
+end
+ylim(yLimAA);
+yl = get(gca, 'YLim');
+legend(gca,'off');
+legend('Location', legend_location, 'NumColumns', 1, 'Interpreter', 'latex');
+legend('FontSize', legendFontSize);
+title('Density', 'FontSize', globalFontSize, 'FontWeight', 'normal', 'Interpreter', 'latex');
+set(gca, 'TickLabelInterpreter', 'latex')
+set(gca, 'Position', [0.705 0.09 0.28 0.835]);
+box on;
+grid on;
+
+subplot(1, 2, 1)
+positions = 0.5 * linspace(1, size(groups, 1), size(groups, 1));
+for g_id = 1:size(groups, 1)
+    b = boxplot(diffs_all{g_id},'Notch', 'off', 'positions', positions(g_id), 'Colors', 'k');
+    set(gca, 'FontSize', 40);
+    all_items = handle(b);
+    tags = get(all_items,'tag');
+    idx = strcmpi(tags,'box');
+    boxes = all_items(idx);
+    set(all_items,'linewidth',3)
+    idx = strcmpi(tags,'Outliers');
+    outliers = all_items(idx);
+    set(outliers, 'visible', 'off')
+    hold all;
+    xs = positions(g_id) * ones(size(diffs_all{g_id}, 1), 1) + ((rand(size(diffs_all{g_id}))-0.5)/10);
+    h = scatter(xs, diffs_all{g_id}, 100, 'o', 'LineWidth',  1, 'MarkerEdgeColor', 'black', 'MarkerFaceColor', colors{g_id}, 'MarkerEdgeAlpha', opacity, 'MarkerFaceAlpha', opacity);
+    h.Annotation.LegendInformation.IconDisplayStyle = 'off';
+    hold all;
+end
+xticks(positions);
+xticklabels(groups);
+axis auto;
+xlim([min(positions) - 0.3, max(positions) + 0.3])
+ylabel(sprintf(y_label_acceleration), 'Interpreter', 'latex')
+set(gca, 'TickLabelInterpreter', 'latex')
+box on;
+grid on;
+
+pValueKW = kruskalwallis(agediff, mod_status, 'off');
+if size(groups, 1) == 2
+    pValue = ranksum(diffs_all{1}, diffs_all{2});
+else
+    pValue = pValueKW;
+end
+str = sprintf('%s p-value: %0.2e', y_label, pValue);
+title(str, 'FontSize', globalFontSize-8, 'FontWeight', 'normal', 'Interpreter', 'latex');
+set(gca, 'Position', [0.13 0.09 0.57 0.835]);
+ylim(yl);
+hold all;
+
+fn_fig = sprintf('%s/x(%s)_y(%s)_group(%s)_KW', figures_path, x_var, y_var, group_feature);
+oqs_save_fig(gcf, fn_fig)
+saveas(gcf, sprintf('%s.png', fn_fig));
