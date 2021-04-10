@@ -2,14 +2,14 @@ clear all;
 
 part = 'v2';
 
-x_var = 'Age';
-x_label = 'Age';
+x_var = 'ImmunoAgeAA';
+x_label = 'ImmunoAgeAA';
 xlims = [0; 100];
-y_var = 'PhenoAge';
-y_label = 'Phenotypic Age';
+y_var = 'MIG';
+y_label = 'MIG';
 ylims = [0; 100];
 y_label_acceleration = 'Age Acceleration';
-fit_range_mode = 'lim'; %'lim'; % 'minmax';
+fit_range_mode = 'minmax'; %'lim'; % 'minmax';
 
 group_feature = 'Group';
 groups = {'Control', 'Disease'}';
@@ -29,7 +29,6 @@ if ~exist(figures_path, 'dir')
 end
 fn = sprintf('%s/all_data/table_part(%s).xlsx', path, part);
 opts = detectImportOptions(fn);
-opts = setvartype(opts, {group_feature}, 'string');
 tbl = readtable(fn, opts);
 
 incKeys = {};
@@ -62,8 +61,8 @@ ys_all = {};
 coeffs = table();
 for g_id = 1:size(groups, 1)
     
-    xs = tbl{tbl.(group_feature) == groups{g_id}, x_var};
-    ys = tbl{tbl.(group_feature) == groups{g_id}, y_var};
+    xs = tbl{strcmp(tbl.(group_feature), groups{g_id}), x_var};
+    ys = tbl{strcmp(tbl.(group_feature), groups{g_id}), y_var};
    
     xs_all{g_id} = xs;
     ys_all{g_id} = ys;
@@ -81,15 +80,16 @@ for g_id = 1:size(groups, 1)
     %legend(h, sprintf('%s $(R^2=%0.2f)$', groups{g_id}, R2), 'Interpreter','latex');
     legend(h, sprintf('%s', groups{g_id}), 'Interpreter','latex');
 
+    
+    if strcmp(fit_range_mode, 'minmax')
+        x_fit = [min(xs); max(xs)];
+    else
+        x_fit = [xlims(1); xlims(2)];
+    end
+    y_fit = lm.Coefficients{'(Intercept)','Estimate'} + x_fit * lm.Coefficients{x_var,'Estimate'};
+    h = plot(x_fit, y_fit, 'LineWidth', 2, 'Color', color);
+    h.Annotation.LegendInformation.IconDisplayStyle = 'off';
     if (strcmp(groups{g_id}, group_base))
-        if strcmp(fit_range_mode, 'minmax')
-            x_fit = [min(xs); max(xs)];
-        else
-            x_fit = [xlims(1); xlims(2)];
-        end
-        y_fit = lm.Coefficients{'(Intercept)','Estimate'} + x_fit * lm.Coefficients{x_var,'Estimate'};
-        h = plot(x_fit, y_fit, 'LineWidth', 2, 'Color', color);
-        h.Annotation.LegendInformation.IconDisplayStyle = 'off';
         coeffs = lm.Coefficients;
     end
 end
@@ -113,7 +113,9 @@ hold all;
 set(gca, 'FontSize', 40);
 xlabel(x_label, 'Interpreter', 'latex');
 set(gca, 'FontSize', 40);
-ylabel(y_label, 'Interpreter', 'latex');
+ylabel(strrep(y_label,'_','\_'), 'Interpreter', 'latex');
+ax = gca;
+set(ax,'TickLabelInterpreter','Latex')
 bissectrice_s = min(xlims(1), ylims(1));
 bissectrice_f = max(xlims(2), ylims(2));
 hold all;

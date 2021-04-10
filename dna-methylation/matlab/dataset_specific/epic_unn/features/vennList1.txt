@@ -1,0 +1,13 @@
+M_CSF
+MIG
+IL_12_p40
+MIP_1b
+IL_6
+FLT_3L
+IL_17A
+FGF_2
+VEGF_A
+GROa
+MIP_1a
+IL_1b
+Fraktalkine

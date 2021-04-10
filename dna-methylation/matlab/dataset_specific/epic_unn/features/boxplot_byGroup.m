@@ -3,7 +3,7 @@ clear all;
 part = 'v2';
 
 %features_types = {'CD4T', 'NK', 'Mono', 'Gran', 'PlasmaBlast', 'CD8pCD28nCD45RAn', 'CD8.naive'}';
-target = 'MIG';
+target = 'ImmunoAgeAA';
 group_feature = 'Group';
 groups = {'Control', 'Disease'}';
 
@@ -13,7 +13,7 @@ opacity = 0.65;
 globalFontSize = 36;
 legendFontSize = 18;
 legend_location = 'NorthEast';
-yLim = [-100, 20000];
+yLim = [-50, 200];
 %yLim = 'auto';
 
 path = 'E:/YandexDisk/Work/pydnameth/unn_epic';
@@ -94,12 +94,14 @@ for g_id = 1:size(groups, 1)
 end
 ylim(yLim);
 yl = get(gca, 'YLim');
+ylim(yl);
 legend(gca,'off');
 legend('Location', legend_location, 'NumColumns', 1, 'Interpreter', 'latex');
 legend('FontSize', legendFontSize);
 title('Density', 'FontSize', globalFontSize, 'FontWeight', 'normal', 'Interpreter', 'latex');
 set(gca, 'TickLabelInterpreter', 'latex')
 set(gca, 'Position', [0.705 0.09 0.28 0.835]);
+xlim([0, inf]);
 box on;
 grid on;
 
