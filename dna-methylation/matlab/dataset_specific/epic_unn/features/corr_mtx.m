@@ -9,8 +9,10 @@ opacity = 0.5;
 globalFontSize = 16;
 xFontSize = 10;
 yFontSize = 10;
+numFontSize = 4;
 xBinPos = 0.015;
 yBinPos = 0.0167;
+isNum = 1;
 
 corr_x_features = importdata('corr_x_features.txt');
 corr_x_labels = importdata('corr_x_labels.txt');
@@ -81,6 +83,17 @@ xtickangle(90);
 ax.XAxis.FontSize = xFontSize;
 yticks(ys);
 yticklabels(strrep(corr_y_labels,'_','\_'));
+if isNum == 1
+    for x_id = 1:xSize
+        for y_id = 1:ySize
+            pos_x = (x_id - 0.3);
+            pos_y = y_id;
+            
+            msg = sprintf('%0.2f', cm(x_id, y_id));
+            text(pos_x, pos_y, msg, 'FontSize', numFontSize, 'Interpreter', 'latex', 'Rotation', 0);
+        end
+    end
+end
 ax.YAxis.FontSize = xFontSize;
 set(ax,'TickLabelInterpreter','Latex')
 set(gca, 'Position', position);
@@ -88,6 +101,7 @@ a = gca;
 b = copyobj(a, gcf);
 set(b, 'Xcolor', 'none', 'YColor', 'none', 'XTickLabel', [], 'YTickLabel', [])
 hold all;
+
 
 fn_fig = sprintf('%s/%s_%s', figures_path, corrType, group);
 oqs_save_fig(gcf, fn_fig)

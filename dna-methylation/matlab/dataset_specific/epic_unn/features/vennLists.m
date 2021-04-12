@@ -9,9 +9,10 @@ end
 
 list1 = importdata('vennList1.txt');
 list2 = importdata('vennList2.txt');
-names = {'Associated with CKD', 'Associated with Age (Control)'};
+list3 = importdata('vennList3.txt');
+names = {'Associated with CKD', 'Associated with Age (Control)', 'Associated with Age Acceleration (Disease)'};
 
-fig = plotVenn2({list1, list2}, names, 50, 30);
+fig = plotVenn3({list1, list2, list3}, names, 50, 20);
 fn_fig = sprintf('%s/%s', figures_path, strjoin(names, '_'));
 oqs_save_fig(gcf, fn_fig)
 

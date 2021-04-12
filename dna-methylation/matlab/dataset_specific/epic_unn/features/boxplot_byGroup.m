@@ -4,6 +4,7 @@ part = 'v2';
 
 %features_types = {'CD4T', 'NK', 'Mono', 'Gran', 'PlasmaBlast', 'CD8pCD28nCD45RAn', 'CD8.naive'}';
 target = 'ImmunoAgeAA';
+label = 'ImmunoAgeAcceleration';
 group_feature = 'Group';
 groups = {'Control', 'Disease'}';
 
@@ -130,7 +131,7 @@ xticklabels(groups);
 axis auto;
 xlim([min(positions) - 0.3, max(positions) + 0.3])
 set(gca, 'TickLabelInterpreter', 'latex')
-ylabel(target, 'Interpreter', 'latex')
+ylabel(label, 'Interpreter', 'latex')
 box on;
 grid on;
 

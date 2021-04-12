@@ -1,7 +1,7 @@
-DNAmAgeHannumAcc
-DNAmAgeAcc
-DNAmPhenoAgeAcc
-DNAmGrimAgeAcc
-PhenoAgeAcc
-ImmunoAgeAcc
-IEAA
+Age
+DNAmAgeHannum
+DNAmAge
+DNAmPhenoAge
+DNAmGrimAge
+PhenotypicalAge
+ImmunoAge

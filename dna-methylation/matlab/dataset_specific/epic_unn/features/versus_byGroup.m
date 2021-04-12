@@ -2,14 +2,14 @@ clear all;
 
 part = 'v2';
 
-x_var = 'ImmunoAgeAA';
-x_label = 'ImmunoAgeAA';
-xlims = [0; 100];
-y_var = 'MIG';
-y_label = 'MIG';
-ylims = [0; 100];
+x_var = 'Age';
+x_label = 'Age';
+xlims = [10; 100];
+y_var = 'ImmunoAge';
+y_label = 'ImmunoAge';
+ylims = [10; 100];
 y_label_acceleration = 'Age Acceleration';
-fit_range_mode = 'minmax'; %'lim'; % 'minmax';
+fit_range_mode = 'lim'; %'lim'; % 'minmax';
 
 group_feature = 'Group';
 groups = {'Control', 'Disease'}';
@@ -19,7 +19,7 @@ colors = {[0 1 0], [1 0 1]}';
 opacity = 0.5;
 globalFontSize = 36;
 legendFontSize = 18;
-legend_location = 'NorthEast';
+legend_location = 'NorthWest';
 yLimAA = [-15, 70];
 
 path = 'E:/YandexDisk/Work/pydnameth/unn_epic';
@@ -75,6 +75,7 @@ for g_id = 1:size(groups, 1)
     
     T = table(xs, ys, 'VariableNames', {x_var, y_var});
     lm = fitlm(T, sprintf('%s~%s', y_var, x_var));
+    rho = corr(X, Y, 'Type', 'Pearson');
     R2 = lm.Rsquared.Ordinary;
     RMSE = lm.RMSE;
     %legend(h, sprintf('%s $(R^2=%0.2f)$', groups{g_id}, R2), 'Interpreter','latex');

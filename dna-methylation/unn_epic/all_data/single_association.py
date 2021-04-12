@@ -9,7 +9,7 @@ path = f'E:/YandexDisk/Work/pydnameth/unn_epic/all_data'
 target_key = 'Group'
 target_groups = ['Control', 'Disease']
 features_type = 'immuno'
-regression_features = ['DNAmAgeHannum', 'DNAmAge', 'DNAmPhenoAge', 'DNAmGrimAge', 'Age', 'PhenoAge', 'ImmunoAge', 'DNAmAgeHannumAA', 'DNAmAgeAA', 'DNAmPhenoAgeAA', 'DNAmGrimAgeAA', 'PhenoAgeAA', 'ImmunoAgeAA']
+regression_features = ['DNAmAgeHannum', 'DNAmAge', 'DNAmPhenoAge', 'DNAmGrimAge', 'Age', 'PhenoAge', 'ImmunoAge', 'DNAmAgeHannumAA', 'DNAmAgeAA', 'DNAmPhenoAgeAA', 'DNAmGrimAgeAA', 'PhenoAgeAA', 'ImmunoAgeAA', 'IEAA']
 
 df_merged = pd.read_excel(f'{path}/table_part({part}).xlsx', converters={'ID': str}, engine='openpyxl')
 
