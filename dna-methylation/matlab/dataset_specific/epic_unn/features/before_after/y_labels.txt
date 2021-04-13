@@ -1,0 +1,10 @@
+White blood cell count ($10^9$/L)
+Mean cell volume (fL)
+Red cell distribution width (\%)
+Lymphocyte percent (\%)
+Albumin (g/L)
+Glucose. serum (mmol/L)
+Creatinine (umol/L)
+Alkaline phosphatase (U/L)
+Log C-reactive protein (mg/L)
+Phenotypic Age

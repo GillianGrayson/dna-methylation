@@ -1,0 +1,10 @@
+WhiteBloodCellCount_10_9_L_
+MeanCellVolume_fL_
+RedCellDistributionWidth___
+LymphocytePercent___
+Albumin_g_L_
+Glucose_Serum_mmol_L_
+Creatinine_umol_L_
+AlkalinePhosphatase_U_L_
+LogC_reactiveProtein_mg_L_
+PhenotypicAge
