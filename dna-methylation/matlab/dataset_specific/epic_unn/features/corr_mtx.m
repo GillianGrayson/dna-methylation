@@ -3,7 +3,9 @@ clear all;
 part = 'v2';
 
 corrType = 'Pearson';
-group = 'Control';
+group = 'Disease';
+
+is_pval = 0;
 
 opacity = 0.5;
 globalFontSize = 16;
@@ -14,10 +16,10 @@ xBinPos = 0.015;
 yBinPos = 0.0167;
 isNum = 1;
 
-corr_x_features = importdata('corr_x_features.txt');
-corr_x_labels = importdata('corr_x_labels.txt');
-corr_y_features = importdata('corr_y_features.txt');
-corr_y_labels = importdata('corr_y_labels.txt');
+corr_x_features = importdata('corr_mtx/corr_x_features.txt');
+corr_x_labels = importdata('corr_mtx/corr_x_labels.txt');
+corr_y_features = importdata('corr_mtx/corr_y_features.txt');
+corr_y_labels = importdata('corr_mtx/corr_y_labels.txt');
 xSize = size(corr_x_features, 1);
 ySize = size(corr_y_features, 1);
 
@@ -54,8 +56,12 @@ for x_id = 1:xSize
     for y_id = 1:ySize
         X = tbl.(corr_x_features{x_id});
         Y = tbl.(corr_y_features{y_id});
-        rho = corr(X, Y, 'Type', corrType);
-        cm(x_id, y_id) = rho;
+        [rho, pval] = corr(X, Y, 'Type', corrType);
+        if is_pval == 1
+            cm(x_id, y_id) = -log10(pval);
+        else
+            cm(x_id, y_id) = rho;
+        end
     end
 end
 
@@ -68,12 +74,23 @@ imagesc(xs, ys, cm');
 set(gca, 'FontSize', globalFontSize);
 xlabel('', 'Interpreter', 'latex');
 ylabel('', 'Interpreter', 'latex');
-caxis([-1 1])
-cmap = getPyPlot_cMap('bwr', 128);
+if is_pval == 1
+    caxis([-log10(0.05), max(cm, [], 'all')])
+    cmap1 = getPyPlot_cMap('Reds', 128);
+    cmap2 = getPyPlot_cMap('winter', 128);
+    cmap = vertcat(cmap2(70, :), cmap1);
+else
+    caxis([-1 1])
+    cmap = getPyPlot_cMap('bwr', 128);
+end
 %cmap = customcolormap([0 0.5 1], [1 0 0; 1 1 1; 0 0 1]);
 colormap(cmap);
 h = colorbar('northoutside');
-title(h, {corrType;'Correlation';'Coefficient'}, 'FontSize', 14, 'Interpreter','Latex');
+if is_pval == 1
+    title(h, {corrType;'$-\log_{10}($p-value$)$';}, 'FontSize', 14, 'Interpreter','Latex');
+else
+    title(h, {corrType;'Correlation';'Coefficient'}, 'FontSize', 14, 'Interpreter','Latex');
+end
 set(gca, 'FontSize', globalFontSize);
 set(gca,'YDir','normal');
 ax = gca;
@@ -102,7 +119,10 @@ b = copyobj(a, gcf);
 set(b, 'Xcolor', 'none', 'YColor', 'none', 'XTickLabel', [], 'YTickLabel', [])
 hold all;
 
-
-fn_fig = sprintf('%s/%s_%s', figures_path, corrType, group);
+if is_pval == 1
+    fn_fig = sprintf('%s/%s_%s_pValue', figures_path, corrType, group);
+else
+    fn_fig = sprintf('%s/%s_%s_corrCoeff', figures_path, corrType, group);
+end
 oqs_save_fig(gcf, fn_fig)
 
