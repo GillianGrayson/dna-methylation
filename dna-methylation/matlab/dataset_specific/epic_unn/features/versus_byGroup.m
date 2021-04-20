@@ -75,7 +75,6 @@ for g_id = 1:size(groups, 1)
     
     T = table(xs, ys, 'VariableNames', {x_var, y_var});
     lm = fitlm(T, sprintf('%s~%s', y_var, x_var));
-    rho = corr(X, Y, 'Type', 'Pearson');
     R2 = lm.Rsquared.Ordinary;
     RMSE = lm.RMSE;
     %legend(h, sprintf('%s $(R^2=%0.2f)$', groups{g_id}, R2), 'Interpreter','latex');
