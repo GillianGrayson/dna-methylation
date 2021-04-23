@@ -2,9 +2,8 @@ clear all;
 
 part = 'v2';
 
-%features_types = {'CD4T', 'NK', 'Mono', 'Gran', 'PlasmaBlast', 'CD8pCD28nCD45RAn', 'CD8.naive'}';
-target = 'ImmunoAgeAA';
-label = 'ImmunoAgeAcceleration';
+target = 'CXCL9';
+label = 'CXCL9';
 group_feature = 'Group';
 groups = {'Control', 'Disease'}';
 
@@ -14,7 +13,7 @@ opacity = 0.65;
 globalFontSize = 36;
 legendFontSize = 18;
 legend_location = 'NorthEast';
-yLim = [-50, 200];
+yLim = [0, 20000];
 %yLim = 'auto';
 
 path = 'E:/YandexDisk/Work/pydnameth/unn_epic';

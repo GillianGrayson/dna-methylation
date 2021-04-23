@@ -11,7 +11,7 @@ def scale(x, out_range=(-1, 1)):
 y_name = 'Age'
 formula_IEAA = 'DNAmAge ~ Age + CD8naive + CD8pCD28nCD45RAn + PlasmaBlast + CD4T + NK + Mono + Gran'
 formula_EEAA = 'Age ~ WA'
-part = 'v2'
+part = 'v22'
 target_part = 'Control'
 
 path = f'E:/YandexDisk/Work/pydnameth/unn_epic/all_data'

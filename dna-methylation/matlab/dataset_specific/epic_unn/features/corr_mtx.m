@@ -3,7 +3,7 @@ clear all;
 part = 'v2';
 
 corrType = 'Pearson';
-group = 'Disease';
+group = 'Control';
 
 is_pval = 0;
 
@@ -75,21 +75,25 @@ set(gca, 'FontSize', globalFontSize);
 xlabel('', 'Interpreter', 'latex');
 ylabel('', 'Interpreter', 'latex');
 if is_pval == 1
-    caxis([-log10(0.05), max(cm, [], 'all')])
-    cmap1 = getPyPlot_cMap('Reds', 128);
-    cmap2 = getPyPlot_cMap('winter', 128);
+    c_shift = max(cm(~isinf(cm))) - (-log10(0.05));
+    c_add = c_shift / 100;
+    c_min = -log10(0.05) - c_add;
+    c_max = max(cm(~isinf(cm)));
+    
+    caxis([c_min, c_max])
+    cmap1 = getPyPlot_cMap('Reds', 100);
+    cmap2 = getPyPlot_cMap('winter', 100);
     cmap = vertcat(cmap2(70, :), cmap1);
 else
     caxis([-1 1])
     cmap = getPyPlot_cMap('bwr', 128);
 end
-%cmap = customcolormap([0 0.5 1], [1 0 0; 1 1 1; 0 0 1]);
 colormap(cmap);
 h = colorbar('northoutside');
 if is_pval == 1
     title(h, {corrType;'$-\log_{10}($p-value$)$';}, 'FontSize', 14, 'Interpreter','Latex');
 else
-    title(h, {corrType;'Correlation';'Coefficient'}, 'FontSize', 14, 'Interpreter','Latex');
+    title(h, {corrType;'Correlation';}, 'FontSize', 14, 'Interpreter','Latex');
 end
 set(gca, 'FontSize', globalFontSize);
 set(gca,'YDir','normal');

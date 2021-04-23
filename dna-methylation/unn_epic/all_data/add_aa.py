@@ -3,7 +3,7 @@ import statsmodels.formula.api as smf
 
 y_name = 'Age'
 ages = ['DNAmAgeHannum', 'DNAmAge', 'DNAmPhenoAge', 'DNAmGrimAge', 'PhenoAge', 'ImmunoAge']
-part = 'v2'
+part = 'v22'
 target_part = 'Control'
 
 path = f'E:/YandexDisk/Work/pydnameth/unn_epic/all_data'

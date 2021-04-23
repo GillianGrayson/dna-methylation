@@ -65,7 +65,7 @@ cv = RepeatedKFold(n_splits=3, n_repeats=5, random_state=1)
 model_type = ElasticNet(max_iter=10000, tol=0.01)
 
 # define grid
-alphas = np.logspace(-5, 1, 61)
+alphas = np.logspace(-5, 0.5, 61)
 # alphas = np.logspace(-5, np.log10(0.3 + 0.7 * random.uniform(0, 1)), 51)
 # l1_ratios = np.linspace(0.0, 1.0, 6)
 l1_ratios = [0.5]
