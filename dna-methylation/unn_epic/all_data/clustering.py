@@ -37,7 +37,14 @@ x = df.loc[:, features].values
 x_immuno = df.loc[:, immuno_features].values
 
 pca = PCA(n_components=num_components)
-pcs = pca.fit_transform(x)
+pca.fit(x)
+pcs = pca.transform(x)
+
+pca_dict = {'features': features}
+for pc_id in range(0, pcs.shape[1]):
+    pca_dict[f'PC{pc_id}'] = pca.components_[pc_id, :]
+
+pca_df = pd.DataFrame(pca_dict)
 
 tsne = TSNE(n_components=num_components)
 tsnes = tsne.fit_transform(x)
@@ -49,36 +56,38 @@ scaled_pcs_features = []
 for pc_id in range(0, pcs.shape[1]):
     pc = pcs[:, pc_id]
     df[f"AA_pc_{pc_id}"] = pc
-    pc_immuno = pcs_immuno[:, pc_id]
-    df[f"immuno_pc_{pc_id}"] = pc_immuno
+    # pc_immuno = pcs_immuno[:, pc_id]
+    # df[f"immuno_pc_{pc_id}"] = pc_immuno
 
-    scaler = StandardScaler()
-    data = pc.reshape(-1, 1)
-    scaled = scaler.fit_transform(data)
-    feature = f"AA_pc_{pc_id}_scaled"
-    scaled_pcs_features.append(feature)
-    df[feature] = scaled
+    # scaler = StandardScaler()
+    # data = pc.reshape(-1, 1)
+    # scaled = scaler.fit_transform(data)
+    # feature = f"AA_pc_{pc_id}_scaled"
+    # scaled_pcs_features.append(feature)
+    # df[feature] = scaled
 
-scaled_tsne_features = []
-for pc_id in range(0, pcs.shape[1]):
-    ts = tsnes[:, pc_id]
-    df[f"AA_tsne_{pc_id}"] = ts
-    scaler = StandardScaler()
-    data = ts.reshape(-1, 1)
-    scaled = scaler.fit_transform(data)
-    feature = f"AA_tsne_{pc_id}_scaled"
-    scaled_tsne_features.append(feature)
-    df[feature] = scaled
+# scaled_tsne_features = []
+# for pc_id in range(0, pcs.shape[1]):
+#     ts = tsnes[:, pc_id]
+#     df[f"AA_tsne_{pc_id}"] = ts
+#     scaler = StandardScaler()
+#     data = ts.reshape(-1, 1)
+#     scaled = scaler.fit_transform(data)
+#     feature = f"AA_tsne_{pc_id}_scaled"
+#     scaled_tsne_features.append(feature)
+#     df[feature] = scaled
 
-x_pca = df.loc[:, features].values
-model_pca = DBSCAN(eps=dbscan_eps, min_samples=dbscan_min_samples)
-dbscan_pca_clusters = model_pca.fit_predict(x_pca)
-df['pca_dbscan'] = dbscan_pca_clusters
-
-
-x_tsne = df.loc[:, features].values
-model_tsne = DBSCAN(eps=dbscan_eps, min_samples=dbscan_min_samples)
-dbscan_tsne_clusters = model_tsne.fit_predict(x_tsne)
-df['tsne_dbscan'] = dbscan_tsne_clusters
+# x_pca = df.loc[:, features].values
+# model_pca = DBSCAN(eps=dbscan_eps, min_samples=dbscan_min_samples)
+# dbscan_pca_clusters = model_pca.fit_predict(x_pca)
+# df['pca_dbscan'] = dbscan_pca_clusters
+#
+#
+# x_tsne = df.loc[:, features].values
+# model_tsne = DBSCAN(eps=dbscan_eps, min_samples=dbscan_min_samples)
+# dbscan_tsne_clusters = model_tsne.fit_predict(x_tsne)
+# df['tsne_dbscan'] = dbscan_tsne_clusters
 
 df.to_excel(f'{path}/current_table.xlsx', index=False)
+
+pca_df.to_excel(f'{path}/pca.xlsx', index=False)

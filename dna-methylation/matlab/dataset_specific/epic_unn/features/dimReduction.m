@@ -4,7 +4,7 @@ part = 'v2';
 
 epsilon = 1.5;
 minpts = 3;
-pca_features = {'immuno_pc_0', 'immuno_pc_1'}';
+pca_features = {'AA_pc_0', 'AA_pc_1'}';
 
 group_feature = 'Group';
 groups = {'Control', 'Disease'}';
@@ -21,6 +21,52 @@ figures_path = sprintf('E:/YandexDisk/Work/pydnameth/unn_epic/figures/features/d
 if ~exist(figures_path, 'dir')
     mkdir(figures_path)
 end
+
+fn = sprintf('%s/all_data/pca.xlsx', path);
+opts = detectImportOptions(fn);
+tbl_pca = readtable(fn, opts);
+
+pos = [0.2, 0.2, 0.3, 0.4];
+
+fig = figure;
+propertyeditor('on');
+tick_labels = tbl_pca.('features');
+barh(tbl_pca.('PC0'), 'FaceColor', 'red');
+yticks(linspace(1, size(tick_labels, 1), size(tick_labels, 1)))
+ylim([0.5, size(tick_labels, 1) + 0.5])
+xlim([-0.2, 1.1])
+hold all;
+set(gca, 'yTickLabel', tick_labels);
+ax = gca;
+ax.YAxis.FontSize = legendFontSize;
+set(gca, 'TickLabelInterpreter', 'latex')
+xlabel('PCA $1^{st}$ vector components', 'Interpreter', 'latex');
+ax.XAxis.FontSize = legendFontSize;
+set(gca, 'Position', pos);
+grid on;
+fn_fig = sprintf('%s/pca_0', figures_path);
+oqs_save_fig(gcf, fn_fig)
+
+fig = figure;
+propertyeditor('on');
+tick_labels = tbl_pca.('features');
+barh(tbl_pca.('PC1'), 'FaceColor', 'red');
+yticks(linspace(1, size(tick_labels, 1), size(tick_labels, 1)))
+ylim([0.5, size(tick_labels, 1) + 0.5])
+xlim([-0.2, 1.1])
+hold all;
+set(gca, 'yTickLabel', tick_labels);
+ax = gca;
+ax.YAxis.FontSize = legendFontSize;
+set(gca, 'TickLabelInterpreter', 'latex')
+xlabel('PCA $2^{nd}$ vector components', 'Interpreter', 'latex');
+ax.XAxis.FontSize = legendFontSize;
+set(gca, 'Position', pos);
+grid on;
+fn_fig = sprintf('%s/pca_1', figures_path);
+oqs_save_fig(gcf, fn_fig)
+
+
 fn = sprintf('%s/all_data/current_table.xlsx', path);
 opts = detectImportOptions(fn);
 tbl = readtable(fn, opts);
@@ -69,3 +115,5 @@ box on;
 
 fn_fig = sprintf('%s/pca', figures_path);
 oqs_save_fig(gcf, fn_fig)
+
+
