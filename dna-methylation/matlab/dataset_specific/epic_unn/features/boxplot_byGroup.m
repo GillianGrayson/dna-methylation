@@ -2,8 +2,8 @@ clear all;
 
 part = 'v2';
 
-target = 'CXCL9';
-label = 'CXCL9';
+target = 'IEAA';
+label = 'IEAA';
 group_feature = 'Group';
 groups = {'Control', 'Disease'}';
 
@@ -13,8 +13,8 @@ opacity = 0.65;
 globalFontSize = 36;
 legendFontSize = 18;
 legend_location = 'NorthEast';
-yLim = [0, 20000];
-%yLim = 'auto';
+%yLim = [0, 20000];
+yLim = 'auto';
 
 path = 'E:/YandexDisk/Work/pydnameth/unn_epic';
 figures_path = sprintf('E:/YandexDisk/Work/pydnameth/unn_epic/figures/features/boxplot_byGroup/part(%s)', part);
@@ -68,6 +68,8 @@ subplot(1, 2, 2)
 for g_id = 1:size(groups, 1)
     [f,xi] = ksdensity(featuresByGroup{g_id});
     
+    
+    
     pdf.x_num_bins = 101;
     shift = max(featuresByGroup{g_id}) - min(featuresByGroup{g_id});
     pdf.x_bin_s = min(featuresByGroup{g_id}) - 0.15 * shift;
@@ -109,6 +111,12 @@ subplot(1, 2, 1)
 propertyeditor('on');
 positions = 0.5 * linspace(1, size(groups, 1), size(groups, 1));
 for g_id = 1:size(groups, 1)
+    
+    qs = quantile(featuresByGroup{g_id},[0.25 0.50 0.75]);
+    fprintf('Q1 %s: %0.4e\n', groups{g_id}, qs(1));
+    fprintf('Q2 %s: %0.4e\n', groups{g_id}, qs(2));
+    fprintf('Q3 %s: %0.4e\n', groups{g_id}, qs(3));
+    
     b = boxplot(featuresByGroup{g_id}, 'Notch', 'off', 'positions', positions(g_id), 'Colors', 'k');
     set(gca, 'FontSize', globalFontSize);
     all_items = handle(b);
