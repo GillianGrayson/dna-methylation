@@ -2,10 +2,14 @@ clear all;
 
 part = 'v2';
 
-target = 'IEAA';
-label = 'IEAA';
+target = 'ImmunoAgeAA';
+label = 'ImmunoAgeAcc';
 group_feature = 'Group';
 groups = {'Control', 'Disease'}';
+
+highlight_ids = {'H102', 'H107', 'H91', 'H98', 'H7', 'H8', 'H68', 'H77'}';
+highlight_color = [0 0 0];
+
 
 colors = {[0 1 0], [1 0 1]}';
 
@@ -13,8 +17,8 @@ opacity = 0.65;
 globalFontSize = 36;
 legendFontSize = 18;
 legend_location = 'NorthEast';
-%yLim = [0, 20000];
-yLim = 'auto';
+yLim = [-50, 1200];
+%yLim = 'auto';
 
 path = 'E:/YandexDisk/Work/pydnameth/unn_epic';
 figures_path = sprintf('E:/YandexDisk/Work/pydnameth/unn_epic/figures/features/boxplot_byGroup/part(%s)', part);
@@ -48,9 +52,14 @@ feature = strrep(target,'.','_');
 features = tbl.(feature);
 
 featuresByGroup = {};
+scattersAux = {};
+not_highlight_tbl = tbl(~ismember(tbl.('ID'), highlight_ids), :);
+highlight_tbl = tbl(ismember(tbl.('ID'), highlight_ids), :);
 for g_id = 1:size(groups, 1)
     vars = tbl{strcmp(tbl.(group_feature), groups{g_id}), feature};
     featuresByGroup{g_id} = vars;
+    
+    scattersAux{g_id} = {not_highlight_tbl{strcmp(not_highlight_tbl.(group_feature), groups{g_id}), feature}; highlight_tbl{strcmp(highlight_tbl.(group_feature), groups{g_id}), feature}};
 end
 
 features_ordered  = [];
@@ -128,10 +137,25 @@ for g_id = 1:size(groups, 1)
     outliers = all_items(idx);
     set(outliers, 'visible', 'off')
     hold all;
-    xs = positions(g_id) * ones(size(featuresByGroup{g_id}, 1), 1) + ((rand(size(featuresByGroup{g_id}))-0.5)/10);
-    h = scatter(xs, featuresByGroup{g_id}, 100, 'o', 'LineWidth',  1, 'MarkerEdgeColor', 'black', 'MarkerFaceColor', colors{g_id}, 'MarkerEdgeAlpha', opacity, 'MarkerFaceAlpha', opacity);
-    h.Annotation.LegendInformation.IconDisplayStyle = 'off';
-    hold all;
+    for sc_id = 1:2
+        vals = scattersAux{g_id}{sc_id};
+        if size(vals, 1) > 0
+            xs = positions(g_id) * ones(size(vals, 1), 1) + ((rand(size(vals))-0.5)/10);
+            if sc_id == 1
+                color = colors{g_id};
+                h = scatter(xs, vals, 100, 'o', 'LineWidth',  1, 'MarkerEdgeColor', 'black', 'MarkerFaceColor', color, 'MarkerEdgeAlpha', opacity, 'MarkerFaceAlpha', opacity);
+            else
+                color = highlight_color;
+                h = scatter(xs, vals, 200, 'x', 'LineWidth',  4, 'MarkerEdgeColor', 'black', 'MarkerFaceColor', color, 'MarkerEdgeAlpha', opacity, 'MarkerFaceAlpha', opacity);
+            end
+            h.Annotation.LegendInformation.IconDisplayStyle = 'off';
+            hold all;
+        end
+    end
+%     xs = positions(g_id) * ones(size(featuresByGroup{g_id}, 1), 1) + ((rand(size(featuresByGroup{g_id}))-0.5)/10);
+%     h = scatter(xs, featuresByGroup{g_id}, 100, 'o', 'LineWidth',  1, 'MarkerEdgeColor', 'black', 'MarkerFaceColor', colors{g_id}, 'MarkerEdgeAlpha', opacity, 'MarkerFaceAlpha', opacity);
+%     h.Annotation.LegendInformation.IconDisplayStyle = 'off';
+%     hold all;
 end
 xticks(positions);
 xticklabels(groups);
