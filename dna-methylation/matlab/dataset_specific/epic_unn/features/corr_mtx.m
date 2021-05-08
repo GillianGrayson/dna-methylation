@@ -3,7 +3,7 @@ clear all;
 part = 'v2';
 
 corrType = 'Pearson';
-group = 'Control';
+group = 'Disease';
 
 is_pval = 0;
 
@@ -34,8 +34,8 @@ fn = sprintf('%s/all_data/table_part(%s).xlsx', path, part);
 opts = detectImportOptions(fn);
 tbl = readtable(fn, opts);
 
-incKeys = {'Group'};
-incVals = {{group}};
+incKeys = {'Group', 'is_CMV'};
+incVals = {{group}, {'yes'}};
 decKeys = {};
 decVals = {{}};
 if size(incKeys, 1) > 0
@@ -80,10 +80,14 @@ if is_pval == 1
     c_min = -log10(0.05) - c_add;
     c_max = max(cm(~isinf(cm)));
     
-    caxis([c_min, c_max])
-    cmap1 = getPyPlot_cMap('Reds', 100);
-    cmap2 = getPyPlot_cMap('winter', 100);
-    cmap = vertcat(cmap2(70, :), cmap1);
+    if c_max < c_min
+        cmap = getPyPlot_cMap('winter', 100);
+    else
+        caxis([c_min, c_max])
+        cmap1 = getPyPlot_cMap('Reds', 100);
+        cmap2 = getPyPlot_cMap('winter', 100);
+        cmap = vertcat(cmap2(70, :), cmap1);
+    end
 else
     caxis([-1 1])
     cmap = getPyPlot_cMap('bwr', 128);

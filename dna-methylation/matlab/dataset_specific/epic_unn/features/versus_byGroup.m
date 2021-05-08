@@ -2,12 +2,12 @@ clear all;
 
 part = 'v2';
 
-x_var = 'Age';
-x_label = 'Age';
-xlims = [10; 100];
-y_var = 'ImmunoAge';
-y_label = 'ImmunoAge';
-ylims = [10; 100];
+x_var = 'ImmunoAge';
+x_label = 'ImmunoAge';
+xlims = [0; 250];
+y_var = 'IgG_CMV';
+y_label = 'IgG for CMV (PE/ml)';
+ylims = [0; 4];
 y_label_acceleration = 'Age Acceleration';
 fit_range_mode = 'lim'; %'lim'; % 'minmax';
 
@@ -31,8 +31,8 @@ fn = sprintf('%s/all_data/table_part(%s).xlsx', path, part);
 opts = detectImportOptions(fn);
 tbl = readtable(fn, opts);
 
-incKeys = {};
-incVals = {{}};
+incKeys = {'is_CMV'};
+incVals = {{'yes'}};
 decKeys = {};
 decVals = {{}};
 if size(incKeys, 1) > 0

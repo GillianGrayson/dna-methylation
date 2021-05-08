@@ -2,12 +2,12 @@ clear all;
 
 part = 'v2';
 
-target = 'ImmunoAgeAA';
-label = 'ImmunoAgeAcc';
+target = 'IgG_CMV';
+label = 'IgG for CMV (PE/ml)';
 group_feature = 'Group';
 groups = {'Control', 'Disease'}';
 
-highlight_ids = {'H102', 'H107', 'H91', 'H98', 'H7', 'H8', 'H68', 'H77'}';
+highlight_ids = {}';
 highlight_color = [0 0 0];
 
 
@@ -17,8 +17,8 @@ opacity = 0.65;
 globalFontSize = 36;
 legendFontSize = 18;
 legend_location = 'NorthEast';
-yLim = [-50, 1200];
-%yLim = 'auto';
+%yLim = [-50, 1200];
+yLim = 'auto';
 
 path = 'E:/YandexDisk/Work/pydnameth/unn_epic';
 figures_path = sprintf('E:/YandexDisk/Work/pydnameth/unn_epic/figures/features/boxplot_byGroup/part(%s)', part);
@@ -30,8 +30,8 @@ opts = detectImportOptions(fn);
 opts = setvartype(opts, {group_feature}, 'string');
 tbl = readtable(fn, opts);
 
-incKeys = {};
-incVals = {{}};
+incKeys = {'is_CMV'};
+incVals = {{'yes'}};
 decKeys = {};
 decVals = {{}};
 if size(incKeys, 1) > 0

@@ -23,7 +23,7 @@ def only_words(words):
 
 
 GPL = '21145'
-suffix = '22_09_20'
+suffix = '05_05_21'
 
 gsm_key = 'gsm'
 gse_key = 'series_id'
@@ -106,10 +106,10 @@ for gse in tqdm(gses):
     path_tmp = f'{get_data_path()}/GPL{GPL}/tmp'
     make_dir(path_tmp)
 
-    gsms = gse_gsms_dict[gse]
+    curr_gsms = gse_gsms_dict[gse]
 
     # Init characteristics dicts
-    gsm = gsms[0]
+    gsm = curr_gsms[0]
     try:
         gsm_data = get_gsm(gsm, path_tmp, is_remove=True)
     except GEOparse.GEOparse.NoEntriesException:
@@ -132,12 +132,12 @@ for gse in tqdm(gses):
         # if os.path.isfile(f'{path_all}/observables.xlsx'):
         #    continue
 
-        gsms = gse_gsms_dict[gse]
+        curr_gsms = gse_gsms_dict[gse]
         gsms_exist = []
 
         # Init characteristics dicts
         chs_keys = set()
-        for gsm_id, gsm in enumerate(gsms):
+        for gsm_id, gsm in enumerate(curr_gsms):
             try:
                 gsm_data = get_gsm(gsm, f'{path_all}/gsms')
             except GEOparse.GEOparse.NoEntriesException:
@@ -149,8 +149,8 @@ for gse in tqdm(gses):
                 ch_split = ch.split(': ')
                 chs_keys.update([ch_split[0]])
 
-        gsms = gsms_exist
-        gsms_passed = [True] * len(gsms)
+        curr_gsms = gsms_exist
+        gsms_passed = [True] * len(curr_gsms)
 
         chs = {}
         chs['geo_accession'] = []
@@ -158,9 +158,9 @@ for gse in tqdm(gses):
         for key in chs_keys:
             chs[key] = []
 
-        for gsm_id, gsm in enumerate(gsms):
+        for gsm_id, gsm in enumerate(curr_gsms):
 
-            gsm_data = GEOparse.get_GEO(geo=gsm, destdir=f'{path_all}/gsms', include_data=False, how="")
+            gsm_data = GEOparse.get_GEO(geo=gsm, destdir=f'{path_all}/gsms', include_data=False, how="quick")
 
             gsm_is_passed = True
 
