@@ -3,15 +3,6 @@ if ~exist(figures_path, 'dir')
     mkdir(figures_path)
 end
 
-cgs = ...
-    { ...
-    'cg07553761', ...
-    'cg00481951', ...
-    'cg23256579', ...
-    'cg06639320', ...
-    'cg22454769' ...
-    }';
-num_cpgs = size(cgs, 1);
 
 group_by = 'Sex';
 groups = {'F', 'M'}';
@@ -20,9 +11,12 @@ opacity = 0.65;
 
 x_font = 20;
 
-agena_tbl = readtable('E:/YandexDisk/Work/pydnameth/unn_epic/agena/11.02.xlsx', 'ReadRowNames', true);
+agena_tbl = readtable('E:/YandexDisk/Work/pydnameth/unn_epic/agena/11.05.xlsx', 'ReadRowNames', true);
 target_subjects = agena_tbl.Properties.VariableNames';
-ts_id = 6;
+cgs = agena_tbl.Properties.RowNames;
+num_cpgs = size(cgs, 1);
+
+ts_id = 1;
 
 group_indeces = {};
 for g_id = 1 : size(groups, 1)
@@ -49,14 +43,14 @@ for cg_id = 1:size(cgs, 1)
         tags = get(all_items,'tag');
         idx = strcmpi(tags, 'box');
         boxes = all_items(idx);
-        set(all_items, 'linewidth', 2)
+        set(all_items, 'linewidth', 1)
         idx = strcmpi(tags, 'Outliers');
         outliers = all_items(idx);
         set(outliers, 'visible', 'off')
         hold all;
         
         xs = position * ones(size(curr_data, 1), 1) + ((rand(size(curr_data))-0.5)/10);
-        h = scatter(xs, curr_data, 50, 'o', 'LineWidth',  1, 'MarkerEdgeColor', 'black', 'MarkerFaceColor', color, 'MarkerEdgeAlpha', 0.3, 'MarkerFaceAlpha', 0.3);
+        h = scatter(xs, curr_data, 10, 'o', 'LineWidth',  1, 'MarkerEdgeColor', 'black', 'MarkerFaceColor', color, 'MarkerEdgeAlpha', 0.3, 'MarkerFaceAlpha', 0.3);
         h.Annotation.LegendInformation.IconDisplayStyle = 'off';
         hold all;
     end
@@ -64,7 +58,7 @@ for cg_id = 1:size(cgs, 1)
     curr_indexes = strcmp(obs.('ID'), target_subjects(ts_id));
     curr_obs = obs(curr_indexes, :);
     curr_data = betas{cg, curr_indexes}';
-    agena_data = agena_tbl{cg, ts_id} * 0.01;
+    agena_data = agena_tbl{cg, ts_id};
     if strcmp(curr_obs.(group_by){1}, groups{1})
         curr_color = colors{1};
     else

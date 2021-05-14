@@ -1,15 +1,15 @@
 clear all;
 
-part = 'wo_noIntensity_detP';
+part = 'v12';
 
 
-path = 'E:/YandexDisk/Work/pydnameth/unn_epic/raw';
+path = 'E:/YandexDisk/Work/pydnameth/unn_epic/raw/result';
 figures_path = 'E:/YandexDisk/Work/pydnameth/unn_epic/figures/failed';
 if ~exist(figures_path, 'dir')
     mkdir(figures_path)
 end
 
-fn = sprintf('%s/failed_part(%s).csv', path, part);
+fn = sprintf('%s/part(%s)_config(0.01_0.10_0.10)/failed_after.csv', path, part);
 data = readtable(fn);
 x = data.('Sample');
 y = data.(2);

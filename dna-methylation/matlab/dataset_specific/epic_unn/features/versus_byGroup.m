@@ -2,9 +2,9 @@ clear all;
 
 part = 'v2';
 
-x_var = 'ImmunoAge';
-x_label = 'ImmunoAge';
-xlims = [0; 250];
+x_var = 'ImmunoAgeAA';
+x_label = 'ImmunoAgeAcc';
+xlims = [-50; 200];
 y_var = 'IgG_CMV';
 y_label = 'IgG for CMV (PE/ml)';
 ylims = [0; 4];

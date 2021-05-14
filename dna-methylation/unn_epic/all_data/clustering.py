@@ -7,13 +7,16 @@ from sklearn.manifold import TSNE
 from sklearn.decomposition import PCA
 from sklearn.cluster import DBSCAN
 from numpy import unique
+import os
 
 
 num_components = 2
-features = ['DNAmAgeHannumAA', 'DNAmAgeAA', 'IEAA',  'DNAmPhenoAgeAA', 'DNAmGrimAgeAA', 'PhenoAgeAA', 'ImmunoAgeAA']
+
 
 dbscan_eps = 0.5
 dbscan_min_samples = 5
+
+features = ['DNAmAgeHannumAA', 'DNAmAgeAA', 'IEAA',  'DNAmPhenoAgeAA', 'DNAmGrimAgeAA', 'PhenoAgeAA', 'ImmunoAgeAA']
 
 part = 'v2'
 path = f'E:/YandexDisk/Work/pydnameth/unn_epic/all_data'
@@ -53,9 +56,9 @@ pca_immuno = PCA(n_components=num_components)
 pcs_immuno = pca_immuno.fit_transform(x_immuno)
 
 scaled_pcs_features = []
-for pc_id in range(0, pcs.shape[1]):
-    pc = pcs[:, pc_id]
-    df[f"AA_pc_{pc_id}"] = pc
+for pc_id in range(0, pcs_immuno.shape[1]):
+    pc = pcs_immuno[:, pc_id]
+    df[f"PC_{pc_id}"] = pc
     # pc_immuno = pcs_immuno[:, pc_id]
     # df[f"immuno_pc_{pc_id}"] = pc_immuno
 

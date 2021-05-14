@@ -2,10 +2,10 @@ clear all;
 
 part = 'v2';
 
-target = 'IgG_CMV';
-label = 'IgG for CMV (PE/ml)';
+target = 'IEAA';
+label = 'IEAA';
 group_feature = 'Group';
-groups = {'Control', 'Disease'}';
+groups = {'Control', 'ESRD'}';
 
 highlight_ids = {}';
 highlight_color = [0 0 0];
@@ -30,8 +30,8 @@ opts = detectImportOptions(fn);
 opts = setvartype(opts, {group_feature}, 'string');
 tbl = readtable(fn, opts);
 
-incKeys = {'is_CMV'};
-incVals = {{'yes'}};
+incKeys = {};
+incVals = {{}};
 decKeys = {};
 decVals = {{}};
 if size(incKeys, 1) > 0

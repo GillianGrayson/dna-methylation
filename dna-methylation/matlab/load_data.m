@@ -1,4 +1,4 @@
-.clear all;
+clear all;
 
 chip = '850k';
 dataset = 'unn_epic';

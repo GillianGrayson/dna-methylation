@@ -3,7 +3,7 @@ clear all;
 part = 'v2';
 
 corrType = 'Pearson';
-group = 'Disease';
+group = 'ESRD';
 
 is_pval = 0;
 
@@ -34,8 +34,8 @@ fn = sprintf('%s/all_data/table_part(%s).xlsx', path, part);
 opts = detectImportOptions(fn);
 tbl = readtable(fn, opts);
 
-incKeys = {'Group', 'is_CMV'};
-incVals = {{group}, {'yes'}};
+incKeys = {'Group'};
+incVals = {{group}};
 decKeys = {};
 decVals = {{}};
 if size(incKeys, 1) > 0

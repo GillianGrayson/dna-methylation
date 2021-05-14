@@ -1,5 +1,3 @@
-ImmunoAge
-ImmunoAgeAA
 CD40LG
 EGF
 CCL11

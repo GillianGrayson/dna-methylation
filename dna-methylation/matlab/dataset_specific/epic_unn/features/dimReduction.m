@@ -4,7 +4,7 @@ part = 'v2';
 
 epsilon = 1.5;
 minpts = 3;
-pca_features = {'AA_pc_0', 'AA_pc_1'}';
+pca_features = {'PC_0', 'PC_1'}';
 
 group_feature = 'Group';
 groups = {'Control', 'Disease'}';
