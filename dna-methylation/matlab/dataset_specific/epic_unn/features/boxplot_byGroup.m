@@ -2,14 +2,13 @@ clear all;
 
 part = 'v2';
 
-target = 'IEAA';
-label = 'IEAA';
+target = 'DNAmPhenoAgeAA';
+label = 'DNAmPhenoAgeAA';
 group_feature = 'Group';
 groups = {'Control', 'ESRD'}';
 
 highlight_ids = {}';
 highlight_color = [0 0 0];
-
 
 colors = {[0 1 0], [1 0 1]}';
 

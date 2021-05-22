@@ -6,7 +6,7 @@ count_target = 'yes';
 count_limit = 5;
 
 features_type = 'drugs';
-y_label = 'Medicines';
+y_label = 'Drugs';
 
 opacity = 0.65;
 fontSizeX = 36;
@@ -25,7 +25,7 @@ opts = detectImportOptions(fn);
 tbl = readtable(fn, opts);
 
 keySet_inc = {'Group'};
-valueSet_inc = {{'Disease'}};
+valueSet_inc = {{'ESRD'}};
 keySet_dec = {};
 valueSet_dec = {{}};
 base_filter = true(height(tbl), 1);
