@@ -13,16 +13,17 @@ import pickle
 import urllib.request
 
 
-GPL = '13534'
-suffix = '03_03_20'
+#GPL = '13534'
+GPL = '21145'
+suffix = '05_05_21'
 
 gsm_key = 'gsm'
 gse_key = 'series_id'
 source_key = 'source_name_ch1'
 characteristics_key = 'characteristics_ch1'
 
-gses = ['GSE87571']
-target_dir = f'{get_data_path()}/GPL{GPL}/filtered/blood(whole)'
+gses = ['GSE147740']
+target_dir = f'{get_data_path()}/GPL{GPL}/filtered'
 
 fn_xlsx = f'{get_data_path()}/GPL{GPL}/GPL{GPL}_gsm_table_{suffix}.xlsx'
 fn_pkl = f'{get_data_path()}/GPL{GPL}/GPL{GPL}_gsm_table_{suffix}.pkl'
@@ -95,8 +96,15 @@ for gse in tqdm(gses):
         try:
             while True:
                 try:
-                    gsm_data = GEOparse.get_GEO(geo=gsm, destdir=f'{path_data}', include_data=True, how='brief', silent=True)
-                    os.remove(f'{path_data}/{gsm}.txt')
+
+                    c1 = False
+                    while not c1:
+                        try:
+                            gsm_data = GEOparse.get_GEO(geo=gsm, destdir=f'{path_data}', include_data=True, how='brief', silent=True)
+                            os.remove(f'{path_data}/{gsm}.txt')
+                            c1 = True
+                        except OSError:
+                            pass
 
                     # characteristics processing
                     gsms_exist.append(gsm)
@@ -114,9 +122,19 @@ for gse in tqdm(gses):
                             if tail[:-3] in files_downloaded:
                                 raise ValueError('File duplication')
                             files_downloaded.add(tail[:-3])
-                            if not os.path.exists( f'{path_data}/{tail[:-3]}'):
+                            print(f'{tail[:-3]}')
+                            if not os.path.exists(f'{path_data}/{tail[:-3]}'):
                                 # urllib.request.urlretrieve(supp_file, f'{path_data}/{tail}')
-                                download_from_url(supp_file, f'{path_data}/{tail}')
+
+                                connected = False
+                                while not connected:
+                                    try:
+                                        download_from_url(supp_file, f'{path_data}/{tail}')
+                                        #urllib.request.urlretrieve(supp_file, f'{path_data}/{tail}')
+                                        connected = True
+                                    except OSError:
+                                        pass
+
                                 with gzip.open( f'{path_data}/{tail}', 'rb') as f_in:
                                     with open( f'{path_data}/{tail[:-3]}', 'wb') as f_out:
                                         shutil.copyfileobj(f_in, f_out)

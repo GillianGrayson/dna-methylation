@@ -33,7 +33,9 @@ sink()
 
 # path <- "E:/YandexDisk/Work/pydnameth/script_datasets/GPL13534/filtered/brain(DLPFC)/GSE74193/raw/data"
 # path <- "E:/YandexDisk/Work/pydnameth/script_datasets/GPL13534/filtered/blood(whole)/GSE87571/raw/data"
-path <- "E:/YandexDisk/Work/pydnameth/unn_epic/raw/data"
+# path <- "E:/YandexDisk/Work/pydnameth/unn_epic/raw/data"
+
+path <- "E:/YandexDisk/Work/pydnameth/script_datasets/GPL21145/filtered/GSE147740/raw_data"
 chip_type = "EPIC"
 detPcut = 0.01
 
