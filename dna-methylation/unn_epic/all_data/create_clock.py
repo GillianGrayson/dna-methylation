@@ -28,7 +28,7 @@ y_name = 'Age'
 part = 'v2'
 
 target_part = 'Control'
-data_type = 'immuno'
+data_type = 'agena_cpgs_11'
 
 path = f'E:/YandexDisk/Work/pydnameth/unn_epic/all_data'
 df_merged = pd.read_excel(f'{path}/table_part({part}).xlsx', converters={'ID': str}, engine='openpyxl')
@@ -44,7 +44,7 @@ X_C_df = df_merged.loc[df_merged['Group'] == 'Control']
 X_C = X_C_df[list(target_features)].to_numpy()
 y_C = X_C_df[y_name].to_numpy()
 
-X_T_df = df_merged.loc[df_merged['Group'] == 'Disease']
+X_T_df = df_merged.loc[df_merged['Group'] == 'ESRD']
 X_T = X_T_df[list(target_features)].to_numpy()
 y_T = X_T_df[y_name].to_numpy()
 
@@ -112,7 +112,7 @@ params_df.to_excel(f'{path}/clock/{data_type}/{target_part}/{y_name}/part({part}
 
 print(params_df)
 
-df_merged[f'CKDAge_{y_name}_{target_part}'] = y_pred_all
+df_merged[f'{data_type}_{y_name}_{target_part}'] = y_pred_all
 
 # = pd.concat([X_C_df, X_T_df])
 # df_merged= pd.merge(df_merged, tmp_df[['ID', 'CKDAge']], on=['ID'], how='inner')

@@ -17,6 +17,7 @@ df_drug = pd.read_excel(f'{path}/raw/drugs_tmp.xlsx', converters={'ID': str}, en
 df_ages = pd.read_excel(f'{path}/raw/ages.xlsx', converters={'ID': str}, engine='openpyxl')
 df_immunoclocks = pd.read_excel(f'{path}/raw/immuno_clocks.xlsx', converters={'ID': str}, engine='openpyxl')
 df_cmv = pd.read_excel(f'{path}/raw/CMV.xlsx', converters={'ID': str}, engine='openpyxl')
+df_agena = pd.read_excel(f'{path}/raw/cpgs_agena.xlsx', converters={'ID': str}, engine='openpyxl')
 
 import collections
 print([item for item, count in collections.Counter(df_cmv['ID'].to_list()).items() if count > 1])
@@ -29,7 +30,7 @@ print(len(set_IDs))
 print([item for item, count in collections.Counter(IDs).items() if count > 1])
 
 
-data_frames = [df_tmp, df_cmv]
+data_frames = [df_tmp, df_agena]
 df_merged = reduce(lambda left, right: pd.merge(left, right, on=['ID'], how=how), data_frames)
 df_merged.to_excel(f'{path}/current_table.xlsx', index=False)
 

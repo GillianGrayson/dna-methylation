@@ -2,17 +2,17 @@ clear all;
 
 part = 'v2';
 
-x_var = 'ImmunoAgeAA';
-x_label = 'ImmunoAgeAcc';
-xlims = [-50; 200];
-y_var = 'IgG_CMV';
-y_label = 'IgG for CMV (PE/ml)';
-ylims = [0; 4];
+x_var = 'Age';
+x_label = 'Age';
+xlims = [0; 100];
+y_var = 'AgenaAge';
+y_label = 'AgenaAge';
+ylims = [0; 100];
 y_label_acceleration = 'Age Acceleration';
 fit_range_mode = 'lim'; %'lim'; % 'minmax';
 
 group_feature = 'Group';
-groups = {'Control', 'Disease'}';
+groups = {'Control', 'ESRD'}';
 group_base = 'Control';
 colors = {[0 1 0], [1 0 1]}';
 
@@ -20,7 +20,7 @@ opacity = 0.5;
 globalFontSize = 36;
 legendFontSize = 18;
 legend_location = 'NorthWest';
-yLimAA = [-15, 70];
+yLimAA = [-20, 20];
 
 path = 'E:/YandexDisk/Work/pydnameth/unn_epic';
 figures_path = sprintf('E:/YandexDisk/Work/pydnameth/unn_epic/figures/features/versus_byGroup/part(%s)', part);
@@ -31,8 +31,8 @@ fn = sprintf('%s/all_data/table_part(%s).xlsx', path, part);
 opts = detectImportOptions(fn);
 tbl = readtable(fn, opts);
 
-incKeys = {'is_CMV'};
-incVals = {{'yes'}};
+incKeys = {};
+incVals = {{}};
 decKeys = {};
 decVals = {{}};
 if size(incKeys, 1) > 0

@@ -8,8 +8,10 @@ import copy
 from sklearn.metrics import mean_squared_error, mean_absolute_error
 
 
-dataset = 'GSE55763'
-outcome = 'age'
+dataset = 'unn_epic'
+dataset_beta_suffix = '_part(v1)_config(0.01_0.10_0.10)_norm(fun)'
+dataset_pheno_suffix = '_part(v1)'
+outcome = 'Age'
 
 agena_path = f"E:/YandexDisk/Work/pydnameth/unn_epic/agena"
 global_path = f"E:/YandexDisk/Work/pydnameth"
@@ -23,15 +25,15 @@ cpgs = np.loadtxt(F"{agena_path}/cpgs(11).txt", dtype='str')
 table_fn = f"{table_path}/table.xlsx"
 if not os.path.isfile(table_fn):
 
-    beta_fn = f"{global_path}/{dataset}/betas.txt"
-    df = pd.read_csv(beta_fn, delimiter = "\t", index_col='ID_REF')
+    beta_fn = f"{global_path}/{dataset}/betas{dataset_beta_suffix}.txt"
+    df = pd.read_csv(beta_fn, delimiter = "\t", index_col='IlmnID')
     beta = df.T
     beta = beta[cpgs]
     ids_beta = [x.split('_')[0] for x in beta.index.values.tolist()]
 
 
-    pheno_fn = f"{global_path}/{dataset}/observables.txt"
-    df = pd.read_csv(pheno_fn, delimiter = "\t", index_col='geo_accession')
+    pheno_fn = f"{global_path}/{dataset}/observables{dataset_pheno_suffix}.txt"
+    df = pd.read_csv(pheno_fn, delimiter = "\t", index_col='ID')
     pheno = df
     ids_pheno = pheno.index.values.tolist()
     beta.index = ids_pheno
