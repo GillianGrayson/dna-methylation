@@ -9,11 +9,22 @@ from sklearn.metrics import mean_squared_error, mean_absolute_error
 import pickle
 
 
+def calc_metrics(model, X, y, comment, params):
+    y_pred = model.predict(X)
+    score = model.score(X, y)
+    rmse = np.sqrt(mean_squared_error(y_pred, y))
+    mae = mean_absolute_error(y_pred, y)
+    params[f'{comment} R2'] = score
+    params[f'{comment} RMSE'] = rmse
+    params[f'{comment} MAE'] = mae
+    return y_pred
+
+
 is_pkl = True
 
 dataset = 'GSE52588'
-dataset_beta_suffix = '_part(v1)_config(0.01_0.10_0.10)_norm(fun)'
-dataset_pheno_suffix = '_part(v1)'
+dataset_beta_suffix = ''
+dataset_pheno_suffix = ''
 outcome = 'age'
 
 agena_path = f"E:/YandexDisk/Work/pydnameth/unn_epic/agena"
@@ -63,11 +74,31 @@ if not os.path.isfile(table_fn):
     table.to_excel(table_fn, index=True, index_label="ID")
 
 else:
-    table = pd.read_excel(table_fn, engine='openpyxl')
-    remaining_cpgs = list(table.olumns.values)
+    table = pd.read_excel(table_fn, engine='openpyxl', index_col='ID')
+    remaining_cpgs = list(set.intersection(set(cpgs), set(list(table.columns.values))))
 
-X = table[list(remaining_cpgs)].to_numpy()
-y = table[outcome].to_numpy()
+X_all = table[list(remaining_cpgs)].to_numpy()
+y_all = table[outcome].to_numpy()
+
+X_DS_df = table.loc[table['group'] == 'DS']
+X_DS = X_DS_df[list(remaining_cpgs)].to_numpy()
+y_DS = X_DS_df[outcome].to_numpy()
+
+X_S_df = table.loc[table['group'] == 'Siblings']
+X_S = X_S_df[list(remaining_cpgs)].to_numpy()
+y_S = X_S_df[outcome].to_numpy()
+
+X_M_df = table.loc[table['group'] == 'Mothers']
+X_M = X_M_df[list(remaining_cpgs)].to_numpy()
+y_M = X_M_df[outcome].to_numpy()
+
+X_NDS_df = table.loc[table['group'] != 'DS']
+X_NDS = X_NDS_df[list(remaining_cpgs)].to_numpy()
+y_NDS = X_NDS_df[outcome].to_numpy()
+
+X_target = X_NDS
+y_target = y_NDS
+
 
 scoring = 'r2'
 cv = RepeatedKFold(n_splits=3, n_repeats=5, random_state=1)
@@ -82,11 +113,11 @@ grid['alpha'] = alphas
 grid['l1_ratio'] = l1_ratios
 
 search = GridSearchCV(estimator=model_type, scoring=scoring, param_grid=grid, cv=cv, verbose=3)
-results = search.fit(X, y)
+results = search.fit(X_target, y_target)
 
 model = results.best_estimator_
 
-score = model.score(X, y)
+score = model.score(X_target, y_target)
 params = copy.deepcopy(results.best_params_)
 
 searching_process = pd.DataFrame(results.cv_results_)
@@ -103,17 +134,15 @@ for f_id, f in enumerate(remaining_cpgs):
 model_df = pd.DataFrame(model_dict)
 model_df.to_excel(f'{table_path}/clock.xlsx', index=False)
 
-y_pred = model.predict(X)
+y_pred = model.predict(X_all)
 table[f"{outcome}_pred"] = y_pred
 table.to_excel(table_fn, index=True, index_label="ID")
-score = model.score(X, y)
-rmse = np.sqrt(mean_squared_error(y_pred, y))
-mae = mean_absolute_error(y_pred, y)
-params["R2"] = score
-params["RMSE"] = rmse
-params["MAE"] = mae
-params['num_features'] = num_features
 
+y_pred_DS = calc_metrics(model, X_DS, y_DS, 'DS', params)
+y_pred_S = calc_metrics(model, X_S, y_S, 'Siblings', params)
+y_pred_M = calc_metrics(model, X_M, y_M, 'Mothers', params)
+y_pred_NDS = calc_metrics(model, X_NDS, y_NDS, 'NDS', params)
+y_pred_all = calc_metrics(model, X_all, y_all, 'All', params)
+params['num_features'] = num_features
 params_df = pd.DataFrame({'Feature': list(params.keys()), 'Value': list(params.values())})
 params_df.to_excel(f'{table_path}/params.xlsx', index=False)
-
