@@ -90,7 +90,7 @@ for run_id in range(0, len(rows_dict['items']), max_rows):
         cols_dict=cols_dict,
         method_params={
             'line': 'no',
-            'fit': 'yes',
+            'fit': 'none',
             'semi_window': 4,
             'box_b': 'Q1',
             'box_t': 'Q99',

@@ -3,7 +3,7 @@ if ~exist(figures_path, 'dir')
     mkdir(figures_path)
 end
 
-continious = 'Age';
+continious = 'age';
 xlims = [0; 100];
 
 % Contour params ==========================================================
@@ -14,41 +14,38 @@ levels = [level level];
 meshgrid_size = 50;
 % =========================================================================
 
-is_lin_fit = 1;
+is_lin_fit = 0;
 
-group_by = 'Sex';
+group_by = 'gender';
 groups = {'F', 'M'}';
 colors = {[1 0 0],[0 0 1]}';
 opacity = 0.65;
 
-keySet = {'COVID', 'Sample_Chronology'};
-valueSet = {{'no', 'before'}, {0, 1}};
-fitering = containers.Map(keySet,valueSet);
+keySet = {};
+valueSet = {{}};
+base_filter = true(height(obs), 1);
+if size(keySet, 1) > 0
+    fitering = containers.Map(keySet,valueSet);
+    
+    for k = keys(fitering)
+        b = false(height(obs), 1);
+        vals = fitering(k{1});
+        column = obs.(k{1});
+        for v_id = 1:size(vals, 2)
+            if iscell(column)
+                b = b | strcmp(column, vals{v_id});
+            else
+                b = b | (column == vals{v_id});
+            end
+        end
+        base_filter = base_filter & b;
+    end
+end
 
 cgs = ...
     { ...
-    'cg07553761', ...
-    'cg00481951', ...
-    'cg23256579', ...
-    'cg06639320', ...
-    'cg22454769' ...
+    'cg27288829', ...
     }';
-
-
-base_filter = true(height(obs), 1);
-for k = keys(fitering)
-    b = false(height(obs), 1);
-    vals = fitering(k{1});
-    column = obs.(k{1});
-    for v_id = 1:size(vals, 2)
-        if iscell(column)
-            b = b | strcmp(column, vals{v_id});
-        else
-            b = b | (column == vals{v_id});
-        end
-    end
-    base_filter = base_filter & b;
-end
 
 group_indeces = {};
 for g_id = 1 : size(groups, 1)
