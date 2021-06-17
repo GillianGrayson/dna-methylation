@@ -1,4 +1,6 @@
 import GEOparse
+import numpy as np
+
 from GEO_parsing.infrastructure.path import get_data_path, make_dir
 from GEO_parsing.routines import get_gsm
 from functions.load.table import load_table_dict_xlsx, load_table_dict_pkl
@@ -22,16 +24,18 @@ def only_words(words):
     return passed_words
 
 
-GPL = '21145'
-suffix = '05_05_21'
+GPL = '13534'
+suffix = '06_16_21'
+
+num_subj = 200
 
 gsm_key = 'gsm'
 gse_key = 'series_id'
 source_key = 'source_name_ch1'
 characteristics_key = 'characteristics_ch1'
 
-fn_xlsx = f'{get_data_path()}/GPL{GPL}/GPL{GPL}_gsm_table_{suffix}.xlsx'
-fn_pkl = f'{get_data_path()}/GPL{GPL}/GPL{GPL}_gsm_table_{suffix}.pkl'
+fn_xlsx = f'{get_data_path()}/GPL{GPL}/gsm_table_{suffix}.xlsx'
+fn_pkl = f'{get_data_path()}/GPL{GPL}/gsm_table_{suffix}.pkl'
 if os.path.isfile(fn_pkl):
     gsm_raw_dict = load_table_dict_pkl(fn_pkl)
 else:
@@ -90,8 +94,7 @@ else:
 
 gses = sorted(gse_gsms_dict.keys(),  key=lambda s: len(gse_gsms_dict.get(s)),  reverse=True)
 
-
-
+np.savetxt(f'{get_data_path()}/GPL{GPL}/gses.txt', gses, fmt='%s')
 
 source_unique_words = set()
 ch_unique_words = set()
@@ -101,7 +104,10 @@ gse_passed_dict = {}
 
 gse_good_ones = []
 
-for gse in tqdm(gses):
+for gse_id, gse in tqdm(enumerate(gses)):
+
+    if len(gse_gsms_dict[gse]) < num_subj:
+        break
 
     path_tmp = f'{get_data_path()}/GPL{GPL}/tmp'
     make_dir(path_tmp)
@@ -125,8 +131,8 @@ for gse in tqdm(gses):
     if len(intersection) > 0:
         print(f'{gse} is passed!')
 
-        path_all = f'{get_data_path()}/GPL{GPL}/all/{gse}'
-        path_passed = f'{get_data_path()}/GPL{GPL}/passed/{gse}'
+        path_all = f'{get_data_path()}/GPL{GPL}/all/{gse_id}_{gse}'
+        path_passed = f'{get_data_path()}/GPL{GPL}/passed/{gse_id}_{gse}'
         make_dir(path_all)
 
         # if os.path.isfile(f'{path_all}/observables.xlsx'):
@@ -160,7 +166,7 @@ for gse in tqdm(gses):
 
         for gsm_id, gsm in enumerate(curr_gsms):
 
-            gsm_data = GEOparse.get_GEO(geo=gsm, destdir=f'{path_all}/gsms', include_data=False, how="quick")
+            gsm_data = GEOparse.get_GEO(geo=gsm, destdir=f'{path_all}/gsms', include_data=False, how="quick", silent=True)
 
             gsm_is_passed = True
 

@@ -22,6 +22,7 @@ BiocManager::install("GEOmetadb")
 #############################################################################
 
 library(GEOmetadb)
+library(openxlsx)
 
 getSQLiteFile(destdir = getwd(), destfile = "GEOmetadb.sqlite.gz")
 
@@ -97,7 +98,7 @@ sql <- paste("SELECT DISTINCT gsm.ID, gsm.title, gsm.gsm, gsm.series_id, gsm.gpl
              #"gsm.characteristics_ch1 NOT LIKE '%leukocyte%' AND",
              #"gsm.source_name_ch1 NOT LIKE '%leukocyte%' AND",
              #"(gsm.characteristics_ch1 LIKE '%control%' OR gse.title LIKE '%control%' OR gsm.title LIKE '%control%' OR gsm.source_name_ch1 LIKE '%control%' OR gsm.characteristics_ch1 LIKE '%normal%' OR gse.title LIKE '%normal%' OR gsm.title LIKE '%normal%' OR gsm.source_name_ch1 LIKE '%normal%' OR gsm.characteristics_ch1 LIKE '%health%' OR gse.title LIKE '%health%' OR gsm.title LIKE '%health%' OR gsm.source_name_ch1 LIKE '%health%' OR  gsm.characteristics_ch1 LIKE '%non-tumor%' OR gsm.source_name_ch1 LIKE '%non-tumor%') AND",
-             "gsm.gpl LIKE '%GPL13534%'",sep=" ") #here the GPL of interest should be added. For example GPL8490 contain Human Methylation 27k Beadchip data (HM27k); but we can use GPL13534 (HM450k) or GPL21145 (EPIC Beadchip) to access other Illumina DNA methylation data platforms.
+             "gsm.gpl LIKE '%GPL21145%'",sep=" ") #here the GPL of interest should be added. For example GPL8490 contain Human Methylation 27k Beadchip data (HM27k); but we can use GPL13534 (HM450k) or GPL21145 (EPIC Beadchip) to access other Illumina DNA methylation data platforms.
 
 #Note that on the last line  were used gsm.gpl "GPL8490" because that is the point that defines in what platforms the previous key-words will be searched.
 
@@ -108,7 +109,9 @@ sql <- paste("SELECT DISTINCT gsm.ID, gsm.title, gsm.gsm, gsm.series_id, gsm.gpl
 rs <- dbGetQuery(con,sql) #this is the GEO base table 
 #This next substitution is to guarantee that saving this table as a txt file, the previous tab operator do not interfer to reopen the GEO table.
 rs$characteristics_ch1 <- gsub(";\t", ";", rs$characteristics_ch1, perl = TRUE)
-write.table(rs,"GPL21145_gsm_table.txt",sep="\t",row.names=F,quote = F) #OR
+write.table(rs,"GPL21145_gsm_table.txt",sep="\t",row.names=F,quote = F) 
+write.xlsx(rs, "gsm_table.xlsx", sheetName = "Sheet1", col.names = TRUE, row.names = FALSE, append = FALSE)
+#OR
 #write.table(rs,"~/GPL13534/GPL13534_gsm_table.txt",sep="\t",row.names=F,quote = F)
 
 gpl <- rs
