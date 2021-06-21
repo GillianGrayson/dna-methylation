@@ -6,14 +6,11 @@ from functions.save.table import save_table_dict_xlsx
 import os
 from tqdm import tqdm
 
-GPL = '13534'
+GPL = '21145'
 suffix = '06_16_21'
 
-gses = ['GSE87640']
+gses = ['GSE147667']
 
-gsm_key = 'gsm'
-gse_key = 'series_id'
-source_key = 'source_name_ch1'
 characteristics_key = 'characteristics_ch1'
 
 
@@ -41,7 +38,7 @@ for gse_id, gse in tqdm(enumerate(gses)):
             os.remove(f'{path_tmp}/gsms/{gsm}.txt')
             continue
         gsms_exist.append(gsm)
-        chs_raw = gsm_data.metadata[characteristics_key]
+        chs_raw = gsm_data.metadata["characteristics_ch1"]
         for ch in chs_raw:
             ch_split = ch.split(': ')
             chs_keys.update([ch_split[0]])
@@ -50,6 +47,8 @@ for gse_id, gse in tqdm(enumerate(gses)):
 
     chs = {}
     chs['geo_accession'] = []
+    chs['title'] = []
+    chs['source_name'] = []
     for key in chs_keys:
         chs[key] = []
 
@@ -57,7 +56,10 @@ for gse_id, gse in tqdm(enumerate(gses)):
 
         gsm_data = gsm_data_dict[gsm]
         chs['geo_accession'].append(gsm_data.metadata['geo_accession'][0])
-        chs_raw = gsm_data.metadata[characteristics_key]
+        chs['title'].append(gsm_data.metadata['title'][0])
+        chs['source_name'].append(gsm_data.metadata['source_name_ch1'][0])
+
+        chs_raw = gsm_data.metadata["characteristics_ch1"]
         exist_chs = []
         for ch in chs_raw:
             ch_split = ch.split(': ')

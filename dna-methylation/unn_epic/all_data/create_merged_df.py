@@ -30,7 +30,7 @@ print(len(set_IDs))
 print([item for item, count in collections.Counter(IDs).items() if count > 1])
 
 
-data_frames = [df_tmp, df_agena]
+data_frames = [df_tmp, df_biochem]
 df_merged = reduce(lambda left, right: pd.merge(left, right, on=['ID'], how=how), data_frames)
 df_merged.to_excel(f'{path}/current_table.xlsx', index=False)
 
