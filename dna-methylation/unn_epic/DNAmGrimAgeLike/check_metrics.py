@@ -18,14 +18,10 @@ norm = "fun"
 target_part = 'Control'
 
 path = f'E:/YandexDisk/Work/pydnameth/unn_epic'
-df = pd.read_excel(f'{path}/all_data/DNAmGrimAgeLike/markers/{target_part}/table.xlsx', engine='openpyxl')
+df = pd.read_excel(f'{path}/all_data/DNAmGrimAgeLike/{target_part}/table.xlsx', engine='openpyxl')
 df.set_index("Sample_Name", inplace=True)
 
-with open(f'{path}/all_data/immuno.txt') as f:
-    markers = f.read().splitlines()
-with open(f'{path}/all_data/cytokines.txt') as f:
-    tmp = f.read().splitlines()
-    markers.extend(tmp)
+markers = ["IL12Bp70"]
 
 for marker_id, marker in tqdm(enumerate(markers)):
 
