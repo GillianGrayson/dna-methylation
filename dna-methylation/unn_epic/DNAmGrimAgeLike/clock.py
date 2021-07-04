@@ -24,7 +24,7 @@ def calc_metrics(model, X, y, comment, params):
     params[f'{comment}_pearson_pval'] = pval
     return y_pred
 
-version = "DNAmGrimAge_v1"
+version = "DNAmGrimAge_v2"
 target_part = 'Control'
 pearson_r_lim = 0.35
 

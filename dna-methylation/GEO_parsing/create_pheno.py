@@ -5,11 +5,12 @@ from GEO_parsing.routines import get_gsm
 from functions.save.table import save_table_dict_xlsx
 import os
 from tqdm import tqdm
+import ntpath
 
 GPL = '21145'
 suffix = '06_16_21'
 
-gses = ['GSE147667']
+gses = ['GSE168739']
 
 characteristics_key = 'characteristics_ch1'
 
@@ -47,15 +48,34 @@ for gse_id, gse in tqdm(enumerate(gses)):
 
     chs = {}
     chs['geo_accession'] = []
+    chs['description'] = []
     chs['title'] = []
     chs['source_name'] = []
+    chs['Sample_Name'] = []
+    chs['Sentrix_Position'] = []
+    chs['Sentrix_ID'] = []
     for key in chs_keys:
         chs[key] = []
 
     for gsm_id, gsm in enumerate(gsm_data_dict):
 
         gsm_data = gsm_data_dict[gsm]
+
+        if gsm_data.metadata['supplementary_file'][0] != 'NONE':
+            supp_file = gsm_data.metadata['supplementary_file'][0]
+            head, tail = ntpath.split(supp_file)
+            tmp = os.path.splitext(tail)[0][0:-9]
+            pd_parts = tmp.split('_')
+            chs['Sample_Name'].append(pd_parts[0])
+            chs['Sentrix_ID'].append(pd_parts[1])
+            chs['Sentrix_Position'].append(pd_parts[2])
+        else:
+            chs['Sample_Name'].append(gsm)
+            chs['Sentrix_ID'].append('')
+            chs['Sentrix_Position'].append('')
+
         chs['geo_accession'].append(gsm_data.metadata['geo_accession'][0])
+        chs['description'].append(gsm_data.metadata['description'][0])
         chs['title'].append(gsm_data.metadata['title'][0])
         chs['source_name'].append(gsm_data.metadata['source_name_ch1'][0])
 
@@ -72,4 +92,4 @@ for gse_id, gse in tqdm(enumerate(gses)):
         for ch in missed_chs:
             chs[ch].append('NA')
 
-    save_table_dict_xlsx(f'{path_tmp}/observables.xlsx', chs)
+    save_table_dict_xlsx(f'{path_tmp}/pheno.xlsx', chs)
