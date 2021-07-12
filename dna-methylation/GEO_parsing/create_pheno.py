@@ -7,10 +7,10 @@ import os
 from tqdm import tqdm
 import ntpath
 
-GPL = '21145'
+GPL = '13534'
 suffix = '06_16_21'
 
-gses = ['GSE168739']
+gses = ['GSE53740', 'GSE87648', 'GSE144858']
 
 characteristics_key = 'characteristics_ch1'
 
@@ -48,7 +48,7 @@ for gse_id, gse in tqdm(enumerate(gses)):
 
     chs = {}
     chs['geo_accession'] = []
-    chs['description'] = []
+    #chs['description'] = []
     chs['title'] = []
     chs['source_name'] = []
     chs['Sample_Name'] = []
@@ -75,7 +75,7 @@ for gse_id, gse in tqdm(enumerate(gses)):
             chs['Sentrix_Position'].append('')
 
         chs['geo_accession'].append(gsm_data.metadata['geo_accession'][0])
-        chs['description'].append(gsm_data.metadata['description'][0])
+        #chs['description'].append(gsm_data.metadata['description'][0])
         chs['title'].append(gsm_data.metadata['title'][0])
         chs['source_name'].append(gsm_data.metadata['source_name_ch1'][0])
 

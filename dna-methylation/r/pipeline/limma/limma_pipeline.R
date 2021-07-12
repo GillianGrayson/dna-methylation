@@ -4,8 +4,8 @@ library(minfi)
 library(limma)
 library(openxlsx)
 
-path = "E:/YandexDisk/Work/pydnameth/script_datasets/GPL13534/filtered/brain(DLPFC)/GSE74193"
-path = "E:/YandexDisk/Work/pydnameth/script_datasets/GPL13534/filtered/blood(whole)/GSE87571"
+path = "E:/YandexDisk/Work/pydnameth/datasets/GPL13534/GSE74193"
+path = "E:/YandexDisk/Work/pydnameth/datasets/GPL13534/GSE87571"
 path = "E:/YandexDisk/Work/pydnameth/liver"
 
 path_wd = paste(path, "/limma", sep='')
@@ -74,7 +74,7 @@ table(rownames(topl1_Sex)==rownames(topl1_Age))
 results <- data.frame(topl1_Sex,topl1_Age)
 
 write.xlsx(results, 
-           paste(path_wd, "/m.xlsx", sep=''), 
+           paste(path_wd, "/ms.xlsx", sep=''), 
            col.names = TRUE,
            row.names = TRUE)
 
