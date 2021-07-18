@@ -18,6 +18,7 @@ df_ages = pd.read_excel(f'{path}/raw/ages.xlsx', converters={'ID': str}, engine=
 df_immunoclocks = pd.read_excel(f'{path}/raw/immuno_clocks.xlsx', converters={'ID': str}, engine='openpyxl')
 df_cmv = pd.read_excel(f'{path}/raw/CMV.xlsx', converters={'ID': str}, engine='openpyxl')
 df_agena = pd.read_excel(f'{path}/raw/cpgs_agena_15.xlsx', converters={'ID': str}, engine='openpyxl')
+df_BioAge4HAStatic = pd.read_excel(f'{path}/raw/BioAge4HAStatic.xlsx', engine='openpyxl')
 
 import collections
 print([item for item, count in collections.Counter(df_cmv['ID'].to_list()).items() if count > 1])
@@ -30,8 +31,8 @@ print(len(set_IDs))
 print([item for item, count in collections.Counter(IDs).items() if count > 1])
 
 
-data_frames = [df_tmp, df_biochem]
-df_merged = reduce(lambda left, right: pd.merge(left, right, on=['ID'], how=how), data_frames)
+data_frames = [df_tmp, df_BioAge4HAStatic]
+df_merged = reduce(lambda left, right: pd.merge(left, right, on=['Sample_Name'], how=how), data_frames)
 df_merged.to_excel(f'{path}/current_table.xlsx', index=False)
 
 print(set(df_DNAm['ID'].values) - set(df_merged['ID'].values))

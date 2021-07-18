@@ -3,9 +3,9 @@ clear all;
 part = 'v2';
 
 corrType = 'Pearson';
-group = 'ESRD';
+group = 'Control';
 
-is_pval = 0;
+is_pval = 1;
 
 opacity = 0.5;
 globalFontSize = 16;

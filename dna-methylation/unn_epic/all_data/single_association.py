@@ -7,9 +7,9 @@ part = 'v2'
 path = f'E:/YandexDisk/Work/pydnameth/unn_epic/all_data'
 
 target_key = 'Group'
-target_groups = ['Control', 'Disease']
+target_groups = ['Control', 'ESRD']
 features_type = 'immuno'
-regression_features = ['DNAmAgeHannum', 'DNAmAge', 'DNAmPhenoAge', 'DNAmGrimAge', 'Age', 'PhenoAge', 'ImmunoAge', 'DNAmAgeHannumAA', 'DNAmAgeAA', 'DNAmPhenoAgeAA', 'DNAmGrimAgeAA', 'PhenoAgeAA', 'ImmunoAgeAA', 'IEAA']
+regression_features = ['IEAA', 'EEAA']
 
 df_merged = pd.read_excel(f'{path}/table_part({part}).xlsx', converters={'ID': str}, engine='openpyxl')
 
@@ -69,7 +69,7 @@ for m_id, m in enumerate(target_features):
         #res_dict[f'{a}_spearman_r_C'].append(spearman_r)
         #res_dict[f'{a}_spearman_p_value_C'].append(spearman_p_value)
 
-    df_disease = df_merged.loc[df_merged[target_key] == 'Disease']
+    df_disease = df_merged.loc[df_merged[target_key] == 'ESRD']
     for a in regression_features:
         formula = f'{m} ~ {a}'
         reg_res = smf.ols(formula=formula, data=df_disease).fit()

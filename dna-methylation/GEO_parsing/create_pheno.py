@@ -10,7 +10,7 @@ import ntpath
 GPL = '13534'
 suffix = '06_16_21'
 
-gses = ['GSE53740', 'GSE87648', 'GSE144858']
+gses = ['GSE156994']
 
 characteristics_key = 'characteristics_ch1'
 

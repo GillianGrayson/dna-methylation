@@ -2,8 +2,8 @@ clear all;
 
 part = 'v2';
 
-target = 'DNAmPhenoAgeAA';
-label = 'DNAmPhenoAgeAA';
+target = 'EEAA';
+label = 'EEAA';
 group_feature = 'Group';
 groups = {'Control', 'ESRD'}';
 

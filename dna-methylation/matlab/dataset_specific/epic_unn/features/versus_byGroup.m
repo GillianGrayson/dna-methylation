@@ -1,12 +1,12 @@
 clear all;
 
-part = 'v3';
+part = 'v2';
 
 x_var = 'Age';
 x_label = 'Age';
 xlims = [0; 100];
-y_var = 'DNAmImmunoAge_Control';
-y_label = 'DNAmImmunoAge';
+y_var = 'BioAge4HAStatic';
+y_label = 'EEAA';
 ylims = [0; 100];
 y_label_acceleration = 'Age Acceleration';
 fit_range_mode = 'lim'; %'lim'; % 'minmax';
