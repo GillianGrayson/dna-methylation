@@ -7,6 +7,7 @@ import pickle
 from pathlib import Path
 import os
 import copy
+import statsmodels.formula.api as smf
 from numpy import mean
 from numpy import std
 from numpy import absolute
@@ -15,10 +16,17 @@ from sklearn.model_selection import cross_val_score
 
 def calc_metrics(model, X, y, comment, params):
     y_pred = model.predict(X)
-    score = model.score(X, y)
-    rmse = np.sqrt(mean_squared_error(y_pred, y))
-    mae = mean_absolute_error(y_pred, y)
-    params[f'{comment} R2'] = score
+    df = pd.DataFrame({'y_pred': y_pred, 'y': y})
+
+    reg = smf.ols(formula=f"y_pred ~ y", data=df).fit()
+
+    score_1 = reg.rsquared
+    score_2 = r2_score(y, y_pred)
+    score_3 = model.score(X, y)
+
+    rmse = np.sqrt(mean_squared_error(y, y_pred))
+    mae = mean_absolute_error(y, y_pred)
+    params[f'{comment} R2'] = score_3
     params[f'{comment} RMSE'] = rmse
     params[f'{comment} MAE'] = mae
     return y_pred
@@ -28,7 +36,7 @@ y_name = 'Age'
 part = 'v2'
 
 target_part = 'Control'
-data_type = 'agena_cpgs_11'
+data_type = '3biomarkers'
 
 path = f'E:/YandexDisk/Work/pydnameth/unn_epic/all_data'
 df_merged = pd.read_excel(f'{path}/table_part({part}).xlsx', converters={'ID': str}, engine='openpyxl')
@@ -65,7 +73,7 @@ cv = RepeatedKFold(n_splits=3, n_repeats=5, random_state=1)
 model_type = ElasticNet(max_iter=10000, tol=0.01)
 
 # define grid
-alphas = np.logspace(-5, 0.5, 61)
+alphas = np.logspace(-5, 2, 101)
 # alphas = np.logspace(-5, np.log10(0.3 + 0.7 * random.uniform(0, 1)), 51)
 # l1_ratios = np.linspace(0.0, 1.0, 6)
 l1_ratios = [0.5]

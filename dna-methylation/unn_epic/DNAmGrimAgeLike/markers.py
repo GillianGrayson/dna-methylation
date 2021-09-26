@@ -14,8 +14,8 @@ from scipy import stats
 def calc_metrics(model, X, y, comment, params):
     y_pred = model.predict(X)
     R2 = model.score(X, y)
-    RMSE = np.sqrt(mean_squared_error(y_pred, y))
-    MAE = mean_absolute_error(y_pred, y)
+    RMSE = np.sqrt(mean_squared_error(y, y_pred))
+    MAE = mean_absolute_error(y, y_pred)
     params[f'{comment}_R2'].append(R2)
     params[f'{comment}_RMSE'].append(RMSE)
     params[f'{comment}_MAE'].append(MAE)

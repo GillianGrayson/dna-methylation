@@ -5,9 +5,9 @@ part = 'v2';
 x_var = 'Age';
 x_label = 'Age';
 xlims = [0; 100];
-y_var = 'BioAge4HAStatic';
-y_label = 'EEAA';
-ylims = [0; 100];
+y_var = 'x3biomarkers_Age_Control';
+y_label = 'Age estimation (3 biomarkers)';
+ylims = [0; 250];
 y_label_acceleration = 'Age Acceleration';
 fit_range_mode = 'lim'; %'lim'; % 'minmax';
 
@@ -20,7 +20,7 @@ opacity = 0.5;
 globalFontSize = 36;
 legendFontSize = 18;
 legend_location = 'NorthWest';
-yLimAA = [-20, 20];
+yLimAA = [-40, 300];
 
 path = 'E:/YandexDisk/Work/pydnameth/unn_epic';
 figures_path = sprintf('E:/YandexDisk/Work/pydnameth/unn_epic/figures/features/versus_byGroup/part(%s)', part);
@@ -77,8 +77,8 @@ for g_id = 1:size(groups, 1)
     lm = fitlm(T, sprintf('%s~%s', y_var, x_var));
     R2 = lm.Rsquared.Ordinary;
     RMSE = lm.RMSE;
-    %legend(h, sprintf('%s $(R^2=%0.2f)$', groups{g_id}, R2), 'Interpreter','latex');
-    legend(h, sprintf('%s', groups{g_id}), 'Interpreter','latex');
+    legend(h, sprintf('%s $(R^2=%0.2f)$', groups{g_id}, R2), 'Interpreter','latex');
+    %legend(h, sprintf('%s', groups{g_id}), 'Interpreter','latex');
 
     
     if strcmp(fit_range_mode, 'minmax')

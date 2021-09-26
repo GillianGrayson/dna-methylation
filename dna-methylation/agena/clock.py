@@ -107,8 +107,8 @@ y_pred = model.predict(X)
 table[f"{outcome}_pred"] = y_pred
 table.to_excel(table_fn, index=True, index_label="ID")
 score = model.score(X, y)
-rmse = np.sqrt(mean_squared_error(y_pred, y))
-mae = mean_absolute_error(y_pred, y)
+rmse = np.sqrt(mean_squared_error(y, y_pred))
+mae = mean_absolute_error(y, y_pred)
 params["R2"] = score
 params["RMSE"] = rmse
 params["MAE"] = mae

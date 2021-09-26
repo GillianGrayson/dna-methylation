@@ -15,12 +15,12 @@ from sklearn.model_selection import cross_val_score
 def calc_metrics(model, X, y, comment, params):
     y_pred = model.predict(X)
     R2 = model.score(X, y)
-    RMSE = np.sqrt(mean_squared_error(y_pred, y))
-    MAE = mean_absolute_error(y_pred, y)
+    RMSE = np.sqrt(mean_squared_error(y, y_pred))
+    MAE = mean_absolute_error(y, y_pred)
     params[f'{comment}_R2'].append(R2)
     params[f'{comment}_RMSE'].append(RMSE)
     params[f'{comment}_MAE'].append(MAE)
-    r, pval = stats.pearsonr(y_pred, y)
+    r, pval = stats.pearsonr(y, y_pred)
     params[f'{comment}_pearson_r'].append(r)
     params[f'{comment}_pearson_pval'].append(pval)
     return y_pred
@@ -100,9 +100,9 @@ for marker_id, marker in tqdm(enumerate(markers)):
     model_type.fit(X_target, y_target)
     y_pred = model_type.predict(X_all)
     R2 = model_type.score(X_all, y_all)
-    RMSE = np.sqrt(mean_squared_error(y_pred, y_all))
-    MAE = mean_absolute_error(y_pred, y_all)
-    r, pval = stats.pearsonr(y_pred, y_all)
+    RMSE = np.sqrt(mean_squared_error(y_all, y_pred))
+    MAE = mean_absolute_error(y_all, y_pred)
+    r, pval = stats.pearsonr(y_all, y_pred)
 
 
     grid = dict()
