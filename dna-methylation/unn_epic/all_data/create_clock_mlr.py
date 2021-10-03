@@ -14,18 +14,18 @@ from numpy import absolute
 from sklearn.model_selection import cross_val_score
 
 
-def calc_metrics(model, X, y, comment, params):
-    y_pred = model.predict(X)
+def calc_metrics(model, df, y_name, comment, params):
+    y = df.loc[:, y_name].values
+    y_pred = model.predict(df)
     df = pd.DataFrame({'y_pred': y_pred, 'y': y})
 
     reg = smf.ols(formula=f"y_pred ~ y", data=df).fit()
 
     score_2 = r2_score(y, y_pred)
-    score_3 = model.score(X, y)
 
     rmse = np.sqrt(mean_squared_error(y, y_pred))
     mae = mean_absolute_error(y, y_pred)
-    params[f'{comment} R2'] = score_3
+    params[f'{comment} R2'] = score_2
     params[f'{comment} RMSE'] = rmse
     params[f'{comment} MAE'] = mae
     return y_pred
@@ -67,53 +67,20 @@ elif target_part == 'Control':
 else:
     raise ValueError("Unsupported target_part")
 
-scoring = 'r2'
-cv = RepeatedKFold(n_splits=3, n_repeats=10, random_state=1)
-model_type = ElasticNet(max_iter=10000, tol=0.01)
-
-# define grid
-alphas = np.logspace(-5, 1, 101)
-# alphas = np.logspace(-5, np.log10(0.3 + 0.7 * random.uniform(0, 1)), 51)
-# l1_ratios = np.linspace(0.0, 1.0, 11)
-l1_ratios = [0.5]
-
-grid = dict()
-grid['alpha'] = alphas
-grid['l1_ratio'] = l1_ratios
-# define search
-search = GridSearchCV(estimator=model_type, scoring=scoring, param_grid=grid, cv=cv, verbose=3)
-results = search.fit(X_target, y_target)
-
-model = results.best_estimator_
-
-score = model.score(X_target, y_target)
-params = copy.deepcopy(results.best_params_)
-
-searching_process = pd.DataFrame(results.cv_results_)
-searching_process.to_excel(
-    f'{path}/clock/{data_type}/{target_part}/{y_name}/part({part})/searching_process_{scoring}.xlsx',
-    index=False)
-
-model_dict = {'feature': ['Intercept'], 'coef': [model.intercept_]}
-num_features = 0
-for f_id, f in enumerate(target_features):
-    coef = model.coef_[f_id]
-    if abs(coef) > 0:
-        model_dict['feature'].append(f)
-        model_dict['coef'].append(coef)
-        num_features += 1
-model_df = pd.DataFrame(model_dict)
+formula = ' + '.join(target_features)
+model = smf.ols(formula=f"{y_name} ~ {formula}", data=X_C_df).fit()
 
 Path(f'{path}/clock/{data_type}/{target_part}/{y_name}/part({part})').mkdir(parents=True, exist_ok=True)
-model_df.to_excel(f'{path}/clock/{data_type}/{target_part}/{y_name}/part({part})/clock.xlsx', index=False)
+df_to_save = model.params.to_frame(name='Value')
+df_to_save.index.name = 'Name'
+df_to_save.to_excel(f'{path}/clock/{data_type}/{target_part}/{y_name}/part({part})/clock.xlsx', index=True)
 
 with open(f'{path}/clock/{data_type}/{target_part}/{y_name}/part({part})/clock.pkl', 'wb') as handle:
     pickle.dump(model, handle, protocol=pickle.HIGHEST_PROTOCOL)
-
-y_pred_C = calc_metrics(model, X_C, y_C, 'Control', params)
-y_pred_T = calc_metrics(model, X_T, y_T, 'Disease', params)
-y_pred_all = calc_metrics(model, X_all, y_all, 'All', params)
-params['num_features'] = num_features
+params = {}
+y_pred_C = calc_metrics(model, df_merged.loc[df_merged['Group'] == 'Control'], y_name, 'Control', params)
+y_pred_T = calc_metrics(model, df_merged.loc[df_merged['Group'] == 'ESRD'], y_name, 'Disease', params)
+y_pred_all = calc_metrics(model, df_merged, y_name, 'All', params)
 params_df = pd.DataFrame({'Feature': list(params.keys()), 'Value': list(params.values())})
 params_df.to_excel(f'{path}/clock/{data_type}/{target_part}/{y_name}/part({part})/params.xlsx', index=False)
 
