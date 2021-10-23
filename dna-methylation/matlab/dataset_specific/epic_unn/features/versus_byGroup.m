@@ -5,7 +5,7 @@ part = 'v2';
 x_var = 'Age';
 x_label = 'Age';
 xlims = [0; 100];
-y_var = 'x3biomarkers_Age_Control';
+y_var = 'x3biomarkers_milli_Age_Control';
 y_label = 'Age estimation (3 biomarkers)';
 ylims = [0; 250];
 y_label_acceleration = 'Age Acceleration';
@@ -23,6 +23,7 @@ legend_location = 'NorthWest';
 yLimAA = [-40, 300];
 
 path = 'E:/YandexDisk/Work/pydnameth/unn_epic';
+%path = 'E:/YandexDisk/Work/pydnameth/datasets/GPL21145/GSEUNN';
 figures_path = sprintf('E:/YandexDisk/Work/pydnameth/unn_epic/figures/features/versus_byGroup/part(%s)', part);
 if ~exist(figures_path, 'dir')
     mkdir(figures_path)
