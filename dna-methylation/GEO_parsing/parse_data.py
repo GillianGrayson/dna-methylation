@@ -1,5 +1,6 @@
 import GEOparse
 import numpy as np
+import pandas as pd
 from GEO_parsing.infrastructure.filter import split_words, only_words, get_raw_dict, get_gsm_dict, get_gse_gsm_dict
 from GEO_parsing.infrastructure.path import get_data_path, make_dir
 from GEO_parsing.routines import get_gsm
@@ -12,10 +13,10 @@ import re
 from distutils.dir_util import copy_tree
 
 
-GPL = '13534'
+GPL = '21145'
 suffix = '06_16_21'
 
-num_subj = 200
+num_subj = 100
 
 gsm_raw_dict = get_raw_dict( f'{get_data_path()}/GPL{GPL}/gsm_table_{suffix}')
 gsm_dict = get_gsm_dict(f'{get_data_path()}/GPL{GPL}/GPL{GPL}_gsm_dict', gsm_raw_dict)
@@ -34,6 +35,13 @@ f.close()
 gsms = gsm_raw_dict["gsm"]
 
 gses = sorted(gse_gsms_dict.keys(),  key=lambda s: len(gse_gsms_dict.get(s)),  reverse=True)
+gses_dict = {'Dataset': [], 'Count': []}
+for gse in gse_gsms_dict:
+    gses_dict['Dataset'].append(gse)
+    gses_dict['Count'].append(len(gse_gsms_dict[gse]))
+gses_df = pd.DataFrame.from_dict(gses_dict)
+gses_df.set_index('Dataset', inplace=True)
+gses_df.to_excel(f'{get_data_path()}/GPL{GPL}/gses.xlsx')
 
 np.savetxt(f'{get_data_path()}/GPL{GPL}/gses.txt', gses, fmt='%s')
 

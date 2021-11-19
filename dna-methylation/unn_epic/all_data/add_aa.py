@@ -3,13 +3,13 @@ import statsmodels.formula.api as smf
 
 y_name = 'Age'
 ages = ['DNAmAgeHannum', 'DNAmAge', 'DNAmPhenoAge', 'DNAmGrimAge', 'PhenoAge', 'ImmunoAge']
-part = 'v22'
+part = 'v2'
 target_part = 'Control'
 
 path = f'E:/YandexDisk/Work/pydnameth/unn_epic/all_data'
 df_merged = pd.read_excel(f'{path}/table_part({part}).xlsx', converters={'ID': str}, engine='openpyxl')
 C_df = df_merged.loc[df_merged['Group'] == 'Control']
-T_df = df_merged.loc[df_merged['Group'] == 'Disease']
+T_df = df_merged.loc[df_merged['Group'] == 'ESRD']
 
 for a in ages:
     formula = f"{a} ~ {y_name}"
