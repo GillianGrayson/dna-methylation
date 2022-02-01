@@ -1,12 +1,12 @@
 clear all;
 
-part = 'v2';
+part = 'xtd';
 
 count_target = 'yes';
-count_limit = 5;
+count_limit = 10;
 
-features_type = 'drugs';
-y_label = 'Drugs';
+features_type = 'diseases';
+y_label = 'Diseases';
 
 opacity = 0.65;
 fontSizeX = 36;
@@ -20,12 +20,12 @@ end
 
 target_features = importdata(sprintf('%s/all_data/%s.txt', path, features_type));
 
-fn = sprintf('%s/all_data/table_part(%s).xlsx', path, part);
+fn = sprintf('%s/all_data/pheno_%s.xlsx', path, part);
 opts = detectImportOptions(fn);
 tbl = readtable(fn, opts);
 
-keySet_inc = {'Group'};
-valueSet_inc = {{'ESRD'}};
+keySet_inc = {};
+valueSet_inc = {{}};
 keySet_dec = {};
 valueSet_dec = {{}};
 base_filter = true(height(tbl), 1);
@@ -93,8 +93,8 @@ set(gca, 'yTickLabel', target_features);
 ax = gca;
 ax.YAxis.FontSize = fontSizeY;
 set(gca, 'TickLabelInterpreter', 'none')
-xlabel('Number of subjects', 'Interpreter', 'latex', 'FontSize', fontSizeX + 4);
-ylabel(y_label, 'Interpreter', 'latex', 'FontSize', fontSizeX + 6);
+xlabel('Number of subjects', 'FontSize', fontSizeX + 4);
+ylabel(y_label, 'FontSize', fontSizeX + 6);
 ax.XAxis.FontSize = fontSizeX;
 grid on;
 

@@ -1,18 +1,18 @@
 clear all;
 
-%x_var = 'Age';
-%x_label = 'Age';
-x_var = 'Dialysis_months_';
-x_label = 'Dialysis (months)';
-target = 'Group';
-%target_vals = {'F', 'M'}';
-%colors = {[1 0 0],[0 0 1]}';
-target_vals = {'Disease'}';
-colors = {[1 0 1]}';
+x_var = 'Age';
+x_label = 'Age';
+%x_var = 'Dialysis_months_';
+%x_label = 'Dialysis (months)';
+target = 'Sex';
+target_vals = {'F', 'M'}';
+colors = {[1 0 0],[0 0 1]}';
+%target_vals = {'Control', 'ESRD'}';
+%colors = {[1 0 1]}';
 bin_size = 5;
 FaceAlpha = 0.5;
 
-part = 'v2';
+part = 'xtd';
 
 path = 'E:/YandexDisk/Work/pydnameth/unn_epic';
 figures_path = sprintf('E:/YandexDisk/Work/pydnameth/unn_epic/figures/features/histogram_byGroup/part(%s)', part);
@@ -20,7 +20,7 @@ if ~exist(figures_path, 'dir')
     mkdir(figures_path)
 end
 
-fn = sprintf('%s/all_data/table_part(%s).xlsx', path, part);
+fn = sprintf('%s/all_data/pheno_%s.xlsx', path, part);
 opts = detectImportOptions(fn);
 opts = setvartype(opts, {target}, 'string');
 data = readtable(fn, opts);
@@ -47,9 +47,10 @@ for t_id = 1:size(target_vals, 1)
 end
 
 set(gca, 'FontSize', 40);
-xlabel(x_label, 'Interpreter', 'latex');
+xlabel(x_label);
 set(gca, 'FontSize', 40);
-ylabel('Number of subjects', 'Interpreter', 'latex');
+ylabel('Number of subjects');
+ylim([0, 12])
 grid on;
 legend(gca,'off');
 legend('Location','Northwest','NumColumns',1)
